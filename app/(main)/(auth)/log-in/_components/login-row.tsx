@@ -59,7 +59,7 @@ export function LoginRow() {
         <div>
           <Button
             disabled={isPending}
-            className="space-x-2 w-full bg-blue-600 hover:bg-blue-600 active:bg-blue-600/60 disabled:cursor-not-allowed"
+            className="space-x-2 w-full bg-green-600 hover:bg-green-600 active:bg-green-600/60 disabled:cursor-not-allowed"
           >
             {isPending ? (
               <Loader2 size={15} className="animate-spin" />
@@ -74,8 +74,8 @@ export function LoginRow() {
 
       <div className="flex flex-col items-center gap-2 mt-10 text-sm">
         <p>
-          <span className="text-gray-500">Don't have an account?</span>{" "}
-          <Link href="/register" className="text-blue-600 hover:underline">
+          <span className="text-gray-500">Don&apos;t have an account?</span>{" "}
+          <Link href="/register" className="text-green-600 hover:underline">
             Register
           </Link>
         </p>

@@ -4,10 +4,10 @@ export function middleware(req: NextRequest) {
   const { nextUrl } = req;
   const access_token = req.cookies.get("token")?.value;
 
-  const authRoute = ["/register", "/log-in"];
+  const securedRoute = ["/resident", "/admin"];
 
-  if (access_token && authRoute.includes(nextUrl.pathname)) {
-    return Response.redirect(new URL("/", req.url));
+  if (!access_token && securedRoute.includes(nextUrl.pathname)) {
+    return Response.redirect(new URL("/log-in", req.url));
   }
 }
 

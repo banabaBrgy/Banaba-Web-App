@@ -74,3 +74,33 @@
     @apply bg-background text-foreground;
   }
 }
+
+::-webkit-scrollbar {
+  width: 8px;
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgb(177, 177, 177);
+  border-radius: 1000px;
+}
+
+.title_outline {
+  text-shadow: -1px 1px 3px rgb(0, 0, 0);
+}
+
+.waves-top {
+  background: url(/waves.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: top;
+}
+
+@media screen and (max-width: 800px) {
+  .waves-top {
+    background: url(/waves.svg);
+    background-repeat: no-repeat;
+    background-size: 800% 60%;
+    background-position: top;
+  }
+}

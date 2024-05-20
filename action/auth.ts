@@ -61,7 +61,11 @@ export async function actionLogIn(formData: FormData) {
 
   const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!);
 
-  cookies().set("token", token, { httpOnly: true, secure: true });
+  cookies().set("token", token, {
+    httpOnly: true,
+    secure: true,
+    maxAge: 100000000000000,
+  });
 
   redirect("/");
 }

@@ -94,7 +94,7 @@ export function RegisterRow() {
         <div>
           <Button
             disabled={isSubmitting}
-            className="space-x-2 w-full bg-blue-600 hover:bg-blue-600 active:bg-blue-600/60 disabled:cursor-not-allowed active:scale-[.98]"
+            className="space-x-2 w-full bg-green-600 hover:bg-green-600 active:bg-green-600/60 disabled:cursor-not-allowed active:scale-[.98]"
           >
             {isSubmitting ? (
               <Loader2 size={15} className="animate-spin" />
@@ -110,7 +110,7 @@ export function RegisterRow() {
       <div className="flex flex-col items-center gap-2 mt-10 text-sm">
         <p>
           <span className="text-gray-500">Already have an account?</span>{" "}
-          <Link href="/log-in" className="text-blue-600 hover:underline">
+          <Link href="/log-in" className="text-green-600 hover:underline">
             Log in
           </Link>
         </p>
