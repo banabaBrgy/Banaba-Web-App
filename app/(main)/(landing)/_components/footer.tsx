@@ -10,7 +10,7 @@ export function Footer() {
   if (pathname === "/") return;
 
   return (
-    <footer className="flex justify-between py-5 px-3 bg-gray-600 text-white">
+    <footer className="flex justify-between pb-8 pt-14 px-3 bg-[#EBEBEB]">
       <div className="flex flex-col items-center gap-2">
         <Image
           src="/logo.png"
@@ -26,9 +26,9 @@ export function Footer() {
       </div>
 
       <div className="space-y-3">
-        <h1 className="font-bold uppercase">More Pages</h1>
+        <h1 className="font-extrabold uppercase text-gray-700">More Pages</h1>
 
-        <ul className="grid grid-cols-2 text-sm gap-2">
+        <ul className="grid grid-cols-2 text-sm gap-2 text-gray-600">
           <li>Home</li>
           <li>Profile</li>
           <li>Services</li>

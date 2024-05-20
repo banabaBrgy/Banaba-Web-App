@@ -27,15 +27,15 @@ export default function HealthCenterPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-[#D9D9D9] to-white pb-32">
+    <div className="min-h-screen pb-32">
       <div className="flex justify-center items-center bg-green-700 pt-24 pb-9">
-        <h1 className="title_outline md:text-2xl text-xl font-extrabold text-white uppercase tracking-widest">
+        <h1 className="title_outline md:text-2xl text-xl font-extrabold text-white uppercase">
           Barangay Health Center
         </h1>
       </div>
 
       <div className="flex lg:flex-row lg:items-stretch items-center flex-col gap-4 mt-10 px-3 max-w-[72.5rem] mx-auto">
-        <div className="shrink-0 rounded-md overflow-hidden shadow-xl">
+        <div className="shrink-0 rounded-md overflow-hidden shadow-md border border-gray-300">
           <Image
             src="/health-center.jpg"
             alt="Health-center"
@@ -59,10 +59,10 @@ export default function HealthCenterPage() {
         </div>
       </div>
 
-      <div className="flex justify-center lg:flex-row lg:items-stretch items-center flex-col gap-5 mt-12 mx-3">
-        <div className="w-full max-w-[48rem] border border-gray-300 rounded-md overflow-hidden shadow-xl bg-white">
+      <div className="flex justify-center lg:flex-row lg:items-start items-center flex-col gap-5 mt-12 mx-3">
+        <div className="w-full max-w-[48rem] border border-gray-300 rounded-md overflow-hidden shadow-md bg-white">
           <h1 className="uppercase text-center p-6 bg-green-500 text-white">
-            Check Up Dates / Programs
+            Programs
           </h1>
 
           <div className="grid grid-cols-1">
@@ -88,10 +88,54 @@ export default function HealthCenterPage() {
                 ratione! Non, voluptatem asperiores.
               </p>
             </div>
+            <div className="flex border-b border-gray-300">
+              <p className="w-14 shrink-0 flex items-center justify-center">
+                2.
+              </p>
+              <p className="p-2 text-sm flex-1">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia
+                quas adipisci tempora? Numquam nostrum maiores in veritatis,
+                nihil soluta nemo animi placeat quidem consequatur ea mollitia
+                ratione! Non, voluptatem asperiores.
+              </p>
+            </div>
+            <div className="flex border-b border-gray-300">
+              <p className="w-14 shrink-0 flex items-center justify-center">
+                2.
+              </p>
+              <p className="p-2 text-sm flex-1">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia
+                quas adipisci tempora? Numquam nostrum maiores in veritatis,
+                nihil soluta nemo animi placeat quidem consequatur ea mollitia
+                ratione! Non, voluptatem asperiores.
+              </p>
+            </div>
+            <div className="flex border-b border-gray-300">
+              <p className="w-14 shrink-0 flex items-center justify-center">
+                2.
+              </p>
+              <p className="p-2 text-sm flex-1">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia
+                quas adipisci tempora? Numquam nostrum maiores in veritatis,
+                nihil soluta nemo animi placeat quidem consequatur ea mollitia
+                ratione! Non, voluptatem asperiores.
+              </p>
+            </div>
+            <div className="flex border-b border-gray-300">
+              <p className="w-14 shrink-0 flex items-center justify-center">
+                2.
+              </p>
+              <p className="p-2 text-sm flex-1">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia
+                quas adipisci tempora? Numquam nostrum maiores in veritatis,
+                nihil soluta nemo animi placeat quidem consequatur ea mollitia
+                ratione! Non, voluptatem asperiores.
+              </p>
+            </div>
           </div>
         </div>
 
-        <div className="bg-white px-2 py-5 max-w-[22rem] shrink-0 rounded-md shadow-xl border border-gray-300">
+        <div className="bg-white px-4 py-5 max-w-[22rem] shrink-0 rounded-md shadow-md border border-gray-300">
           <div className="flex justify-center gap-3 mb-2">
             <Image
               src="/DOH-logo.png"
@@ -140,14 +184,14 @@ export default function HealthCenterPage() {
                 BARANGAY HEALTH EMERGENCY RESPONSE TEAM (BHERT)
               </h1>
 
-              <ul className="flex flex-col gap-y-5 items-center text-xs">
+              <ul className="flex flex-col gap-y-5 items-center text-sm">
                 {barangayHealthResponseTeam.map((item, index) => (
                   <li
                     key={index}
                     className="grid grid-cols-3 place-items-center"
                   >
                     <div className="text-center">
-                      <h1 className="font-medium">{item.name}</h1>
+                      <h1 className="font-bold">{item.name}</h1>
                       <p>({item.status})</p>
                     </div>
                     <MoveRight size={20} />

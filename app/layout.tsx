@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Open_Sans } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
+import "react-calendar/dist/Calendar.css";
 import "./globals.css";
 
-const font = Inter({
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+const font = Open_Sans({
+  weight: ["300", "400", "700", "800"],
   subsets: ["latin"],
 });
 

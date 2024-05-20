@@ -32,9 +32,9 @@ export default function AboutUsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-[#D9D9D9] to-white pb-32">
+    <div className="min-h-screen pb-32">
       <div className="flex justify-center items-center bg-green-700 pt-24 pb-9 mb-5">
-        <h1 className="title_outline text-2xl font-extrabold text-white uppercase tracking-widest">
+        <h1 className="title_outline text-2xl font-extrabold text-white uppercase">
           Barangay Officials
         </h1>
       </div>
@@ -44,7 +44,7 @@ export default function AboutUsPage() {
       </div>
 
       <div className="flex lg:flex-row flex-col justify-center lg:items-stretch items-center gap-5 mx-3">
-        <div className="flex flex-col flex-1 max-w-[28rem] rounded-md shadow-2xl bg-white border border-gray-300">
+        <div className="flex flex-col flex-1 max-w-[28rem] rounded-md shadow-md bg-white border border-gray-300">
           <h1 className="text-center uppercase mb-8 pt-5 px-5">
             Physical & Demographic Characteristics
           </h1>
@@ -71,7 +71,7 @@ export default function AboutUsPage() {
           </div>
         </div>
 
-        <div className="p-10 flex-1 max-w-[43rem] rounded-md shadow-2xl bg-white border border-gray-300">
+        <div className="p-10 flex-1 max-w-[43rem] rounded-md shadow-md bg-white border border-gray-300">
           <div className="flex justify-center mb-3">
             <Image
               src="/logo.png"
@@ -109,7 +109,7 @@ export default function AboutUsPage() {
         </div>
       </div>
 
-      <div className="flex justify-center bg-white border border-gray-300 mt-8 p-3 shadow-2xl">
+      <div className="flex justify-center bg-white border border-gray-300 mt-8 p-3 shadow-md">
         <div className="flex md:flex-row flex-col gap-10 flex-1 max-w-[55rem]">
           <div className="flex md:flex-col md:items-stretch sm:flex-row flex-col items-center justify-center gap-3 shrink-0">
             <Image

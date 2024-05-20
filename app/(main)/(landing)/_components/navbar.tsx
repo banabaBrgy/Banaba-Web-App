@@ -35,8 +35,8 @@ export function Navbar() {
   return (
     <nav
       className={cn(
-        "fixed top-0 inset-x-0 h-14 flex justify-between backdrop-blur-sm px-3 z-[1000] text-white",
-        pathname === "/" ? "bg-green-500/70" : "bg-green-500 shadow-xl"
+        "fixed top-0 inset-x-0 h-14 flex justify-between px-3 z-[1000] text-white",
+        pathname === "/" ? "bg-green-500/70" : "bg-green-500"
       )}
     >
       <div

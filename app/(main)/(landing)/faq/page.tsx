@@ -19,9 +19,9 @@ export default function FaqPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-[#D9D9D9] to-white pb-32">
+    <div className="min-h-screen pb-32">
       <div className="flex flex-col justify-center items-center gap-1 bg-green-700 pt-24 pb-7 mb-8 text-white">
-        <h1 className="title_outline text-2xl font-extrabold uppercase tracking-widest">
+        <h1 className="title_outline text-2xl font-extrabold uppercase">
           Frequently ask questions
         </h1>
         <p className="title_outline uppercase text-xl font-extrabold">(Faq)</p>
@@ -30,7 +30,9 @@ export default function FaqPage() {
       <div className="max-w-[65rem] mx-auto px-3">
         <form onSubmit={handleSubmit} className="space-y-3">
           <Textarea name="question" placeholder="Ask your question here..." />
-          <Button className="w-full">Add your questions</Button>
+          <Button className="w-full bg-gray-100 hover:bg-gray-200 border border-gray-300 text-black shadow-sm">
+            ADD YOUR QUESTIONS
+          </Button>
         </form>
 
         <div className="grid md:grid-cols-2 gap-2 mt-4">
