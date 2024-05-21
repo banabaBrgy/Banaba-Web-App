@@ -19,7 +19,7 @@ model User {
   lastName        String
   email           String    @unique
   password        String
-  mobile          String?    @unique
+  mobile          String?   @unique
   birthDate       String?
   age             Int?
   gender          String?
@@ -31,7 +31,7 @@ model User {
   isEmailVerified DateTime?
 
   verificationCode String?
-  expiresAt Int?
+  expiresAt        BigInt?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

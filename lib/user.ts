@@ -1,12 +1,8 @@
 import jwt from "jsonwebtoken";
-import { cookies } from "next/headers";
 import { db } from "./db";
+import { cookies } from "next/headers";
 
-function omitPassword(x: any) {
-  delete x.password;
-}
-
-export const getUser = async () => {
+export async function getUser() {
   try {
     const token = cookies().get("token")?.value;
 
@@ -25,7 +21,13 @@ export const getUser = async () => {
     omitPassword(user);
 
     return user;
-  } catch (error) {
-    throw new Error("Cannot get user" + error);
+  } catch {
+    return null;
   }
-};
+}
+
+function omitPassword(x: any) {
+  if (x) {
+    delete x.password;
+  }
+}

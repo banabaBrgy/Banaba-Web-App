@@ -180,3 +180,84 @@ async function sendEmailVerificationCode(
     throw new Error("Error sending email verification code", error.message);
   }
 }
+
+// fortgot password
+
+export async function sendEmailForgotPassword(email: string) {
+  try {
+    const jwtEmail = jwt.sign({ email }, process.env.JWT_SECRET!, {
+      expiresIn: "1h",
+    });
+
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.MY_EMAIL,
+        pass: process.env.MY_PASSWORD,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.MY_EMAIL,
+      to: email,
+      subject: "Forgot password",
+      html: `<a href=${`${process.env.MAIN_BASE_URL}/forgot-password?token=${jwtEmail}`}>Forgot password</a>`,
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Email sent: " + info.response);
+      }
+    });
+  } catch (error: any) {
+    throw new Error("Error sending email forgot password", error.message);
+  }
+}
+
+interface ChangePasswordType {
+  currentPassword: string;
+  newPassword: string;
+}
+
+export async function changePassword(
+  data: ChangePasswordType,
+  jwtEmail: string
+) {
+  try {
+    const verify = jwt.verify(jwtEmail, process.env.JWT_SECRET!) as {
+      email: string;
+    };
+
+    if (!verify.email) return { error: "Token has expired!" };
+
+    const user = await db.user.findUnique({
+      where: {
+        email: verify.email,
+      },
+    });
+
+    const passwordCompare = await bcrypt.compare(
+      data.currentPassword,
+      user?.password as string
+    );
+
+    if (!passwordCompare) return { error: "Invalid current password" };
+
+    const hashPassword = await bcrypt.hash(data.newPassword, 10);
+
+    await db.user.update({
+      where: {
+        email: verify.email,
+      },
+      data: {
+        password: hashPassword,
+      },
+    });
+
+    return { data: "Changed password successfully!" };
+  } catch (error: any) {
+    throw new Error("Change password error" + error.message);
+  }
+}
