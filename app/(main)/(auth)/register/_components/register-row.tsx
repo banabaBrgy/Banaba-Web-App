@@ -109,15 +109,10 @@ export function RegisterRow() {
 
       <div className="flex flex-col items-center gap-2 mt-10 text-sm">
         <p>
-          <span className="text-gray-500">Already have an account?</span>{" "}
-          <Link href="/log-in" className="text-green-600 hover:underline">
-            Log in
-          </Link>
+          Already have an account? <Link href="/log-in">Log in</Link>
         </p>
 
-        <Link href="/forgot-password">
-          <p className="text-gray-500">Forgot password?</p>
-        </Link>
+        <Link href="/forgot-password">Forgot password?</Link>
       </div>
     </div>
   );

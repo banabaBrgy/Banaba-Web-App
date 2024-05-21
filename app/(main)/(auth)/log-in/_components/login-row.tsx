@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import React, { FormEvent, useTransition } from "react";
+import React, { useTransition } from "react";
 import { ChevronRight, Loader2 } from "lucide-react";
 import { actionLogIn } from "@/action/auth";
 import { toast } from "sonner";
@@ -10,16 +10,14 @@ import { toast } from "sonner";
 export function LoginRow() {
   const [isPending, setTransition] = useTransition();
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
+  function action(formData: FormData) {
     setTransition(async () => {
       await actionLogIn(formData).then((data) => {
         if (data?.error) {
           return toast.error(data.error);
         }
 
-        toast.success("Log In Successfully!");
+        toast.success("Log in successfully");
       });
     });
   }
@@ -33,7 +31,7 @@ export function LoginRow() {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="mt-11">
+      <form action={action} className="mt-11">
         <div className="flex flex-col gap-2 text-sm mb-6">
           <label htmlFor="email">Email address</label>
           <input
@@ -74,15 +72,10 @@ export function LoginRow() {
 
       <div className="flex flex-col items-center gap-2 mt-10 text-sm">
         <p>
-          <span className="text-gray-500">Don&apos;t have an account?</span>{" "}
-          <Link href="/register" className="text-green-600 hover:underline">
-            Register
-          </Link>
+          Don&apos;t have an account? <Link href="/register">Register</Link>{" "}
         </p>
 
-        <Link href="/forgot-password">
-          <p className="text-gray-500">Forgot password?</p>
-        </Link>
+        <Link href="/forgot-password">Forgot password?</Link>
       </div>
     </div>
   );

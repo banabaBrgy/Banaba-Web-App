@@ -2,6 +2,7 @@ import React from "react";
 import { PiUsersThreeFill } from "react-icons/pi";
 import { GiQuillInk, GiTimeTrap } from "react-icons/gi";
 import { BiSolidUserCheck } from "react-icons/bi";
+import { cookies } from "next/headers";
 
 export default function ResidentPage() {
   const dashBoard = [
@@ -27,5 +28,17 @@ export default function ResidentPage() {
     },
   ];
 
-  return <div className="p-3">ResidentPage</div>;
+  return (
+    <div className="p-3">
+      <form
+        action={async () => {
+          "use server";
+
+          cookies().set("token", "");
+        }}
+      >
+        <button>Log out</button>
+      </form>
+    </div>
+  );
 }

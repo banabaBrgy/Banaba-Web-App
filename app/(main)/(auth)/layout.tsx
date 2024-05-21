@@ -2,6 +2,8 @@ import { getUser } from "@/lib/user";
 import { redirect } from "next/navigation";
 import React, { ReactNode } from "react";
 
+export const dynamic = "force-dynamic";
+
 export default async function AuthLayout({
   children,
 }: {
