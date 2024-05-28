@@ -57,6 +57,7 @@ export function RegisterRow() {
               type="text"
               id="firstName"
               {...register("firstName")}
+              placeholder="Enter your first name"
               className="py-2 px-3 border border-gray-300 rounded-lg outline-none focus:shadow-lg focus:border-gray-400"
             />
           </div>
@@ -65,6 +66,7 @@ export function RegisterRow() {
             <input
               type="text"
               id="lastName"
+              placeholder="Enter your last name"
               {...register("lastName")}
               className="py-2 px-3 border border-gray-300 rounded-lg outline-none focus:shadow-lg  focus:border-gray-400 duration-200"
             />
@@ -76,6 +78,7 @@ export function RegisterRow() {
           <input
             type="email"
             id="email"
+            placeholder="example@email.com"
             {...register("email")}
             className="py-2 px-3 border border-gray-300 rounded-lg outline-none focus:shadow-lg  focus:border-gray-400 duration-200"
           />
@@ -86,6 +89,7 @@ export function RegisterRow() {
           <input
             type="password"
             id="password"
+            placeholder="Enter your password"
             {...register("password")}
             className="py-2 px-3 border border-gray-300 rounded-lg outline-none focus:shadow-lg  focus:border-gray-400 duration-200"
           />
@@ -94,7 +98,7 @@ export function RegisterRow() {
         <div>
           <Button
             disabled={isSubmitting}
-            className="space-x-2 w-full bg-green-600 hover:bg-green-600 active:bg-green-600/60 disabled:cursor-not-allowed active:scale-[.98]"
+            className="space-x-2 w-full bg-gradient-to-br from-green-600 via-green-500 to-green-400  active:from-green-300 active:via-green-300 active:to-green-300 active:scale-[.98]"
           >
             {isSubmitting ? (
               <Loader2 size={15} className="animate-spin" />

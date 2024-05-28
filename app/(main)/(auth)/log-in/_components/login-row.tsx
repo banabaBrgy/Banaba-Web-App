@@ -38,6 +38,7 @@ export function LoginRow() {
             type="email"
             id="email"
             name="email"
+            placeholder="example@email.com"
             required
             className="py-2 px-3 border border-gray-300 rounded-lg outline-none focus:shadow-lg  focus:border-gray-400 duration-200"
           />
@@ -49,6 +50,7 @@ export function LoginRow() {
             type="password"
             id="password"
             name="password"
+            placeholder="Enter your password"
             required
             className="py-2 px-3 border border-gray-300 rounded-lg outline-none focus:shadow-lg  focus:border-gray-400 duration-200"
           />
@@ -57,7 +59,7 @@ export function LoginRow() {
         <div>
           <Button
             disabled={isPending}
-            className="space-x-2 w-full bg-green-600 hover:bg-green-600 active:bg-green-600/60 disabled:cursor-not-allowed"
+            className="space-x-2 w-full bg-gradient-to-br from-green-600 via-green-500 to-green-400  active:from-green-300 active:via-green-300 active:to-green-300 active:scale-[.98]"
           >
             {isPending ? (
               <Loader2 size={15} className="animate-spin" />

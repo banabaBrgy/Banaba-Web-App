@@ -1,13 +1,9 @@
-import React, { ReactNode } from "react";
 import { Navbar } from "@/components/navbar";
+import React, { ReactNode } from "react";
 import { Sidebar } from "./_components/sidebar";
 import { getUser } from "@/lib/user";
 
-export default async function ResidentLayout({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export default async function Layout({ children }: { children: ReactNode }) {
   const user = await getUser();
 
   return (

@@ -30,7 +30,7 @@ export default function FaqPage() {
       <div className="max-w-[65rem] mx-auto px-3">
         <form onSubmit={handleSubmit} className="space-y-3">
           <Textarea name="question" placeholder="Ask your question here..." />
-          <Button className="w-full bg-gray-100 hover:bg-gray-200 border border-gray-300 text-black shadow-sm">
+          <Button className="w-full bg-gradient-to-tr from-green-600 via-green-500 to-green-400 hover:bg-gray-200 border border-gray-300 text-white shadow-sm">
             ADD YOUR QUESTIONS
           </Button>
         </form>

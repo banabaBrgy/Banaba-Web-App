@@ -31,3 +31,26 @@ function omitPassword(x: any) {
     delete x.password;
   }
 }
+
+export interface UserType {
+  id: string;
+  fullName: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  mobile: string | null;
+  birthDate: string | null;
+  age: number | null;
+  gender: string | null;
+  civilStatus: string | null;
+  placeOfBirth: string | null;
+  sitioPurok: string | null;
+  profile: string | null;
+  role: string;
+  isEmailVerified: Date | null;
+  verificationCode: string | null;
+  expiresAt: bigint | null;
+  createdAt: Date;
+  updatedAt: Date;
+}

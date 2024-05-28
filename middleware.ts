@@ -1,12 +1,14 @@
 import { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
-  const { nextUrl } = req;
+  const {
+    nextUrl: { pathname },
+  } = req;
   const access_token = req.cookies.get("token")?.value;
+  const protectResidentRoute = pathname.startsWith("/resident");
+  const protectAdminRoute = pathname.startsWith("/admin");
 
-  const securedRoute = ["/resident", "/admin"];
-
-  if (!access_token && securedRoute.includes(nextUrl.pathname)) {
+  if (!access_token && (protectAdminRoute || protectResidentRoute)) {
     return Response.redirect(new URL("/log-in", req.url));
   }
 }
