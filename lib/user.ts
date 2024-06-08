@@ -38,7 +38,6 @@ export interface UserType {
   firstName: string;
   lastName: string;
   email: string;
-  password: string;
   mobile: string | null;
   birthDate: string | null;
   age: number | null;

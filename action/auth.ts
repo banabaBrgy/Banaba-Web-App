@@ -181,6 +181,10 @@ async function sendEmailVerificationCode(
   }
 }
 
+export async function logout() {
+  cookies().delete("token");
+}
+
 // fortgot password
 
 export async function sendEmailForgotPassword(email: string) {

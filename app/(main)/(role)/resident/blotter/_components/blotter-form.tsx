@@ -61,7 +61,7 @@ export default function BlotterForm() {
           name="barangay-purok-sitio"
           placeholder="Enter your Barangay/Purok/Sitio"
         />
-        <div className="grid grid-cols-2 gap-4 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
           <InputAndLabel
             label="Incident"
             type="text"
@@ -94,7 +94,7 @@ export default function BlotterForm() {
 
         <Map />
 
-        <div className="grid grid-cols-2 gap-4 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
           <InputAndLabel
             label="Date/Time"
             type="datetime-local"

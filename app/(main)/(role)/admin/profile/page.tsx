@@ -1,6 +1,6 @@
+import { ProfileForm } from "@/components/profile-form";
 import { getUser } from "@/lib/user";
 import React from "react";
-import { ProfileForm } from "@/components/profile-form";
 
 export default async function ProfilePage() {
   const user = await getUser();

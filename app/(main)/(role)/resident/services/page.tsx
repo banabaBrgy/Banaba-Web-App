@@ -27,7 +27,7 @@ export default function ServicesPage() {
           <Textarea rows={10} placeholder="Enter purposes" />
         </div>
 
-        <Button className="w-full bg-gradient-to-tr from-green-600 via-green-500 to-green-400 uppercase">
+        <Button className="w-full uppercase bg-gradient-to-tr from-green-600 via-green-500 to-green-400">
           Submit
         </Button>
       </form>

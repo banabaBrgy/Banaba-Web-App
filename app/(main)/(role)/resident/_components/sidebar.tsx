@@ -9,11 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect } from "react";
-import {
-  MdDashboard,
-  MdAnnouncement,
-  MdOutlinePendingActions,
-} from "react-icons/md";
+import { MdDashboard, MdAnnouncement } from "react-icons/md";
 import { FaClipboardList, FaFileAlt } from "react-icons/fa";
 import { RiInkBottleFill, RiQuestionFill } from "react-icons/ri";
 import { GrServices } from "react-icons/gr";
@@ -83,20 +79,26 @@ export function Sidebar({ user }: SidebarProp) {
         </Button>
       </div>
 
-      <div className="flex items-center gap-2 mt-5">
-        <Link href="/resident/profile" className="active:scale-[.95]">
+      <div className="flex items-center gap-3 mt-5">
+        <Link
+          href="/resident/profile"
+          className="relative active:scale-[.95] shrink-0"
+        >
           <Image
-            src={user?.profile || "https://via.placeholder.com/400x400"}
+            src={user?.profile || "/no-profile.webp"}
             alt="profile"
             width={300}
             height={200}
             priority
-            className="w-12 h-12 rounded-full"
+            className="w-12 h-12 object-cover rounded-full"
           />
+          {/*  <span className="absolute -top-1 right-1 bg-red-500 p-[7px] rounded-full" /> */}
         </Link>
 
-        <div className="space-y-1">
-          <p className="font-semibold text-lg">{user?.firstName}</p>
+        <div className="space-y-1 flex-1">
+          <p className="font-semibold text-lg break-words break-all line-clamp-1">
+            {user?.firstName}
+          </p>
           <p className="text-xs">{user?.role}</p>
         </div>
       </div>

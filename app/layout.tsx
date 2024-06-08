@@ -3,6 +3,7 @@ import { Open_Sans } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import "react-calendar/dist/Calendar.css";
 import "./globals.css";
+import { EdgeStoreProvider } from "@/lib/edgestore";
 
 const font = Open_Sans({
   weight: ["300", "400", "700", "800"],
@@ -23,7 +24,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={font.className}>
         <Toaster />
-        {children}
+        <EdgeStoreProvider>{children}</EdgeStoreProvider>
       </body>
     </html>
   );

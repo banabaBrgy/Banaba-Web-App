@@ -81,12 +81,8 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: rgb(152, 152, 152);
+  background-color: rgb(215, 215, 215);
   border-radius: 1000px;
-}
-
-::-webkit-scrollbar-track {
-  background-color: rgb(233, 233, 233);
 }
 
 .sidebar::-webkit-scrollbar {

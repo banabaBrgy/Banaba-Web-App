@@ -47,7 +47,7 @@ export default async function ResidentPage() {
           <div
             key={idx}
             className={cn(
-              "flex items-center justify-center p-4 rounded-lg",
+              "flex items-center justify-center py-6 px-2 rounded-md",
               item.bg
             )}
           >
@@ -64,7 +64,7 @@ export default async function ResidentPage() {
 
       <div
         style={{ boxShadow: "1px 1px 10px rgba(0, 0, 0, .2)" }}
-        className="space-y-4 mt-4 p-4 rounded-lg bg-white"
+        className="space-y-4 mt-4 p-4 rounded-md bg-white"
       >
         <iframe
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3874.431479607053!2d121.0643701742192!3d13.81310989587289!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33bd0fcd69c6b5a5%3A0x336c8e16b2e275ee!2sBANABA%20EAST%2C%20BARANGAY%20HALL!5e0!3m2!1sen!2sph!4v1716447741892!5m2!1sen!2sph"
@@ -78,9 +78,9 @@ export default async function ResidentPage() {
 
       <div
         style={{ boxShadow: "1px 1px 10px rgba(0, 0, 0, .2)" }}
-        className="flex sm:flex-row flex-col gap-4 mt-4 p-4"
+        className="flex sm:flex-row flex-col gap-4 mt-4 p-4 bg-gradient-to-tr from-yellow-600 via-yellow-500 to-yellow-400 rounded-md"
       >
-        <div className="flex flex-col items-center justify-center gap-2 p-10 sm:basis-[23rem] border border-gray-300 rounded-lg bg-gradient-to-tr from-yellow-600 via-yellow-500 to-yellow-400 text-white animate-in">
+        <div className="flex flex-col items-center justify-center gap-2 p-10 sm:basis-[23rem] text-white animate-in">
           <p className="font-semibold uppercase text-3xl">{day}</p>
           <p className="text-7xl font-semibold text-red-500">
             {month.split(" ")[1]}
@@ -90,7 +90,7 @@ export default async function ResidentPage() {
 
         <Calendar
           defaultValue={new Date()}
-          className="border-none p-4 rounded-lg flex-1 w-full"
+          className="border-none p-4 rounded-md flex-1 w-full"
         />
       </div>
     </div>

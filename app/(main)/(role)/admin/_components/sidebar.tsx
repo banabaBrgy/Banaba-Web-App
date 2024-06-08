@@ -44,7 +44,7 @@ export function Sidebar({ user }: SidebarProp) {
       icon: <FaFileLines size={18} />,
     },
     {
-      id: "/admin/docuement-request",
+      id: "/admin/document-request",
       name: "Document Request",
       icon: <IoDocumentAttachSharp size={20} />,
     },
@@ -130,15 +130,15 @@ export function Sidebar({ user }: SidebarProp) {
         </Button>
       </div>
 
-      <div className="flex items-center gap-2 mt-5">
-        <Link href="/resident/profile" className="active:scale-[.95]">
+      <div className="flex items-center gap-3 mt-5">
+        <Link href="/admin/profile" className="active:scale-[.95]">
           <Image
-            src={user?.profile || "https://via.placeholder.com/400x400"}
+            src={user?.profile || "/no-profile.webp"}
             alt="profile"
             width={300}
             height={200}
             priority
-            className="w-12 h-12 rounded-full"
+            className="w-12 h-12 object-cover rounded-full"
           />
         </Link>
 

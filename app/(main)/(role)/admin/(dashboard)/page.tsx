@@ -42,14 +42,14 @@ export default function AdminPage() {
 
   return (
     <div className="md:px-4 px-3 py-4">
-      <h1 className="text-lg uppercase">Dashboard</h1>
+      <h1 className="text-2xl font-semibold">Dashboard</h1>
 
       <div className="grid md:grid-cols-4 min-[500px]:grid-cols-2 grid-cols-1 gap-3 mt-4 text-white">
         {dashBoard.map((item, idx) => (
           <div
             key={idx}
             className={cn(
-              "flex items-center justify-center p-4 rounded-lg",
+              "flex items-center justify-center py-6 px-2 rounded-md",
               item.bg
             )}
           >
@@ -68,9 +68,9 @@ export default function AdminPage() {
 
       <div
         style={{ boxShadow: "1px 1px 10px rgba(0, 0, 0, .2)" }}
-        className="flex sm:flex-row flex-col gap-4 mt-4 p-4"
+        className="flex sm:flex-row flex-col gap-4 mt-4 p-4 bg-gradient-to-tr from-yellow-600 via-yellow-500 to-yellow-400 rounded-md"
       >
-        <div className="flex flex-col items-center justify-center gap-2 p-10 sm:basis-[23rem] border border-gray-300 rounded-lg bg-gradient-to-tr from-yellow-600 via-yellow-500 to-yellow-400 text-white animate-in">
+        <div className="flex flex-col items-center justify-center gap-2 p-10 sm:basis-[23rem] text-white animate-in">
           <p className="font-semibold uppercase text-3xl">{day}</p>
           <p className="text-7xl font-semibold text-red-500">
             {month.split(" ")[1]}
@@ -80,7 +80,7 @@ export default function AdminPage() {
 
         <Calendar
           defaultValue={new Date()}
-          className="border-none p-4 rounded-lg flex-1 w-full"
+          className="border-none p-4 rounded-md flex-1 w-full"
         />
       </div>
     </div>

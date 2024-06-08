@@ -36,7 +36,9 @@ export function Navbar() {
     <nav
       className={cn(
         "fixed top-0 inset-x-0 h-14 flex justify-between px-3 z-[1000] text-white",
-        pathname === "/" ? "bg-green-500/70" : "bg-green-500"
+        pathname === "/"
+          ? "bg-gradient-to-br from-green-600/70 via-green-500/70 to-green-400/70"
+          : "bg-gradient-to-br from-green-600 via-green-500 to-green-400"
       )}
     >
       <div
@@ -72,7 +74,13 @@ export function Navbar() {
               pathname === links.id && "bg-green-700"
             )}
           >
-            {links.name}
+            <p
+              className={cn(
+                pathname === links.id && "scale-[.90] duration-200"
+              )}
+            >
+              {links.name}
+            </p>
           </Link>
         ))}
       </div>
