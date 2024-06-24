@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { GiQuillInk, GiTimeTrap } from "react-icons/gi";
 import { PiUsersThreeFill } from "react-icons/pi";
 import { FaVoteYea } from "react-icons/fa";
-import Calendar from "react-calendar";
+import ReactBigCalendar from "@/components/react-big-calendar";
 const Graph = dynamic(() => import("./_components/graph"), { ssr: false });
 
 export default function AdminPage() {
@@ -65,24 +65,7 @@ export default function AdminPage() {
       </div>
 
       <Graph />
-
-      <div
-        style={{ boxShadow: "1px 1px 10px rgba(0, 0, 0, .2)" }}
-        className="flex sm:flex-row flex-col gap-4 mt-4 p-4 bg-gradient-to-tr from-yellow-600 via-yellow-500 to-yellow-400 rounded-md"
-      >
-        <div className="flex flex-col items-center justify-center gap-2 p-10 sm:basis-[23rem] text-white animate-in">
-          <p className="font-semibold uppercase text-3xl">{day}</p>
-          <p className="text-7xl font-semibold text-red-500">
-            {month.split(" ")[1]}
-          </p>
-          <p className="font-semibold text-2xl">{year}</p>
-        </div>
-
-        <Calendar
-          defaultValue={new Date()}
-          className="border-none p-4 rounded-md flex-1 w-full"
-        />
-      </div>
+      <ReactBigCalendar />
     </div>
   );
 }

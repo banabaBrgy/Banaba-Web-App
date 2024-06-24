@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { useShowAssistant } from "@/utils/zustand";
 import { AlignJustify } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,6 +10,8 @@ import React from "react";
 
 export function Navbar() {
   const pathname = usePathname();
+  const showAssistant = useShowAssistant();
+
   const navLinks = [
     {
       id: "/",
@@ -36,9 +39,7 @@ export function Navbar() {
     <nav
       className={cn(
         "fixed top-0 inset-x-0 h-14 flex justify-between px-3 z-[1000] text-white",
-        pathname === "/"
-          ? "bg-gradient-to-br from-green-600/70 via-green-500/70 to-green-400/70"
-          : "bg-gradient-to-br from-green-600 via-green-500 to-green-400"
+        pathname === "/" ? "bg-green-500/50 backdrop-blur-sm" : "bg-green-500"
       )}
     >
       <div
@@ -53,36 +54,44 @@ export function Navbar() {
           width={400}
           height={399}
           priority
-          className="w-11 h-11 rounded-full"
+          className="slide-down w-11 h-11 rounded-full"
         />
-        <h1 className="uppercase font-medium sm:block hidden">
+        <h1 className="slide-down uppercase font-medium sm:block hidden">
           Barangay Banaba East Batangas City
         </h1>
       </div>
 
-      <div className="flex items-center">
+      <div className="slide-down flex items-center">
         <AlignJustify className="lg:hidden block" />
       </div>
 
-      <div className="lg:flex hidden items-center">
-        {navLinks.map((links) => (
+      <div className="slide-down lg:flex hidden items-center">
+        {navLinks.map((link) => (
           <Link
-            key={links.id}
-            href={links.id}
+            key={link.id}
+            href={link.id}
             className={cn(
               "flex items-center uppercase text-xs h-full px-3",
-              pathname === links.id && "bg-green-700"
+              pathname === link.id && "bg-green-700"
             )}
           >
             <p
-              className={cn(
-                pathname === links.id && "scale-[.90] duration-200"
-              )}
+              className={cn(pathname === link.id && "scale-[.90] duration-200")}
             >
-              {links.name}
+              {link.name}
             </p>
           </Link>
         ))}
+
+        <Image
+          src="/assistant-logo.png"
+          alt="assistant-logo"
+          width={200}
+          height={200}
+          priority
+          onClick={() => showAssistant.setOpen()}
+          className="w-10 h-10 active:scale-[.95] cursor-pointer"
+        />
       </div>
     </nav>
   );

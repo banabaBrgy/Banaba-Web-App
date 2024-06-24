@@ -51,7 +51,10 @@ export default function ServicePage() {
       <div className="flex flex-col gap-y-8 max-w-[80rem] mx-auto px-3 mt-14">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-y-10">
           {ourServices.map((item, index) => (
-            <div key={index} className="flex flex-col items-center gap-2">
+            <div
+              key={index}
+              className="slide-up flex flex-col items-center gap-2"
+            >
               <div className="flex flex-col items-center gap-2">
                 <div>{item.icon}</div>
                 <h1 className="md:text-lg font-extrabold text-gray-700 text-center">
@@ -67,9 +70,7 @@ export default function ServicePage() {
         </div>
 
         <div className="flex justify-center mt-10">
-          <Button className="py-6 px-20 uppercase bg-gray-100 border border-gray-300 hover:bg-gray-200 shadow-sm text-black">
-            Apply now
-          </Button>
+          <Button className="slide-up py-6 px-20 uppercase">Apply now</Button>
         </div>
       </div>
 

@@ -4,7 +4,7 @@ import { GiQuillInk, GiTimeTrap } from "react-icons/gi";
 import { BiSolidUserCheck } from "react-icons/bi";
 import { cn } from "@/lib/utils";
 import { CountUpAnimation } from "@/components/count-up-animation";
-import Calendar from "react-calendar";
+import ReactBigCalendar from "@/components/react-big-calendar";
 
 export default async function ResidentPage() {
   const dashBoard = [
@@ -34,13 +34,9 @@ export default async function ResidentPage() {
     },
   ];
 
-  const [day, month, year] = new Date()
-    .toLocaleDateString([], { dateStyle: "full" })
-    .split(", ");
-
   return (
     <div className="md:px-4 px-3 py-4">
-      <h1 className="text-lg uppercase">Dashboard</h1>
+      <h1 className="font-semibold text-xl">Dashboard</h1>
 
       <div className="grid md:grid-cols-4 min-[500px]:grid-cols-2 grid-cols-1 gap-3 mt-4 text-white">
         {dashBoard.map((item, idx) => (
@@ -76,23 +72,7 @@ export default async function ResidentPage() {
         />
       </div>
 
-      <div
-        style={{ boxShadow: "1px 1px 10px rgba(0, 0, 0, .2)" }}
-        className="flex sm:flex-row flex-col gap-4 mt-4 p-4 bg-gradient-to-tr from-yellow-600 via-yellow-500 to-yellow-400 rounded-md"
-      >
-        <div className="flex flex-col items-center justify-center gap-2 p-10 sm:basis-[23rem] text-white animate-in">
-          <p className="font-semibold uppercase text-3xl">{day}</p>
-          <p className="text-7xl font-semibold text-red-500">
-            {month.split(" ")[1]}
-          </p>
-          <p className="font-semibold text-2xl">{year}</p>
-        </div>
-
-        <Calendar
-          defaultValue={new Date()}
-          className="border-none p-4 rounded-md flex-1 w-full"
-        />
-      </div>
+      <ReactBigCalendar />
     </div>
   );
 }

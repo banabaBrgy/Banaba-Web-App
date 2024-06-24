@@ -3,6 +3,9 @@
 import { getUser } from "@/lib/user";
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
+import crypto from "crypto";
+import nodemailer from "nodemailer";
+import bcrypt from "bcrypt";
 
 export async function editProfile(
   formData: FormData,
@@ -13,8 +16,6 @@ export async function editProfile(
   const {
     firstName,
     lastName,
-    email,
-    mobile,
     birthDate,
     age,
     gender,
@@ -24,17 +25,6 @@ export async function editProfile(
   } = Object.fromEntries(formData.entries()) as any;
 
   try {
-    if (user?.email !== email) {
-      await db.user.update({
-        where: {
-          id: user?.id,
-        },
-        data: {
-          isEmailVerified: null,
-        },
-      });
-    }
-
     await db.user.update({
       where: {
         id: user?.id,
@@ -43,8 +33,6 @@ export async function editProfile(
         fullName: `${firstName} ${lastName}`,
         firstName,
         lastName,
-        email,
-        mobile,
         birthDate,
         age: parseInt(age),
         gender,
@@ -58,5 +46,196 @@ export async function editProfile(
     revalidatePath("/");
   } catch (error: any) {
     throw new Error("Error editing profile " + error.message);
+  }
+}
+
+async function sendEmailVerificationCode(email: string) {
+  try {
+    const user = await getUser();
+    const verificationCode = crypto.randomInt(100000, 999999).toString();
+    const expiresAt = new Date().getTime() + 3600 * 1000;
+
+    if (!user || !user.id) {
+      throw new Error("Unauthorized user");
+    }
+
+    if (!verificationCode || !expiresAt) {
+      throw new Error("Something went wrong");
+    }
+
+    await db.user.update({
+      where: {
+        id: user?.id as string,
+      },
+      data: {
+        verificationCode,
+        expiresAt,
+      },
+    });
+
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.MY_EMAIL,
+        pass: process.env.MY_PASSWORD,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.MY_EMAIL,
+      to: email,
+      subject: "Verification code",
+      html: `<h1>${verificationCode}</h1>`,
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Email sent: " + info.response);
+      }
+    });
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+}
+
+export async function validateEmail(email: string) {
+  try {
+    if (!email) {
+      throw new Error("Email is required");
+    }
+
+    const existed = await db.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (existed && existed.email) {
+      throw new Error("Email is already exist");
+    }
+
+    await sendEmailVerificationCode(email);
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+}
+
+export async function changeEmail(email: string, otp: string) {
+  try {
+    const user = await getUser();
+
+    const expiredVerificationCode =
+      new Date(parseInt(user?.expiresAt as any)) < new Date();
+
+    if (expiredVerificationCode) {
+      throw new Error("Verification code has expired");
+    }
+
+    if (otp !== user?.verificationCode) {
+      throw new Error("Invalid verification code");
+    }
+
+    await db.user.update({
+      where: {
+        id: user?.id,
+      },
+      data: {
+        email,
+        verificationCode: null,
+        expiresAt: null,
+        isEmailVerified: new Date(),
+      },
+    });
+
+    revalidatePath("/");
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+}
+
+export async function validateChangePassword(
+  formData: FormData,
+  sendTo: boolean
+) {
+  try {
+    const user = await getUser();
+    const currentPassword = formData.get("currentPassword") as string;
+    const newPassword = formData.get("newPassword") as string;
+    const confirmPassword = formData.get("confirmPassword") as string;
+
+    if (!user) {
+      throw new Error("Anauthorized user");
+    }
+
+    const myAccount = await db.user.findUnique({
+      where: {
+        id: user.id,
+      },
+    });
+
+    if (newPassword !== confirmPassword) {
+      throw new Error("New password and Confirm password didn't match");
+    }
+
+    if (newPassword === currentPassword) {
+      throw new Error("Please provide a stronger password");
+    }
+
+    const isPasswordMatch = await bcrypt.compare(
+      currentPassword,
+      myAccount?.password as string
+    );
+
+    if (!isPasswordMatch) {
+      throw new Error("Invalid current password");
+    }
+
+    if (sendTo === false) {
+      await sendEmailVerificationCode(user.email);
+    }
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+}
+
+export async function changePassword(newPassword: string, otp: string) {
+  try {
+    const user = await getUser();
+
+    if (!user || !user.id) {
+      throw new Error("Anauthorized user");
+    }
+
+    if (!newPassword || !otp) {
+      throw new Error("newPassword and otp is required");
+    }
+
+    const isVerificationCodeExpired =
+      new Date(parseInt(user.expiresAt as any)) < new Date();
+
+    if (isVerificationCodeExpired) {
+      throw new Error("Verification code has expired");
+    }
+
+    if (otp !== user.verificationCode) {
+      throw new Error("Invalid verification code");
+    }
+
+    const hashPassword = await bcrypt.hash(newPassword, 10);
+
+    await db.user.update({
+      where: {
+        id: user?.id,
+      },
+      data: {
+        password: hashPassword,
+        verificationCode: null,
+        expiresAt: null,
+      },
+    });
+  } catch (error: any) {
+    throw new Error(error.message);
   }
 }

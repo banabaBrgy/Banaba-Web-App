@@ -33,4 +33,63 @@ model User {
   expiresAt        BigInt?
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
+
+  myRequest       MyRequest[] @relation("RequestedBy")
+  myIssuedRequest MyRequest[] @relation("IssuedBy")
+  myInquiries     Inquiries[]
+  myBlotter       Blotter[]
+}
+
+model Blotter {
+  id                 String   @id @default(cuid())
+  userId             String
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  barangayPurokSitio String
+  incident           String
+  placeOfIncident    String
+  dateTime           String
+  witnesses          String[]
+  narrative          String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model MyRequest {
+  id            String    @id @default(cuid())
+  documentType  String
+  requestedBy   User      @relation(name: "RequestedBy", fields: [requestedById], references: [id], onDelete: Cascade)
+  requestedById String
+  purposes      String
+  issuedBy      User?     @relation(name: "IssuedBy", fields: [issuedById], references: [id], onDelete: Cascade)
+  issuedById    String?
+  dateIssued    DateTime?
+  status        String    @default("pending")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Inquiries {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Announcement {
+  id        String   @id @default(cuid())
+  about     String
+  photo     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Programs {
+  id        String   @id @default(cuid())
+  about     String
+  photo     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

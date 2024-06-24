@@ -1,15 +1,52 @@
-import dynamic from "next/dynamic";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Tabs, TabsTrigger, TabsContent, TabsList } from "@/components/ui/tabs";
 import React from "react";
-const BlotterForm = dynamic(() => import("./_components/blotter-form"), {
-  ssr: false,
-});
+import BlotterForm from "./_components/blotter-form";
+import CreatedBlotterTable from "./_components/created-blotter-table";
+import { getCreatedBlotters } from "@/lib/query/resident/blotter";
 
-export default function BlotterPage() {
+export default async function BlotterPage() {
+  const createdBlotters = await getCreatedBlotters();
+
   return (
     <div className="md:px-4 px-3 py-4">
-      <h1 className="text-lg uppercase">Blotter Information Form</h1>
+      <Tabs defaultValue="create">
+        <TabsList className="w-full">
+          <TabsTrigger value="create" className="w-full">
+            Create blotter
+          </TabsTrigger>
+          <TabsTrigger value="created" className="w-full">
+            Created blotter
+          </TabsTrigger>
+        </TabsList>
 
-      <BlotterForm />
+        <TabsContent value="create">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg uppercase">
+                Blotter Information Form
+              </CardTitle>
+              <CardDescription>
+                Fill all information to submit your blotter
+              </CardDescription>
+            </CardHeader>
+
+            <CardContent>
+              <BlotterForm />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="created">
+          <CreatedBlotterTable createdBlotters={createdBlotters} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

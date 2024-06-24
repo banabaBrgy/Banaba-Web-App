@@ -5,13 +5,13 @@ import { Input } from "@/components/ui/input";
 import { UserType } from "@/lib/user";
 import Image from "next/image";
 import React, { Fragment, useState, useTransition } from "react";
-import { MdVerifiedUser } from "react-icons/md";
 import { RiUploadCloud2Fill } from "react-icons/ri";
 import { logout } from "@/action/auth";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { CircleAlert, Loader2 } from "lucide-react";
 import { editProfile } from "@/action/profile";
 import { useEdgeStore } from "@/lib/edgestore";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface ProfileFormProp {
   user: UserType | null;
@@ -25,22 +25,37 @@ export function ProfileForm({ user }: ProfileFormProp) {
 
   function handleFormAction(formData: FormData) {
     setTransition(async () => {
-      const res = profile
-        ? await edgestore.publicFiles.upload({
+      try {
+        let res;
+
+        if (profile) {
+          res = await edgestore.publicFiles.upload({
             file: profile as File,
             options: {
               replaceTargetUrl: (user?.profile as string) || "",
             },
-          })
-        : null;
+          });
+        }
 
-      const url = res?.url || user?.profile;
+        const url = res?.url || user?.profile;
 
-      editProfile(formData, url).then(() => {
-        toast.success("Save changes successfully");
-      });
+        await editProfile(formData, url).then(() => {
+          toast.success("Save changes successfully");
+          setProfile(null);
+        });
+      } catch (error: any) {
+        toast.error(error.message.replace("2097152", "2mb"));
+      }
     });
   }
+
+  const missingInfo =
+    !user?.birthDate ||
+    !user?.age ||
+    !user?.gender ||
+    !user?.civilStatus ||
+    !user?.placeOfBirth ||
+    !user?.sitioPurok;
 
   return (
     <Fragment>
@@ -66,7 +81,16 @@ export function ProfileForm({ user }: ProfileFormProp) {
         </div>
       </div>
 
-      <div className="w-full mt-3">
+      <div className="w-full">
+        {missingInfo && (
+          <Alert className="mb-5 px-4 py-2" variant="destructive">
+            <AlertDescription className="flex items-center gap-3">
+              <CircleAlert className="h-4 w-4 shrink-0" />
+              Complete your profile information.
+            </AlertDescription>
+          </Alert>
+        )}
+
         <form
           action={handleFormAction}
           className="grid grid-cols-1 sm:grid-cols-2 gap-4"
@@ -96,47 +120,6 @@ export function ProfileForm({ user }: ProfileFormProp) {
               id="lastName"
               defaultValue={user?.lastName}
               placeholder="Enter your last name"
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <div className="flex items-center justify-between mt-1">
-              <label htmlFor="email" className="text-sm">
-                Email address
-              </label>
-
-              {user?.isEmailVerified ? (
-                <span className="flex items-center gap-1 text-xs">
-                  Verified <MdVerifiedUser className="text-green-500" />
-                </span>
-              ) : (
-                <button type="button" className="text-red-500 text-xs">
-                  Verify
-                </button>
-              )}
-            </div>
-            <Input
-              type="email"
-              name="email"
-              id="email"
-              defaultValue={user?.email}
-              placeholder="Enter your email address"
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label htmlFor="mobile" className="text-sm">
-              Mobile number
-            </label>
-            <Input
-              type="tel"
-              pattern="[0-9]{4}[0-9]{3}[0-9]{4}"
-              name="mobile"
-              id="mobile"
-              defaultValue={user?.mobile || ""}
-              placeholder="Enter your mobile number"
               required
             />
           </div>
@@ -231,7 +214,10 @@ export function ProfileForm({ user }: ProfileFormProp) {
             />
           </div>
 
-          <Button disabled={pending} className="uppercase sm:col-span-2 mt-3">
+          <Button
+            disabled={pending || !user}
+            className="uppercase sm:col-span-2 mt-3"
+          >
             {pending ? <Loader2 className="animate-spin" /> : "Save changes"}
           </Button>
         </form>
@@ -244,7 +230,7 @@ export function ProfileForm({ user }: ProfileFormProp) {
                 logout().then(() => window.location.reload())
               )
             }
-            className="text-red-500"
+            className="uppercase text-red-500"
           >
             {pendingLogout ? <Loader2 className="animate-spin" /> : "Log out"}
           </button>

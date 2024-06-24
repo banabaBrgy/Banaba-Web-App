@@ -39,11 +39,11 @@ export default function AboutUsPage() {
         </h1>
       </div>
 
-      <div className="mx-3 mb-10">
+      <div className="slide-up mx-3 mb-10">
         <SwiperOfficials />
       </div>
 
-      <div className="flex lg:flex-row flex-col justify-center lg:items-stretch items-center gap-5 mx-3">
+      <div className="slide-up flex lg:flex-row flex-col justify-center lg:items-stretch items-center gap-5 mx-3">
         <div className="flex flex-col flex-1 max-w-[28rem] rounded-md shadow-md bg-white border border-gray-300">
           <h1 className="text-center uppercase mb-8 pt-5 px-5">
             Physical & Demographic Characteristics
@@ -109,7 +109,7 @@ export default function AboutUsPage() {
         </div>
       </div>
 
-      <div className="flex justify-center bg-white border border-gray-300 mt-8 p-3 shadow-md">
+      <div className="slide-up flex justify-center bg-white border border-gray-300 mt-8 p-3 shadow-md">
         <div className="flex md:flex-row flex-col gap-10 flex-1 max-w-[55rem]">
           <div className="flex md:flex-col md:items-stretch sm:flex-row flex-col items-center justify-center gap-3 shrink-0">
             <Image

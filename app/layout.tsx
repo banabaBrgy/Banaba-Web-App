@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
-import { Open_Sans } from "next/font/google";
+import { Inter as FontSans } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
-import "react-calendar/dist/Calendar.css";
 import "./globals.css";
+import "./animation.css";
 import { EdgeStoreProvider } from "@/lib/edgestore";
+import ProgressBarProvider from "@/utils/progressbar-provider";
+import { cn } from "@/lib/utils";
 
-const font = Open_Sans({
-  weight: ["300", "400", "700", "800"],
+const font = FontSans({
   subsets: ["latin"],
+  variable: "--font-sans",
 });
 
 export const metadata: Metadata = {
@@ -22,9 +24,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={font.className}>
-        <Toaster />
-        <EdgeStoreProvider>{children}</EdgeStoreProvider>
+      <body
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          font.variable
+        )}
+      >
+        <EdgeStoreProvider>
+          <ProgressBarProvider>
+            <Toaster richColors />
+            {children}
+          </ProgressBarProvider>
+        </EdgeStoreProvider>
       </body>
     </html>
   );

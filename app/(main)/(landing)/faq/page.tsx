@@ -28,14 +28,12 @@ export default function FaqPage() {
       </div>
 
       <div className="max-w-[65rem] mx-auto px-3">
-        <form onSubmit={handleSubmit} className="space-y-3">
+        <form onSubmit={handleSubmit} className="slide-up space-y-3">
           <Textarea name="question" placeholder="Ask your question here..." />
-          <Button className="w-full bg-gradient-to-tr from-green-600 via-green-500 to-green-400 hover:bg-gray-200 border border-gray-300 text-white shadow-sm">
-            ADD YOUR QUESTIONS
-          </Button>
+          <Button className="w-full shadow-sm">ADD YOUR QUESTIONS</Button>
         </form>
 
-        <div className="grid md:grid-cols-2 gap-2 mt-4">
+        <div className="slide-up grid md:grid-cols-2 gap-2 mt-4">
           {question.map((item, index) => (
             <div
               key={index}

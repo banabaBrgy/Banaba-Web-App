@@ -10,7 +10,7 @@ export function Footer() {
   if (pathname === "/") return;
 
   return (
-    <footer className="flex justify-between pb-8 pt-14 px-3 bg-[#EBEBEB]">
+    <footer className="flex justify-between py-8 px-3 bg-[#EBEBEB]">
       <div className="flex flex-col items-center gap-2">
         <Image
           src="/logo.png"

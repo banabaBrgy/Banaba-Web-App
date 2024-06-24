@@ -34,7 +34,7 @@ export default function HealthCenterPage() {
         </h1>
       </div>
 
-      <div className="flex lg:flex-row lg:items-stretch items-center flex-col gap-4 mt-10 px-3 max-w-[72.5rem] mx-auto">
+      <div className="slide-up flex lg:flex-row lg:items-stretch items-center flex-col gap-4 mt-10 px-3 max-w-[72.5rem] mx-auto">
         <div className="shrink-0 rounded-md overflow-hidden shadow-md border border-gray-300">
           <Image
             src="/health-center.jpg"
@@ -60,7 +60,7 @@ export default function HealthCenterPage() {
       </div>
 
       <div className="flex justify-center lg:flex-row lg:items-start items-center flex-col gap-5 mt-12 mx-3">
-        <div className="w-full max-w-[48rem] border border-gray-300 rounded-md overflow-hidden shadow-md bg-white">
+        <div className="slide-up w-full max-w-[48rem] border border-gray-300 rounded-md overflow-hidden shadow-md bg-white">
           <h1 className="uppercase text-center p-6 bg-green-500 text-white">
             Programs
           </h1>
@@ -135,7 +135,7 @@ export default function HealthCenterPage() {
           </div>
         </div>
 
-        <div className="bg-white px-4 py-5 max-w-[22rem] shrink-0 rounded-md shadow-md border border-gray-300">
+        <div className="slide-up bg-white px-4 py-5 max-w-[22rem] shrink-0 rounded-md shadow-md border border-gray-300">
           <div className="flex justify-center gap-3 mb-2">
             <Image
               src="/DOH-logo.png"

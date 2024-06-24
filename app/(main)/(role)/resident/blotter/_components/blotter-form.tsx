@@ -1,11 +1,15 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import React, { useState } from "react";
+import React, { ChangeEvent, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
-import ReactQuill from "react-quill";
+import { toast } from "sonner";
+import { Loader2, X } from "lucide-react";
+import { createBlotter } from "@/action/resident/blotter";
+import ReactToPrint from "@/components/react-to-print";
+import dynamic from "next/dynamic";
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
-import { Map } from "./map";
 
 const modules = {
   toolbar: [
@@ -49,115 +53,195 @@ const formats = [
 ];
 
 export default function BlotterForm() {
-  const [value, setValue] = useState("");
+  const [pending, setTransition] = useTransition();
+  const [value, setValue] = useState({
+    barangayPurokSitio: "",
+    incident: "",
+    placeOfIncident: "",
+    dateTime: "",
+    witnesses: [""],
+    narrative: "",
+  });
+
+  function onChangeWitnesses(e: ChangeEvent<HTMLInputElement>, idx: number) {
+    const { value } = e.target;
+
+    setValue((prev) => ({
+      ...prev,
+      witnesses: prev.witnesses.map((w, i) => (i === idx ? value : w)),
+    }));
+  }
+
+  function onAddWitnesses() {
+    setValue((prev) => ({
+      ...prev,
+      witnesses: [...prev.witnesses, ""],
+    }));
+  }
+
+  function onCreateBlotter() {
+    if (!value.narrative) {
+      toast.error("Narrative is required");
+    }
+
+    setTransition(async () => {
+      await createBlotter(value)
+        .then(() => {
+          toast.success("Blotter created successfully");
+          setValue((prev) => ({
+            ...prev,
+            barangayPurokSitio: "",
+            incident: "",
+            placeOfIncident: "",
+            dateTime: "",
+            witnesses: [""],
+            narrative: "",
+          }));
+        })
+        .catch((error) => toast.error(error.message));
+    });
+  }
 
   return (
     <div>
-      <form action="" className="mt-4">
-        <InputAndLabel
-          label="Barangay/purok/sitio"
-          type="text"
-          id="barangay-purok-sitio"
-          name="barangay-purok-sitio"
-          placeholder="Enter your Barangay/Purok/Sitio"
-        />
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-          <InputAndLabel
-            label="Incident"
+      <form action={onCreateBlotter} className="mt-4">
+        <div className="space-y-2">
+          <label htmlFor="barangayPurokSitio" className="text-sm">
+            Barangay/purok/sitio
+          </label>
+          <Input
             type="text"
-            id="incident"
-            name="incident"
-            placeholder="Enter Incident"
-          />
-          <InputAndLabel
-            label="Place of Incident"
-            type="text"
-            id="place-of-incident"
-            name="place-of-incident"
-            placeholder="Enter Place of Incident"
-          />
-          <InputAndLabel
-            label="Longitude"
-            type="text"
-            id="longitude"
-            name="longitude"
-            placeholder="Enter longitude"
-          />
-          <InputAndLabel
-            label="Latitude"
-            type="text"
-            id="latitude"
-            name="latitude"
-            placeholder="Enter latitude"
+            onChange={({ target }) =>
+              setValue((prev) => ({
+                ...prev,
+                barangayPurokSitio: target.value,
+              }))
+            }
+            required
+            value={value.barangayPurokSitio}
+            id="barangayPurokSitio"
+            placeholder="Enter barangay/purok/sitio"
           />
         </div>
 
-        <Map />
-
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-          <InputAndLabel
-            label="Date/Time"
+          <div className="space-y-2">
+            <label htmlFor="incident" className="text-sm">
+              Incident
+            </label>
+            <Input
+              type="text"
+              onChange={({ target }) =>
+                setValue((prev) => ({ ...prev, incident: target.value }))
+              }
+              required
+              value={value.incident}
+              id="incident"
+              placeholder="Enter incident"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="placeOfIncident" className="text-sm">
+              Place of incident
+            </label>
+            <Input
+              type="text"
+              onChange={({ target }) =>
+                setValue((prev) => ({ ...prev, placeOfIncident: target.value }))
+              }
+              required
+              value={value.placeOfIncident}
+              id="placeOfIncident"
+              placeholder="Enter place of incident"
+            />
+          </div>
+        </div>
+
+        <div className="mt-4 space-y-2">
+          <label htmlFor="dateTime" className="text-sm">
+            Date/Time
+          </label>
+          <Input
             type="datetime-local"
-            id="date-time"
-            name="date-time"
-          />
-          <InputAndLabel
-            label="Narrator/Complainant"
-            type="text"
-            id="narrator-complainant"
-            name="narrator-complainant"
-            placeholder="Enter Narrator/Complainant"
+            onChange={({ target }) =>
+              setValue((prev) => ({ ...prev, dateTime: target.value }))
+            }
+            required
+            value={value.dateTime}
+            id="dateTime"
+            placeholder="Enter date/time"
           />
         </div>
 
-        <ReactQuill
-          theme="snow"
-          value={value}
-          onChange={setValue}
-          modules={modules}
-          formats={formats}
-          bounds={".app"}
-          placeholder="Write here"
-          className="mt-4 border border-gray-100 "
-        />
-        {/* <div
+        <div className="mt-4 space-y-2">
+          <label htmlFor="witnesses" className="text-sm">
+            Witnesses <span className="text-xs text-zinc-500">(optional)</span>
+          </label>
+          {value.witnesses.map((item, idx) => (
+            <div key={idx} className="flex items-center relative">
+              <Input
+                type="text"
+                onChange={(e) => onChangeWitnesses(e, idx)}
+                value={item}
+                id="witnesses"
+                className="pr-11"
+                placeholder="Enter witnesses"
+              />
+
+              {idx !== 0 && (
+                <X
+                  onClick={() =>
+                    setValue((prev) => ({
+                      ...prev,
+                      witnesses: prev.witnesses.filter((_, i) => i !== idx),
+                    }))
+                  }
+                  className="absolute right-2 rounded-full cursor-pointer scale-[.90] text-zinc-500"
+                />
+              )}
+            </div>
+          ))}
+          <Button
+            disabled={pending}
+            onClick={onAddWitnesses}
+            type="button"
+            variant="secondary"
+            className="w-full"
+          >
+            Add witnesses
+          </Button>
+        </div>
+
+        <div className="mt-4 space-y-2">
+          <label htmlFor="narrative" className="text-sm">
+            Narrative
+          </label>
+          <ReactQuill
+            theme="snow"
+            id="narrative"
+            value={value.narrative}
+            onChange={(e) => setValue((prev) => ({ ...prev, narrative: e }))}
+            modules={modules}
+            formats={formats}
+            bounds={".app"}
+            placeholder="Say something about the incident.."
+            className="border border-gray-100 rounded-md"
+          />
+          {/*  <div
           className="ql-editor"
           dangerouslySetInnerHTML={{ __html: value }}
         /> */}
+        </div>
 
-        <Button className="mt-10 w-full bg-gradient-to-tr from-green-600 via-green-500 to-green-400">
-          Submit
-        </Button>
+        <div className="flex flex-col md:flex-row items-center gap-x-4 gap-y-2 mt-4">
+          <ReactToPrint pending={pending} value={value} />
+
+          <Button disabled={pending} type="submit" className="w-full uppercase">
+            {pending ? <Loader2 className="animate-spin" /> : "Submit"}
+          </Button>
+        </div>
       </form>
-    </div>
-  );
-}
-
-function InputAndLabel({
-  label,
-  type,
-  id,
-  name,
-  placeholder,
-}: {
-  label: string;
-  type: string;
-  id: string;
-  name: string;
-  placeholder?: string;
-}) {
-  return (
-    <div className="space-y-2">
-      <label htmlFor={id} className="text-sm">
-        {label}
-      </label>
-      <Input
-        id={id}
-        name={name}
-        type={type}
-        placeholder={placeholder}
-        className="rounded-md"
-      />
     </div>
   );
 }

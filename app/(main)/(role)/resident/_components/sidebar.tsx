@@ -64,7 +64,7 @@ export function Sidebar({ user }: SidebarProp) {
   return (
     <div
       className={cn(
-        "fixed inset-y-0 bg-gradient-to-r from-green-600 via-green-500 to-green-400 text-white w-[16rem] px-5 duration-200 z-[1001]",
+        "fixed inset-y-0 bg-green-500 text-white w-[16rem] px-5 duration-200 z-[1001]",
         !isSidebarOpen ? "lg:left-0 left-[-20rem]" : "left-0"
       )}
     >

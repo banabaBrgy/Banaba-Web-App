@@ -44,17 +44,21 @@ export default async function ResidentFilesPage() {
           </thead>
           <tbody>
             {accounts.map((acc, idx) => (
-              <tr key={acc.id} className="odd:bg-[#dddddd] text-sm">
+              <tr key={acc.id} className="text-sm">
                 <td className="border border-[#dddddd] p-2">{idx + 1}</td>
                 <td className="border border-[#dddddd] p-2">{acc.fullName}</td>
                 <td className="border border-[#dddddd] p-2">{acc.email}</td>
-                <td className="border border-[#dddddd] p-2">{acc.mobile}</td>
                 <td className="border border-[#dddddd] p-2">
-                  {acc.sitioPurok}
+                  {acc.mobile || "N/A"}
                 </td>
-                <td className="border border-[#dddddd] p-2">{acc.gender}</td>
                 <td className="border border-[#dddddd] p-2">
-                  {acc.civilStatus}
+                  {acc.sitioPurok || "N/A"}
+                </td>
+                <td className="border border-[#dddddd] p-2">
+                  {acc.gender || "N/A"}
+                </td>
+                <td className="border border-[#dddddd] p-2">
+                  {acc.civilStatus || "N/A"}
                 </td>
                 <td className="border border-[#dddddd] p-2">
                   {new Date(acc.createdAt).toLocaleDateString([], {
