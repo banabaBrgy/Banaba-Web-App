@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { ElementRef, useEffect, useRef } from "react";
 import {
   Card,
   CardContent,
@@ -18,8 +18,10 @@ import { useShowAssistant } from "@/utils/zustand";
 import { usePathname } from "next/navigation";
 
 export default function Assistant() {
+  const cardRef = useRef<ElementRef<"div">>(null);
   const pathname = usePathname();
-  const showAssistant = useShowAssistant();
+  const setClose = useShowAssistant((state) => state.setClose);
+  const isOpen = useShowAssistant((state) => state.isOpen);
   const message = [
     {
       id: "user",
@@ -32,21 +34,34 @@ export default function Assistant() {
     { id: "user", content: "My Message" },
   ];
 
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (!cardRef.current?.contains(e.target as any)) {
+        setClose();
+      }
+    }
+
+    window.addEventListener("click", handleClick);
+
+    return () => window.removeEventListener("click", handleClick);
+  }, [setClose]);
+
   if (pathname === "/log-in" || pathname === "/register") return;
 
   return (
     <Card
+      ref={cardRef}
       className={cn(
-        "fixed sm:right-4 right-0 flex flex-col sm:w-[25rem] sm:h-[35rem] h-full w-full rounded-b-none sm:rounded-t-lg rounded-none z-[1010] duration-300 shadow-2xl",
-        showAssistant.isOpen ? "bottom-0" : "bottom-[-60rem]"
+        "fixed sm:right-4 right-0 flex flex-col sm:w-[26rem] sm:h-[37rem] h-full w-full rounded-b-none sm:rounded-t-lg rounded-none z-[1010] duration-300 shadow-2xl overflow-hidden",
+        isOpen ? "bottom-0" : "bottom-[-60rem]"
       )}
     >
       <CardHeader className="p-3 shadow">
         <div className="flex items-center justify-between">
           <CardTitle>Assistant</CardTitle>
           <IoChevronDownOutline
-            onClick={() => showAssistant.setClose()}
-            className="text-2xl text-zinc-400"
+            onClick={() => setClose()}
+            className="text-2xl"
             cursor="pointer"
           />
         </div>

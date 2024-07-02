@@ -24,32 +24,39 @@ export function ProfileForm({ user }: ProfileFormProp) {
   const [profile, setProfile] = useState<File | null>(null);
 
   function handleFormAction(formData: FormData) {
+    const acceptedMimeType = [
+      "image/webp",
+      "image/jpg",
+      "image/jpeg",
+      "image/png",
+    ];
+
+    if (profile && !acceptedMimeType.includes(profile?.type as string)) {
+      return toast.error("Invalid image type");
+    }
+
     setTransition(async () => {
-      try {
-        let res;
+      let res;
 
-        if (profile) {
-          res = await edgestore.publicFiles.upload({
-            file: profile as File,
-            options: {
-              replaceTargetUrl: (user?.profile as string) || "",
-            },
-          });
-        }
-
-        const url = res?.url || user?.profile;
-
-        await editProfile(formData, url).then(() => {
-          toast.success("Save changes successfully");
-          setProfile(null);
+      if (profile) {
+        res = await edgestore.publicFiles.upload({
+          file: profile as File,
+          options: {
+            replaceTargetUrl: (user?.profile as string) || "",
+          },
         });
-      } catch (error: any) {
-        toast.error(error.message.replace("2097152", "2mb"));
       }
+
+      const url = res?.url || user?.profile;
+
+      await editProfile(formData, url).then(() => {
+        toast.success("Save changes successfully");
+        setProfile(null);
+      });
     });
   }
 
-  const missingInfo =
+  const missingProfileInfo =
     !user?.birthDate ||
     !user?.age ||
     !user?.gender ||
@@ -74,6 +81,7 @@ export function ProfileForm({ user }: ProfileFormProp) {
           </label>
           <input
             type="file"
+            accept="image/webp, image/jpg, image/jpeg, image/png"
             onChange={(e) => setProfile(e.target.files?.[0] as File)}
             id="profile"
             className="hidden"
@@ -82,8 +90,11 @@ export function ProfileForm({ user }: ProfileFormProp) {
       </div>
 
       <div className="w-full">
-        {missingInfo && (
-          <Alert className="mb-5 px-4 py-2" variant="destructive">
+        {missingProfileInfo && (
+          <Alert
+            className="mb-5 px-4 py-2 bg-destructive/10"
+            variant="destructive"
+          >
             <AlertDescription className="flex items-center gap-3">
               <CircleAlert className="h-4 w-4 shrink-0" />
               Complete your profile information.
@@ -202,7 +213,7 @@ export function ProfileForm({ user }: ProfileFormProp) {
 
           <div className="space-y-2">
             <label htmlFor="sitioPurok" className="text-sm">
-              Sitio purok
+              Sitio/Purok
             </label>
             <Input
               type="text"

@@ -6,9 +6,12 @@ import { GiQuillInk, GiTimeTrap } from "react-icons/gi";
 import { PiUsersThreeFill } from "react-icons/pi";
 import { FaVoteYea } from "react-icons/fa";
 import ReactBigCalendar from "@/components/react-big-calendar";
+import { getCalendarActivities } from "@/lib/query/admin/dashboard";
 const Graph = dynamic(() => import("./_components/graph"), { ssr: false });
 
-export default function AdminPage() {
+export default async function AdminPage() {
+  const calendarActivities = await getCalendarActivities();
+
   const dashBoard = [
     {
       total: 59,
@@ -36,13 +39,9 @@ export default function AdminPage() {
     },
   ];
 
-  const [day, month, year] = new Date()
-    .toLocaleDateString([], { dateStyle: "full" })
-    .split(", ");
-
   return (
     <div className="md:px-4 px-3 py-4">
-      <h1 className="text-2xl font-semibold">Dashboard</h1>
+      <h1 className="text-lg font-semibold uppercase">Dashboard</h1>
 
       <div className="grid md:grid-cols-4 min-[500px]:grid-cols-2 grid-cols-1 gap-3 mt-4 text-white">
         {dashBoard.map((item, idx) => (
@@ -65,7 +64,8 @@ export default function AdminPage() {
       </div>
 
       <Graph />
-      <ReactBigCalendar />
+
+      <ReactBigCalendar calendarActivities={calendarActivities} />
     </div>
   );
 }

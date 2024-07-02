@@ -5,7 +5,7 @@ export function middleware(req: NextRequest) {
     nextUrl: { pathname },
   } = req;
   const access_token = req.cookies.get("token")?.value;
-  const protectResidentRoute = pathname.startsWith("/resident");
+  const protectResidentRoute = pathname.startsWith("/user");
   const protectAdminRoute = pathname.startsWith("/admin");
 
   if (!access_token && (protectAdminRoute || protectResidentRoute)) {

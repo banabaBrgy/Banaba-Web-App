@@ -25,7 +25,7 @@ export function VerificationForm({ token }: { token: string }) {
         }
 
         toast.success("Email verified");
-        router.push(data.data === "Admin" ? "/admin" : "/resident");
+        router.push(data.data === "Admin" ? "/admin" : "/user");
       });
     });
   }

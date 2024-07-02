@@ -15,39 +15,33 @@ import {
   MdOutlinePendingActions,
 } from "react-icons/md";
 import { FaFileLines } from "react-icons/fa6";
-import { IoDocumentAttachSharp, IoDocument } from "react-icons/io5";
+import { IoDocument } from "react-icons/io5";
 import { FaClipboardList } from "react-icons/fa";
 import { RiQuestionFill, RiInkBottleFill } from "react-icons/ri";
-import { TbZoomQuestionFilled } from "react-icons/tb";
 import { GrServices } from "react-icons/gr";
-import {
-  BsFillCalendar2WeekFill,
-  BsPersonFillExclamation,
-} from "react-icons/bs";
+import { BsFillCalendar2WeekFill } from "react-icons/bs";
 import { ImUsers } from "react-icons/im";
 import { AiFillLike } from "react-icons/ai";
+import { DocumentRequest } from "@prisma/client";
 
 interface SidebarProp {
   user: UserType | null;
+  pendingRequest:
+    | (DocumentRequest & {
+        requestedBy: {
+          fullName: string;
+        };
+      })[]
+    | null;
 }
 
-export function Sidebar({ user }: SidebarProp) {
+export function Sidebar({ user, pendingRequest }: SidebarProp) {
   const pathname = usePathname();
   const setOpenSidebar = useOpenSidebar((s) => s.setOpenSidebar);
   const isSidebarOpen = useOpenSidebar((s) => s.isSidebarOpen);
 
   const sidebarLinks = [
     { id: "/admin", name: "Dashboard", icon: <MdDashboard size={20} /> },
-    {
-      id: "/admin/resident-files",
-      name: "Resident Files",
-      icon: <FaFileLines size={18} />,
-    },
-    {
-      id: "/admin/document-request",
-      name: "Document Request",
-      icon: <IoDocumentAttachSharp size={20} />,
-    },
     {
       id: "/admin/announcement",
       name: "Announcement",
@@ -68,7 +62,6 @@ export function Sidebar({ user }: SidebarProp) {
       name: "Blotter",
       icon: <RiInkBottleFill size={20} />,
     },
-    { id: "/admin/faq", name: "Faq", icon: <TbZoomQuestionFilled size={20} /> },
     { id: "/admin/services", name: "Services", icon: <GrServices size={20} /> },
     {
       id: "/admin/calendar-of-activities",
@@ -90,7 +83,7 @@ export function Sidebar({ user }: SidebarProp) {
     },
   ];
 
-  const documentReport = [
+  const documentRequest = [
     {
       id: "/admin/request-approved",
       name: "Request Approved",
@@ -100,11 +93,6 @@ export function Sidebar({ user }: SidebarProp) {
       id: "/admin/request-pending",
       name: "Request Pending",
       icon: <MdOutlinePendingActions size={20} />,
-    },
-    {
-      id: "/admin/request-issued",
-      name: "Request Issued",
-      icon: <BsPersonFillExclamation size={20} />,
     },
   ];
 
@@ -131,7 +119,7 @@ export function Sidebar({ user }: SidebarProp) {
       </div>
 
       <div className="flex items-center gap-3 mt-5">
-        <Link href="/admin/profile" className="active:scale-[.95]">
+        <Link href="/admin/profile" className="relative active:scale-[.95]">
           <Image
             src={user?.profile || "/no-profile.webp"}
             alt="profile"
@@ -164,29 +152,41 @@ export function Sidebar({ user }: SidebarProp) {
       </div>
 
       <div className="mt-4">
-        <p className="font-semibold">Settings</p>
+        <p className="font-semibold">Document Request</p>
 
         <div className="flex flex-col mt-4">
-          {settings.map((item) => (
+          {documentRequest.map((item) => (
             <Link
               href={item.id}
               key={item.id}
               className={cn(
-                "flex items-center gap-2 p-3 rounded-md text-sm duration-200 hover:bg-green-500/60",
+                "flex items-center justify-between p-3 rounded-md text-sm duration-200 hover:bg-green-500/60",
                 pathname === item.id && "bg-white hover:bg-white text-black"
               )}
             >
-              {item.icon} {item.name}
+              <p className="flex items-center gap-2 ">
+                {item.icon} {item.name}
+              </p>{" "}
+              {item.name.includes("Pending") && !!pendingRequest?.length && (
+                <span
+                  className={cn(
+                    "flex items-center justify-center bg-red-500 h-5 w-5 rounded-full text-[11px]",
+                    pathname === item.id && "text-white"
+                  )}
+                >
+                  {pendingRequest?.length}
+                </span>
+              )}
             </Link>
           ))}
         </div>
       </div>
 
       <div className="mt-4">
-        <p className="font-semibold">Document Report</p>
+        <p className="font-semibold">Settings</p>
 
         <div className="flex flex-col mt-4">
-          {documentReport.map((item) => (
+          {settings.map((item) => (
             <Link
               href={item.id}
               key={item.id}

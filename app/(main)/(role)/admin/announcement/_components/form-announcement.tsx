@@ -1,6 +1,6 @@
 "use client";
 
-import { createAnnouncement } from "@/action/admin/create-announcement";
+import { createAnnouncement } from "@/action/admin/announcement";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useEdgeStore } from "@/lib/edgestore";
@@ -15,11 +15,22 @@ export default function FormAnnouncement() {
 
   async function onCreateAnnouncement(formData: FormData) {
     const about = formData.get("about") as string;
-    const photo = formData.get("photo");
+    const photo = formData.get("photo") as File;
+
+    const acceptedMimeType = [
+      "image/webp",
+      "image/jpg",
+      "image/jpeg",
+      "image/png",
+    ];
+
+    if (photo.name && !acceptedMimeType.includes(photo.type)) {
+      return toast.error("Invalid image type");
+    }
 
     setTransition(async () => {
       const res = await edgestore.publicFiles.upload({
-        file: photo as File,
+        file: photo,
       });
 
       await createAnnouncement(about, res.url)

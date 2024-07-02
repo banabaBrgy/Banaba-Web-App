@@ -1,7 +1,11 @@
 import Assistant from "@/components/assistant";
 import React, { ReactNode } from "react";
 
-export default function MainLayout({ children }: { children: ReactNode }) {
+export default async function MainLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   return (
     <div>
       <Assistant />

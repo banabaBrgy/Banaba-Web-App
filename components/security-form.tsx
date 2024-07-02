@@ -19,12 +19,14 @@ import {
   changePassword,
   validateChangePassword,
   validateEmail,
+  validatePhoneNumber,
 } from "@/action/profile";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "./ui/input-otp";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useSendOtpPopup } from "@/utils/zustand";
 import { Switch } from "./ui/switch";
+import { CircleAlert } from "lucide-react";
 
 interface SecurityFormProp {
   user: UserType | null;
@@ -54,8 +56,14 @@ export default function SecurityForm({ user }: SecurityFormProp) {
   }
 
   function onValidatePhoneNumber() {
-    setChange("phone number");
-    sendOtpPopup.setOpen();
+    setTransition(async () => {
+      await validatePhoneNumber(inputValue.mobile)
+        .then(() => {
+          setChange("phone number");
+          sendOtpPopup.setOpen();
+        })
+        .catch((error) => toast.error(error.message));
+    });
   }
 
   function onValidateChangePassword(formData: FormData) {
@@ -77,7 +85,6 @@ export default function SecurityForm({ user }: SecurityFormProp) {
       <Card>
         <CardHeader>
           <CardTitle>Email</CardTitle>
-          <CardDescription>Change your email</CardDescription>
         </CardHeader>
 
         <form action={onValidateEmail}>
@@ -113,7 +120,12 @@ export default function SecurityForm({ user }: SecurityFormProp) {
       <Card>
         <CardHeader>
           <CardTitle>Phone number</CardTitle>
-          <CardDescription>Change your phone number</CardDescription>
+          {!user?.mobile && (
+            <CardDescription className="flex items-center gap-1 text-red-500">
+              Please input your valid phone number{" "}
+              <CircleAlert className="text-red-500" size={17} />
+            </CardDescription>
+          )}
         </CardHeader>
 
         <form action={onValidatePhoneNumber}>
@@ -131,11 +143,8 @@ export default function SecurityForm({ user }: SecurityFormProp) {
               pattern="[0-9]{4}[0-9]{3}[0-9]{4}"
               required
               value={inputValue?.mobile}
-              placeholder="Enter your phone number"
+              placeholder="Enter your phone number ex: 09123456789"
             />
-            <div>
-              <small>format: 09123456789</small>
-            </div>
           </CardContent>
 
           <CardFooter>
@@ -155,7 +164,6 @@ export default function SecurityForm({ user }: SecurityFormProp) {
       <Card>
         <CardHeader>
           <CardTitle>Change password</CardTitle>
-          <CardDescription>Change your password</CardDescription>
         </CardHeader>
 
         <form action={onValidateChangePassword} ref={changePasswordFormRef}>

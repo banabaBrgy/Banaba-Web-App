@@ -73,7 +73,7 @@ export async function actionLogIn(formData: FormData) {
     maxAge: 100000000000000,
   });
 
-  redirect(user.role === "Admin" ? "/admin" : "/resident");
+  redirect(user.role === "Admin" ? "/admin" : "/user");
 }
 
 export async function verifyEmail(jwtEmail: string, verificationCode: string) {

@@ -12,7 +12,7 @@ export default function ProgressBarProvider({
     <Fragment>
       {children}
       <ProgressBar
-        height="2.8px"
+        height="3px"
         color="red"
         options={{ showSpinner: false }}
         shallowRouting

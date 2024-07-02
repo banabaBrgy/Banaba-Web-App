@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 import bcrypt from "bcrypt";
+import axios from "axios";
 
 export async function editProfile(
   formData: FormData,
@@ -85,7 +86,7 @@ async function sendEmailVerificationCode(email: string) {
       from: process.env.MY_EMAIL,
       to: email,
       subject: "Verification code",
-      html: `<h1>${verificationCode}</h1>`,
+      html: `<h1>${verificationCode} this will expired in 1hour</h1>`,
     };
 
     transporter.sendMail(mailOptions, function (error, info) {
@@ -94,6 +95,35 @@ async function sendEmailVerificationCode(email: string) {
       } else {
         console.log("Email sent: " + info.response);
       }
+    });
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+}
+
+async function sendPhoneVerificationCode(phoneNumber: string) {
+  try {
+    const user = await getUser();
+
+    const res = await axios.post("https://textbelt.com/otp/generate", {
+      phone: phoneNumber,
+      userid: user?.id,
+      key: process.env.TEXT_BELT_API_KEY,
+      message: "Your verification code is $OTP this will expired in 3 minutes",
+    });
+
+    if (res.data.success === false) {
+      throw new Error("Something went wrong");
+    }
+
+    await db.user.update({
+      where: {
+        id: user?.id,
+      },
+      data: {
+        verificationCode: res.data.otp,
+        expiresAt: new Date().getTime() + 3 * 60 * 1000,
+      },
     });
   } catch (error: any) {
     throw new Error(error.message);
@@ -150,6 +180,30 @@ export async function changeEmail(email: string, otp: string) {
     });
 
     revalidatePath("/");
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+}
+
+export async function validatePhoneNumber(phoneNumber: string) {
+  try {
+    if (!phoneNumber) {
+      throw new Error("Phone number is required");
+    }
+
+    const existed = await db.user.findUnique({
+      where: {
+        mobile: phoneNumber,
+      },
+    });
+
+    if (existed && existed.email) {
+      throw new Error("Phone number is already exist");
+    }
+
+    const changeFormat = `+63${phoneNumber.slice(1)}`;
+
+    await sendPhoneVerificationCode(changeFormat);
   } catch (error: any) {
     throw new Error(error.message);
   }

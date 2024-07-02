@@ -8,8 +8,13 @@ datasource db {
 }
 
 enum Role {
-  Resident
+  User
   Admin
+}
+
+enum DocumentRequestStatus {
+  Pending
+  Approved
 }
 
 model User {
@@ -27,45 +32,44 @@ model User {
   placeOfBirth     String?
   sitioPurok       String?
   profile          String?
-  role             Role      @default(Resident)
+  role             Role      @default(User)
   isEmailVerified  DateTime?
   verificationCode String?
   expiresAt        BigInt?
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
 
-  myRequest       MyRequest[] @relation("RequestedBy")
-  myIssuedRequest MyRequest[] @relation("IssuedBy")
+  myRequest       DocumentRequest[] @relation("RequestedBy")
+  myIssuedRequest DocumentRequest[] @relation("IssuedBy")
   myInquiries     Inquiries[]
   myBlotter       Blotter[]
 }
 
 model Blotter {
-  id                 String   @id @default(cuid())
-  userId             String
-  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  barangayPurokSitio String
-  incident           String
-  placeOfIncident    String
-  dateTime           String
-  witnesses          String[]
-  narrative          String
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  incident        String
+  placeOfIncident String
+  dateTime        String
+  witnesses       String[]
+  narrative       String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
-model MyRequest {
-  id            String    @id @default(cuid())
+model DocumentRequest {
+  id            String                @id @default(cuid())
   documentType  String
-  requestedBy   User      @relation(name: "RequestedBy", fields: [requestedById], references: [id], onDelete: Cascade)
+  requestedBy   User                  @relation(name: "RequestedBy", fields: [requestedById], references: [id], onDelete: Cascade)
   requestedById String
   purposes      String
-  issuedBy      User?     @relation(name: "IssuedBy", fields: [issuedById], references: [id], onDelete: Cascade)
+  issuedBy      User?                 @relation(name: "IssuedBy", fields: [issuedById], references: [id], onDelete: Cascade)
   issuedById    String?
   dateIssued    DateTime?
-  status        String    @default("pending")
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  status        DocumentRequestStatus @default(Pending)
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
 }
 
 model Inquiries {
@@ -74,6 +78,7 @@ model Inquiries {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   subject   String
   message   String
+  answer    String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -90,6 +95,23 @@ model Programs {
   id        String   @id @default(cuid())
   about     String
   photo     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CalendarOfActivities {
+  id          String   @id @default(cuid())
+  event       String
+  description String
+  startDate   String
+  endDate     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model DocumentType {
+  id        String   @id @default(cuid())
+  document  String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

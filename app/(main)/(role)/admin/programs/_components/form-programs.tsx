@@ -1,6 +1,6 @@
 "use client";
 
-import { createPrograms } from "@/action/admin/create-programs";
+import { createPrograms } from "@/action/admin/programs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useEdgeStore } from "@/lib/edgestore";
@@ -15,15 +15,26 @@ export default function FormPrograms() {
 
   function onCreatePrograms(formData: FormData) {
     const about = formData.get("about") as string;
-    const photo = formData.get("photo");
+    const photo = formData.get("photo") as File;
+
+    const acceptedMimeType = [
+      "image/webp",
+      "image/jpg",
+      "image/jpeg",
+      "image/png",
+    ];
+
+    if (photo.name && !acceptedMimeType.includes(photo.type)) {
+      return toast.error("Invalid image type");
+    }
 
     setTransition(async () => {
       const res = await edgestore.publicFiles.upload({
-        file: photo as File,
+        file: photo,
       });
 
       await createPrograms(about, res.url)
-        .then(() => {
+        .then((data) => {
           toast.success("Created successfully");
           programsFormRef.current?.reset();
         })
