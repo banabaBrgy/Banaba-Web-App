@@ -7,6 +7,7 @@ import { EdgeStoreProvider } from "@/lib/edgestore";
 import ProgressBarProvider from "@/utils/progressbar-provider";
 import { cn } from "@/lib/utils";
 import ReactQueryProvider from "@/utils/react-query-provider";
+import { ActiveUserProvider } from "@/utils/active-user-provider";
 
 const font = FontSans({
   subsets: ["latin"],
@@ -33,8 +34,10 @@ export default async function RootLayout({
       >
         <EdgeStoreProvider>
           <ProgressBarProvider>
-            <Toaster richColors />
-            <ReactQueryProvider>{children}</ReactQueryProvider>
+            <ActiveUserProvider>
+              <Toaster richColors />
+              <ReactQueryProvider>{children}</ReactQueryProvider>
+            </ActiveUserProvider>
           </ProgressBarProvider>
         </EdgeStoreProvider>
       </body>

@@ -4,6 +4,7 @@ import { changeRole } from "@/action/admin/system-users";
 import { Input } from "@/components/ui/input";
 import { UserType } from "@/lib/user";
 import { cn } from "@/lib/utils";
+import { useActiveUserProviderValue } from "@/utils/active-user-provider";
 import React, { ChangeEvent, useState, useTransition } from "react";
 import { MdOutlineSearch } from "react-icons/md";
 import { toast } from "sonner";
@@ -17,6 +18,7 @@ export default function SystemUsersRow({
   systemUsers,
   user,
 }: SystemUsersRowProp) {
+  const { activeUser } = useActiveUserProviderValue();
   const [search, setSearch] = useState("");
   const [pending, setTransition] = useTransition();
 
@@ -110,9 +112,15 @@ export default function SystemUsersRow({
                     </select>
                   </td>
                   <td
-                    className={cn("p-2 border border-[#dddddd] text-red-500")}
+                    className={cn(
+                      "p-2 border border-[#dddddd] text-red-500",
+                      activeUser?.includes(systemUser?.id as string) &&
+                        "text-green-500"
+                    )}
                   >
-                    INACTIVE
+                    {activeUser?.includes(systemUser?.id as string)
+                      ? "ACTIVE"
+                      : "INACTIVE"}
                   </td>
                 </tr>
               ))}
