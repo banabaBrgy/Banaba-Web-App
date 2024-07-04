@@ -14,7 +14,7 @@ import {
   MdAnnouncement,
   MdOutlinePendingActions,
 } from "react-icons/md";
-import { FaFileLines } from "react-icons/fa6";
+import { RiFoldersFill } from "react-icons/ri";
 import { IoDocument } from "react-icons/io5";
 import { FaClipboardList } from "react-icons/fa";
 import { RiQuestionFill, RiInkBottleFill } from "react-icons/ri";
@@ -42,6 +42,7 @@ export function Sidebar({ user, pendingRequest }: SidebarProp) {
 
   const sidebarLinks = [
     { id: "/admin", name: "Dashboard", icon: <MdDashboard size={20} /> },
+    { id: "/admin/files", name: "Files", icon: <RiFoldersFill size={20} /> },
     {
       id: "/admin/announcement",
       name: "Announcement",

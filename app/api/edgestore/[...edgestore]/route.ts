@@ -1,7 +1,37 @@
+import { db } from "@/lib/db";
 import { initEdgeStore } from "@edgestore/server";
-import { createEdgeStoreNextHandler } from "@edgestore/server/adapters/next/app";
+import {
+  CreateContextOptions,
+  createEdgeStoreNextHandler,
+} from "@edgestore/server/adapters/next/app";
+import jwt from "jsonwebtoken";
 
-const es = initEdgeStore.create();
+type Context = {
+  userId: string;
+  userRole: string;
+};
+
+async function createContext({ req }: CreateContextOptions) {
+  const token = req.cookies.get("token")?.value;
+  const { id } = jwt.verify(token!, process.env.JWT_SECRET!) as { id: string };
+
+  const user = await db.user.findUnique({
+    where: {
+      id: id as string,
+    },
+    select: {
+      id: true,
+      role: true,
+    },
+  });
+
+  return {
+    userId: user?.id as string,
+    userRole: user?.role as string,
+  };
+}
+
+const es = initEdgeStore.context<Context>().create();
 /**
  * This is the main router for the Edge Store buckets.
  */
@@ -14,10 +44,25 @@ const edgeStoreRouter = es.router({
       console.log("beforeDelete", ctx, fileInfo);
       return true;
     }),
+
+  protectedFiles: es
+    .fileBucket()
+    .path(({ ctx }) => [{ owner: ctx.userId }])
+    .accessControl({
+      AND: [
+        {
+          userId: { path: "owner" },
+        },
+        {
+          userRole: { eq: "Admin" },
+        },
+      ],
+    }),
 });
 
 const handler = createEdgeStoreNextHandler({
   router: edgeStoreRouter,
+  createContext,
 });
 
 export { handler as GET, handler as POST };
