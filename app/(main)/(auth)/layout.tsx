@@ -14,7 +14,7 @@ export default async function AuthLayout({
   if (user?.role === "Admin") {
     redirect("/admin");
   } else if (user?.role === "User") {
-    redirect("/resident");
+    redirect("/user");
   }
 
   return (

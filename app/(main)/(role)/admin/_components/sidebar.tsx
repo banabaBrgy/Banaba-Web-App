@@ -37,7 +37,7 @@ interface SidebarProp {
 
 export function Sidebar({ user, pendingRequest }: SidebarProp) {
   const pathname = usePathname();
-  const setOpenSidebar = useOpenSidebar((s) => s.setOpenSidebar);
+  const setCloseSidebar = useOpenSidebar((s) => s.setClose);
   const isSidebarOpen = useOpenSidebar((s) => s.isSidebarOpen);
 
   const sidebarLinks = [
@@ -98,8 +98,8 @@ export function Sidebar({ user, pendingRequest }: SidebarProp) {
   ];
 
   useEffect(() => {
-    setOpenSidebar();
-  }, [pathname, setOpenSidebar]);
+    setCloseSidebar();
+  }, [pathname, setCloseSidebar]);
 
   return (
     <div
@@ -110,7 +110,7 @@ export function Sidebar({ user, pendingRequest }: SidebarProp) {
     >
       <div className="mt-4 lg:hidden">
         <Button
-          onClick={() => setOpenSidebar()}
+          onClick={() => setCloseSidebar()}
           size="icon"
           style={{ boxShadow: "1px 1px 7px rgba(0, 0, 0, .2)" }}
           className="bg-green-600 hover:bg-green-600 active:scale-[.95]"

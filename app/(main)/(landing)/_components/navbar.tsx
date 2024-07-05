@@ -89,7 +89,10 @@ export function Navbar() {
           width={200}
           height={200}
           priority
-          onClick={() => showAssistant.setOpen()}
+          onClick={(e) => {
+            e.stopPropagation();
+            showAssistant.setOpen();
+          }}
           className="w-10 h-10 active:scale-[.95] cursor-pointer"
         />
       </div>

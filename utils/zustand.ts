@@ -2,7 +2,8 @@ import { create } from "zustand";
 
 interface UseOpenSidebarType {
   isSidebarOpen: boolean;
-  setOpenSidebar: () => void;
+  setOpen: () => void;
+  setClose: () => void;
 }
 
 interface UseSendOtpPopupType {
@@ -20,8 +21,8 @@ interface UseShowAssistant {
 // use inside resident and admin page
 export const useOpenSidebar = create<UseOpenSidebarType>((set) => ({
   isSidebarOpen: false,
-  setOpenSidebar: () =>
-    set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
+  setOpen: () => set({ isSidebarOpen: true }),
+  setClose: () => set({ isSidebarOpen: false }),
 }));
 
 // use in profile security

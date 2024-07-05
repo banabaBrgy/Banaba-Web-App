@@ -5,7 +5,7 @@ import { AlignJustify } from "lucide-react";
 import { RiNotification3Fill } from "react-icons/ri";
 import Image from "next/image";
 import Link from "next/link";
-import React, { ElementRef, useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { UserType } from "@/lib/user";
@@ -19,13 +19,10 @@ export function Navbar({ user }: NavbarProp) {
   const showAssistant = useShowAssistant();
   const openSidebar = useOpenSidebar();
   const [openNotif, setOpenNotif] = useState(false);
-  const notifRef = useRef<ElementRef<"div">>(null);
 
   useEffect(() => {
-    function handleClick(e: MouseEvent) {
-      if (!notifRef.current?.contains(e.target as any)) {
-        setOpenNotif(false);
-      }
+    function handleClick() {
+      setOpenNotif(false);
     }
 
     window.addEventListener("click", handleClick);
@@ -37,7 +34,7 @@ export function Navbar({ user }: NavbarProp) {
     <nav className="sticky top-0 flex items-center justify-between md:px-4 px-3 lg:ml-[16rem] bg-white h-14 z-[1001]">
       <div className="flex gap-2 items-center">
         <AlignJustify
-          onClick={() => openSidebar.setOpenSidebar()}
+          onClick={() => openSidebar.setOpen()}
           className="lg:hidden block"
         />
 
@@ -58,9 +55,12 @@ export function Navbar({ user }: NavbarProp) {
       </div>
 
       <div className="flex items-center gap-1 text-gray-500">
-        <div ref={notifRef} className="relative">
+        <div onClick={(e) => e.stopPropagation()} className="relative">
           <Button
-            onClick={() => setOpenNotif(!openNotif)}
+            onClick={() => {
+              showAssistant.setClose();
+              setOpenNotif(!openNotif);
+            }}
             className={cn(
               "active:scale-90 rounded-full",
               openNotif ? "text-black bg-secondary" : ""
@@ -73,13 +73,13 @@ export function Navbar({ user }: NavbarProp) {
 
           <div
             className={cn(
-              "absolute top-11 right-0 flex flex-col w-[23rem] max-h-[33rem] border border-zinc-200 shadow-xl rounded-md bg-white text-black duration-150",
+              "absolute top-11 right-0 flex flex-col w-[25rem] max-h-[33rem] border border-zinc-200 shadow-xl rounded-md bg-white text-black duration-150",
               openNotif
                 ? "scale-100 visible opacity-100"
                 : "scale-95 invisible opacity-0"
             )}
           >
-            <AdminNotification />
+            <AdminNotification user={user} />
           </div>
         </div>
 

@@ -26,8 +26,8 @@ async function createContext({ req }: CreateContextOptions) {
   });
 
   return {
-    userId: user?.id as string,
-    userRole: user?.role as string,
+    userId: user?.id || "",
+    userRole: user?.role || "",
   };
 }
 

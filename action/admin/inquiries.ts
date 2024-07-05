@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
+import { pusherServer } from "@/lib/pusher";
 import { revalidatePath } from "next/cache";
 
 export async function answerInquiries(
@@ -10,13 +11,33 @@ export async function answerInquiries(
   try {
     const answer = formData.get("answer") as string;
 
-    await db.inquiries.update({
-      where: {
-        id: inquiriesId,
-      },
-      data: {
-        answer,
-      },
+    await db.$transaction(async (tx) => {
+      const inquiries = await tx.inquiries.update({
+        where: {
+          id: inquiriesId,
+        },
+        data: {
+          answer,
+        },
+      });
+
+      const notification = await tx.notification.create({
+        data: {
+          userId: inquiries.userId,
+          message: `Your inquiry has been answered`,
+          path: `/user/inquiries?id=${inquiries.id}`,
+          notificationFor: "User",
+        },
+        include: {
+          markAllAsRead: true,
+        },
+      });
+
+      await pusherServer.trigger(
+        inquiries.userId,
+        "user:notification",
+        notification
+      );
     });
 
     revalidatePath("/");
