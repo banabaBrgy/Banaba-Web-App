@@ -12,9 +12,11 @@ import {
 import { pusherClient } from "@/lib/pusher";
 import { UserType } from "@/lib/user";
 import { cn } from "@/lib/utils";
+import { useUnreadNotificationLength } from "@/utils/zustand";
 import { MarkAllAsRead, Notification } from "@prisma/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
@@ -25,16 +27,23 @@ import { format } from "timeago.js";
 
 type UserNotificationProp = {
   user: UserType | null;
+  setOpenNotif: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 type UserNotificationType = (Notification & {
   markAllAsRead: MarkAllAsRead[];
 })[];
 
-export default function UserNotification({ user }: UserNotificationProp) {
+export default function UserNotification({
+  user,
+  setOpenNotif,
+}: UserNotificationProp) {
   const [openPopover, setOpenPopover] = useState("");
   const queryClient = useQueryClient();
   const [isAll, setIsAll] = useState(true);
+  const setUserUnreadNotification = useUnreadNotificationLength(
+    (s) => s.setUserUnreadNotifications
+  );
 
   const { data: userNotifications, isLoading } = useQuery({
     queryKey: ["user-notifications"],
@@ -130,6 +139,10 @@ export default function UserNotification({ user }: UserNotificationProp) {
   const allUnmarkAsReadNotif = userNotifications?.filter(
     (notif) => !notif.markAllAsRead.some((mark) => mark.userId === user?.id)
   );
+
+  useEffect(() => {
+    setUserUnreadNotification(allUnmarkAsReadNotif?.length || 0);
+  }, [allUnmarkAsReadNotif?.length, setUserUnreadNotification]);
 
   const mutationMarkAllAsRead = useMutation({
     mutationFn: async () => {
@@ -229,7 +242,7 @@ export default function UserNotification({ user }: UserNotificationProp) {
             : userNotif
         )?.length === 0 && (
           <div className="p-4 flex items-center justify-center pb-12 pt-5 text-zinc-500">
-            No notifications
+            {!allUnmarkAsReadNotif?.length ? "No unread" : "No notifications"}
           </div>
         )}
 
@@ -252,20 +265,38 @@ export default function UserNotification({ user }: UserNotificationProp) {
               key={userNotif.id}
               className="relative flex items-center group/show"
             >
-              <Link href={userNotif.path} className="flex-1">
-                <div className="space-y-1 p-4 text-[14.5px] hover:bg-zinc-100">
-                  <p
-                    dangerouslySetInnerHTML={{ __html: userNotif.message }}
-                    className={cn(
-                      "text-zinc-500 pr-5",
-                      !userNotif.markAllAsRead.some(
-                        (n) => n.userId === user?.id
-                      ) && "text-black"
-                    )}
+              <Link
+                onClick={() => {
+                  mutationMarkAsRead.mutate(userNotif.id);
+                  setOpenNotif(false);
+                }}
+                href={userNotif.path}
+                className="flex-1"
+              >
+                <div className="flex gap-3 p-4 hover:bg-zinc-100">
+                  <Image
+                    src={"/logo.png"}
+                    alt="profile"
+                    width={500}
+                    height={500}
+                    priority
+                    className="w-14 h-14 object-cover rounded-full"
                   />
-                  <p className="text-sm text-zinc-500">
-                    {format(userNotif.createdAt)}
-                  </p>
+
+                  <div className="space-y-1 text-[14.5px] flex-1 pr-5">
+                    <p
+                      dangerouslySetInnerHTML={{ __html: userNotif.message }}
+                      className={cn(
+                        "text-zinc-500 pr-5",
+                        !userNotif.markAllAsRead.some(
+                          (n) => n.userId === user?.id
+                        ) && "text-black"
+                      )}
+                    />
+                    <p className="text-sm text-zinc-500">
+                      {format(userNotif.createdAt)}
+                    </p>
+                  </div>
                 </div>
               </Link>
 
@@ -278,10 +309,13 @@ export default function UserNotification({ user }: UserNotificationProp) {
                 <PopoverTrigger asChild>
                   <button
                     className={cn(
-                      "absolute right-9 border border-zinc-300 shadow rounded-full p-3 hover:bg-zinc-100 bg-white",
+                      "absolute right-4 border border-zinc-300 shadow rounded-full p-3 hover:bg-zinc-100 bg-white",
                       openPopover === userNotif.id
                         ? "visible"
-                        : "invisible group-hover/show:visible"
+                        : "sm:invisible group-hover/show:visible",
+                      !userNotif.markAllAsRead.some(
+                        (n) => n.userId === user?.id
+                      ) && "right-9"
                     )}
                   >
                     <BsThreeDots className="scale-[1.3]" />

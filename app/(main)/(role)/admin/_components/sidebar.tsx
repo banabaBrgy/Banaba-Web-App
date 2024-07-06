@@ -22,7 +22,7 @@ import { GrServices } from "react-icons/gr";
 import { BsFillCalendar2WeekFill } from "react-icons/bs";
 import { ImUsers } from "react-icons/im";
 import { AiFillLike } from "react-icons/ai";
-import { DocumentRequest } from "@prisma/client";
+import { DocumentRequest, Inquiries } from "@prisma/client";
 
 interface SidebarProp {
   user: UserType | null;
@@ -33,9 +33,14 @@ interface SidebarProp {
         };
       })[]
     | null;
+  noAnswersInquiries: Inquiries[] | undefined;
 }
 
-export function Sidebar({ user, pendingRequest }: SidebarProp) {
+export function Sidebar({
+  user,
+  pendingRequest,
+  noAnswersInquiries,
+}: SidebarProp) {
   const pathname = usePathname();
   const setCloseSidebar = useOpenSidebar((s) => s.setClose);
   const isSidebarOpen = useOpenSidebar((s) => s.isSidebarOpen);
@@ -143,11 +148,18 @@ export function Sidebar({ user, pendingRequest }: SidebarProp) {
             href={item.id}
             key={item.id}
             className={cn(
-              "flex items-center gap-2 p-3 rounded-md text-sm duration-200 hover:bg-green-500/60",
+              "flex items-center justify-between gap-2 p-3 rounded-md text-sm duration-200 hover:bg-green-500/60",
               pathname === item.id && "bg-white hover:bg-white text-black"
             )}
           >
-            {item.icon} {item.name}
+            <p className="flex items-center gap-2">
+              {item.icon} {item.name}
+            </p>{" "}
+            {item.name === "Inquiries" && !!noAnswersInquiries?.length && (
+              <span className="flex items-center justify-center bg-red-500 h-5 w-5 rounded-full text-[11px] text-white">
+                {noAnswersInquiries.length}
+              </span>
+            )}
           </Link>
         ))}
       </div>
@@ -165,16 +177,11 @@ export function Sidebar({ user, pendingRequest }: SidebarProp) {
                 pathname === item.id && "bg-white hover:bg-white text-black"
               )}
             >
-              <p className="flex items-center gap-2 ">
+              <p className="flex items-center gap-2">
                 {item.icon} {item.name}
               </p>{" "}
               {item.name.includes("Pending") && !!pendingRequest?.length && (
-                <span
-                  className={cn(
-                    "flex items-center justify-center bg-red-500 h-5 w-5 rounded-full text-[11px]",
-                    pathname === item.id && "text-white"
-                  )}
-                >
+                <span className="flex items-center justify-center bg-red-500 h-5 w-5 rounded-full text-[11px] text-white">
                   {pendingRequest?.length}
                 </span>
               )}

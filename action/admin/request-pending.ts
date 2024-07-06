@@ -30,12 +30,19 @@ export async function approvedRequest(documentRequestId: string) {
           issuedById: user?.id,
           dateIssued: new Date(),
         },
+        include: {
+          requestedBy: {
+            select: {
+              fullName: true,
+            },
+          },
+        },
       });
 
       const notification = await tx.notification.create({
         data: {
           userId: documentRequest.requestedById,
-          message: `Your document request for <strong>${documentRequest.documentType}</strong> has been approved`,
+          message: `<strong>${documentRequest.requestedBy.fullName}</strong>, your document request for <strong>${documentRequest.documentType}</strong> has been approved`,
           path: `/user/my-request?id=${documentRequest.id}`,
           notificationFor: "User",
         },

@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useShowAssistant } from "@/utils/zustand";
+import { useLandingSidebar, useShowAssistant } from "@/utils/zustand";
 import { AlignJustify } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,6 +10,7 @@ import React from "react";
 
 export function Navbar() {
   const pathname = usePathname();
+  const landingSidebar = useLandingSidebar();
   const showAssistant = useShowAssistant();
 
   const navLinks = [
@@ -44,7 +45,7 @@ export function Navbar() {
     >
       <div
         className={cn(
-          "flex items-center gap-2",
+          "flex items-center gap-3",
           pathname === "/" ? "invisible" : "visible"
         )}
       >
@@ -54,16 +55,25 @@ export function Navbar() {
           width={400}
           height={399}
           priority
-          className="slide-down w-11 h-11 rounded-full"
+          className="slide-down lg:w-11 lg:h-11 w-9 h-9 rounded-full"
         />
         <h1 className="slide-down uppercase font-medium sm:block hidden">
           Barangay Banaba East Batangas City
         </h1>
       </div>
 
-      <div className="slide-down flex items-center">
-        <AlignJustify className="lg:hidden block" />
-      </div>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          landingSidebar.setOpen();
+        }}
+        className={cn(
+          "slide-down flex items-center lg:hidden visible",
+          landingSidebar.isOpen && "invisible"
+        )}
+      >
+        <AlignJustify />
+      </button>
 
       <div className="slide-down lg:flex hidden items-center">
         {navLinks.map((link) => (
@@ -91,7 +101,9 @@ export function Navbar() {
           priority
           onClick={(e) => {
             e.stopPropagation();
-            showAssistant.setOpen();
+            !showAssistant.isOpen
+              ? showAssistant.setOpen()
+              : showAssistant.setClose();
           }}
           className="w-10 h-10 active:scale-[.95] cursor-pointer"
         />

@@ -3,7 +3,7 @@
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { $Enums } from "@prisma/client";
-import React, { useState } from "react";
+import React, { ElementRef, useEffect, useRef, useState } from "react";
 import { MdOutlineSearch } from "react-icons/md";
 
 interface MyRequestRowProp {
@@ -23,10 +23,12 @@ interface MyRequestRowProp {
         } | null;
       }[]
     | null;
+  id: string;
 }
 
-export default function MyRequestRow({ myRequest }: MyRequestRowProp) {
+export default function MyRequestRow({ myRequest, id }: MyRequestRowProp) {
   const [search, setSearch] = useState("");
+  const refs = useRef<{ [key: string]: ElementRef<"tr"> | null }>({});
 
   const tableHead = [
     "No.",
@@ -39,12 +41,24 @@ export default function MyRequestRow({ myRequest }: MyRequestRowProp) {
     "Status",
   ];
 
+  useEffect(() => {
+    if (id && refs.current[id]) {
+      refs?.current[id]?.scrollIntoView({
+        block: "center",
+        inline: "center",
+        behavior: "smooth",
+      });
+    }
+  }, [id]);
+
   return (
     <div className="px-4 py-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-lg font-semibold uppercase">My Request</h1>
+        <h1 className="sm:text-lg text-sm font-semibold uppercase">
+          My Request
+        </h1>
 
-        <div className="relative flex items-center flex-1 max-w-[20rem]">
+        <div className="relative flex items-center flex-1 sm:max-w-[20rem] max-w-[13rem]">
           <MdOutlineSearch className="absolute right-3 scale-[1.4] text-zinc-400" />
           <Input
             onChange={async (e) => setSearch(e.target.value)}
@@ -55,7 +69,7 @@ export default function MyRequestRow({ myRequest }: MyRequestRowProp) {
         </div>
       </div>
 
-      <div className="overflow-auto  mt-4">
+      <div className="overflow-auto mt-4">
         <table className="border-collapse w-full bg-white">
           <thead>
             <tr>
@@ -79,7 +93,13 @@ export default function MyRequestRow({ myRequest }: MyRequestRowProp) {
                   r.id.toLowerCase().includes(search)
               )
               ?.map((item, idx) => (
-                <tr key={item.id} className="text-sm">
+                <tr
+                  key={item.id}
+                  ref={(el) => {
+                    refs.current[item.id] = el;
+                  }}
+                  className={cn("text-sm", item.id === id && "bg-green-100")}
+                >
                   <td className="border border-zinc-300 p-2 text-center">
                     {idx + 1}
                   </td>

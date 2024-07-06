@@ -23,19 +23,27 @@ import {
 } from "@/action/notification";
 import { toast } from "sonner";
 import { revalidateRealtime } from "@/action/revalidate-realtime";
+import { useUnreadNotificationLength } from "@/utils/zustand";
 
 type AdminNotificationProp = {
   user: UserType | null;
+  setOpenNotif: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 type AdminNotificationType = (Notification & {
   markAllAsRead: MarkAllAsRead[];
 } & { user: { profile: string } })[];
 
-export default function AdminNotification({ user }: AdminNotificationProp) {
+export default function AdminNotification({
+  user,
+  setOpenNotif,
+}: AdminNotificationProp) {
   const [openPopover, setOpenPopover] = useState("");
   const queryClient = useQueryClient();
   const [isAll, setIsAll] = useState(true);
+  const setAdminUnreadNotification = useUnreadNotificationLength(
+    (s) => s.setAdminUnreadNotification
+  );
 
   const { data: adminNotifications, isLoading } = useQuery({
     queryKey: ["admin-notifications"],
@@ -131,6 +139,10 @@ export default function AdminNotification({ user }: AdminNotificationProp) {
   const allUnmarkAsReadNotif = adminNotifications?.filter(
     (notif) => !notif.markAllAsRead.some((mark) => mark.userId === user?.id)
   );
+
+  useEffect(() => {
+    setAdminUnreadNotification(allUnmarkAsReadNotif?.length || 0);
+  }, [allUnmarkAsReadNotif?.length, setAdminUnreadNotification]);
 
   const mutationMarkAllAsRead = useMutation({
     mutationFn: async () => {
@@ -253,6 +265,10 @@ export default function AdminNotification({ user }: AdminNotificationProp) {
               className="flex items-center relative group/show"
             >
               <Link
+                onClick={() => {
+                  mutationMarkAsRead.mutate(adminNotif.id);
+                  setOpenNotif(false);
+                }}
                 href={adminNotif.path}
                 key={adminNotif.id}
                 className="flex-1"

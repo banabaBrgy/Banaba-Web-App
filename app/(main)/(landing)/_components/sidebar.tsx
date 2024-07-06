@@ -1,88 +1,111 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, { ElementRef, useEffect, useRef } from "react";
+import { FaHome, FaUsers } from "react-icons/fa";
+import { GrServices } from "react-icons/gr";
+import { GiHealthNormal } from "react-icons/gi";
+import { BsFillQuestionCircleFill } from "react-icons/bs";
+import { AlignJustify } from "lucide-react";
+import { useLandingSidebar } from "@/utils/zustand";
 
 export default function Sidebar() {
+  const setClose = useLandingSidebar((state) => state.setClose);
+  const isOpen = useLandingSidebar((state) => state.isOpen);
+  const sidebarRef = useRef<ElementRef<"div">>(null);
   const pathname = usePathname();
+
   const navLinks = [
     {
       id: "/",
       name: "home",
+      icon: <FaHome size={17} />,
     },
     {
       id: "/service",
       name: "service",
+      icon: <GrServices size={17} />,
     },
     {
       id: "/health-center",
       name: "health center",
+      icon: <GiHealthNormal size={17} />,
     },
     {
       id: "/about-us",
       name: "about us",
+      icon: <FaUsers size={17} />,
     },
     {
       id: "/faq",
       name: "faq",
+      icon: <BsFillQuestionCircleFill size={17} />,
     },
   ];
 
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (!sidebarRef.current?.contains(e.target as any)) {
+        setClose();
+      }
+    }
+
+    window.addEventListener("click", handleClick);
+
+    return () => window.addEventListener("click", handleClick);
+  }, [setClose]);
+
+  useEffect(() => {
+    setClose();
+  }, [pathname, setClose]);
+
   return (
-    <>
-      <div className="fixed left-0 inset-y-0 bg-white lg:hidden  sm:w-[20rem] w-full z-[1010]">
-        <button className="px-5 mt-5" title="Close sidebar">
-          <X className="scale-[.90]" />
+    <div
+      ref={sidebarRef}
+      className={cn(
+        "fixed inset-y-0 lg:hidden block bg-green-500 text-white shadow-xl w-[15rem] z-[1010] p-4 duration-200",
+        isOpen ? "left-0" : "-left-[20rem]"
+      )}
+    >
+      <div className="flex items-center justify-between">
+        <button
+          onClick={() => setClose()}
+          className="group/resize bg-green-700 rounded-full w-10 h-10 flex items-center justify-center"
+        >
+          <AlignJustify
+            size={22}
+            className="scale-100 group-active/resize:scale-90"
+          />
         </button>
 
-        <Card className="border-none shadow-none bg-none">
-          <CardHeader>
-            <CardTitle>Links</CardTitle>
-          </CardHeader>
-
-          <CardContent className="flex flex-col uppercase border-none">
-            {navLinks.map((link) => (
-              <Link
-                href={link.id}
-                key={link.id}
-                className={cn(
-                  "flex items-center h-12 px-3 hover:bg-gray-200",
-                  pathname === link.id && "bg-gray-200 rounded-md"
-                )}
-              >
-                {link.name}
-              </Link>
-            ))}
-          </CardContent>
-        </Card>
-
-        <Card className="bg-none shadow-none border-none">
-          <CardHeader>
-            <CardTitle>Assistant</CardTitle>
-          </CardHeader>
-
-          <CardContent>
-            <div className="flex items-center h-12 gap-2 cursor-pointer">
-              <Image
-                src="/assistant-logo.png"
-                alt="assistant-logo"
-                width={200}
-                height={200}
-                priority
-                className="w-10 h-10 active:scale-[.95] cursor-pointer"
-              />
-              <p>Assistant</p>
-            </div>
-          </CardContent>
-        </Card>
+        <Image
+          src="/logo.png"
+          alt="logo"
+          width={500}
+          height={500}
+          priority
+          className="w-12 h-12 object-cover"
+        />
       </div>
 
-      <div className="fixed inset-0 bg-black/80 z-[1009] lg:hidden" />
-    </>
+      <div className="flex flex-col mt-7">
+        {navLinks.map((navLink) => (
+          <Link
+            href={navLink.id}
+            key={navLink.id}
+            className={cn(
+              "flex items-center gap-x-3 capitalize p-2 text-[14.5px]",
+              pathname === navLink.id && "bg-green-700 rounded-md "
+            )}
+          >
+            <span>{navLink.icon}</span>{" "}
+            <span className="mt-1">{navLink.name}</span>
+          </Link>
+        ))}
+      </div>
+    </div>
   );
 }

@@ -1,11 +1,15 @@
 "use client";
 
-import { useOpenSidebar, useShowAssistant } from "@/utils/zustand";
+import {
+  useOpenSidebar,
+  useShowAssistant,
+  useUnreadNotificationLength,
+} from "@/utils/zustand";
 import { AlignJustify } from "lucide-react";
 import { RiNotification3Fill } from "react-icons/ri";
 import Image from "next/image";
 import Link from "next/link";
-import React, { ElementRef, useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { UserType } from "@/lib/user";
@@ -19,6 +23,9 @@ export function Navbar({ user }: NavbarProp) {
   const showAssistant = useShowAssistant();
   const openSidebar = useOpenSidebar();
   const [openNotif, setOpenNotif] = useState(false);
+  const userUnreadNotifications = useUnreadNotificationLength(
+    (s) => s.userUnreads
+  );
 
   useEffect(() => {
     function handleClick() {
@@ -34,7 +41,10 @@ export function Navbar({ user }: NavbarProp) {
     <nav className="sticky top-0 flex items-center justify-between md:px-4 px-3 lg:ml-[16rem] bg-white h-14 z-[1001]">
       <div className="flex gap-2 items-center">
         <AlignJustify
-          onClick={() => openSidebar.setOpen()}
+          onClick={(e) => {
+            e.stopPropagation();
+            openSidebar.setOpen();
+          }}
           className="lg:hidden block"
         />
 
@@ -62,24 +72,29 @@ export function Navbar({ user }: NavbarProp) {
               setOpenNotif(!openNotif);
             }}
             className={cn(
-              "active:scale-90 rounded-full",
+              "relative active:scale-90 rounded-full",
               openNotif ? "text-black bg-secondary" : ""
             )}
             size="sm"
             variant="ghost"
           >
+            {!!userUnreadNotifications && (
+              <span className="absolute top-0 right-0 flex items-center justify-center text-white text-[10px] h-5 w-5 rounded-full bg-red-500 z-[10]">
+                {userUnreadNotifications}
+              </span>
+            )}
             <RiNotification3Fill className="scale-[1.4]" />
           </Button>
 
           <div
             className={cn(
-              "absolute top-11 right-0 flex flex-col w-[25rem] max-h-[33rem] border border-zinc-200 shadow-xl rounded-md bg-white text-black duration-150",
+              "sm:absolute fixed inset-x-2 sm:left-auto sm:top-11 top-14 sm:right-0 flex flex-col sm:w-[25rem] max-h-[33rem] border border-zinc-200 shadow-xl rounded-md bg-white text-black duration-150",
               openNotif
                 ? "scale-100 visible opacity-100"
                 : "scale-95 invisible opacity-0"
             )}
           >
-            <UserNotification user={user} />
+            <UserNotification user={user} setOpenNotif={setOpenNotif} />
           </div>
         </div>
 

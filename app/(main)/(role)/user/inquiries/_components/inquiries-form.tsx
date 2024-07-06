@@ -81,7 +81,7 @@ export default function InquiriesForm({ user }: InquiriesFormProp) {
           Message
         </label>
         <Textarea
-          rows={10}
+          rows={5}
           id="message"
           name="message"
           required

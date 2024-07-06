@@ -23,3 +23,17 @@ export const getInquiries = async () => {
     return null;
   }
 };
+
+export const getNoAnswersInquiries = async () => {
+  try {
+    const noAnswersInquiries = await db.inquiries.findMany({
+      where: {
+        answer: null,
+      },
+    });
+
+    return noAnswersInquiries;
+  } catch (error) {
+    console.log(error);
+  }
+};

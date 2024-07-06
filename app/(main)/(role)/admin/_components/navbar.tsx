@@ -1,6 +1,10 @@
 "use client";
 
-import { useOpenSidebar, useShowAssistant } from "@/utils/zustand";
+import {
+  useOpenSidebar,
+  useShowAssistant,
+  useUnreadNotificationLength,
+} from "@/utils/zustand";
 import { AlignJustify } from "lucide-react";
 import { RiNotification3Fill } from "react-icons/ri";
 import Image from "next/image";
@@ -19,6 +23,9 @@ export function Navbar({ user }: NavbarProp) {
   const showAssistant = useShowAssistant();
   const openSidebar = useOpenSidebar();
   const [openNotif, setOpenNotif] = useState(false);
+  const adminUnreadNotifications = useUnreadNotificationLength(
+    (s) => s.adminUnreads
+  );
 
   useEffect(() => {
     function handleClick() {
@@ -62,12 +69,17 @@ export function Navbar({ user }: NavbarProp) {
               setOpenNotif(!openNotif);
             }}
             className={cn(
-              "active:scale-90 rounded-full",
+              "relative active:scale-90 rounded-full",
               openNotif ? "text-black bg-secondary" : ""
             )}
             size="sm"
             variant="ghost"
           >
+            {!!adminUnreadNotifications && (
+              <span className="absolute top-0 right-0 flex items-center justify-center text-white text-[10px] h-5 w-5 rounded-full bg-red-500 z-[10]">
+                {adminUnreadNotifications}
+              </span>
+            )}
             <RiNotification3Fill className="scale-[1.4]" />
           </Button>
 
@@ -79,7 +91,7 @@ export function Navbar({ user }: NavbarProp) {
                 : "scale-95 invisible opacity-0"
             )}
           >
-            <AdminNotification user={user} />
+            <AdminNotification user={user} setOpenNotif={setOpenNotif} />
           </div>
         </div>
 

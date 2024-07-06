@@ -28,13 +28,15 @@ interface InquiriesRowProp {
         };
       })[]
     | null;
+  id: string;
 }
 
-export default function InquiriesRow({ inquiries }: InquiriesRowProp) {
+export default function InquiriesRow({ inquiries, id }: InquiriesRowProp) {
   const [answer, setAnswer] = useState<Inquiries | null>(null);
   const [search, setSearch] = useState("");
   const [pending, setTransition] = useTransition();
   const inquiriesFormRef = useRef<ElementRef<"form">>(null);
+  const refs = useRef<{ [keys: string]: ElementRef<"tr"> | null }>({});
 
   const tableHead = [
     "No.",
@@ -69,6 +71,16 @@ export default function InquiriesRow({ inquiries }: InquiriesRowProp) {
       document.body.style.overflow = "";
     };
   }, [answer?.id]);
+
+  useEffect(() => {
+    if (id && refs.current[id]) {
+      refs?.current[id]?.scrollIntoView({
+        block: "center",
+        inline: "center",
+        behavior: "smooth",
+      });
+    }
+  }, [id]);
 
   function onAnswer(formData: FormData) {
     setTransition(async () => {
@@ -170,7 +182,13 @@ export default function InquiriesRow({ inquiries }: InquiriesRowProp) {
               ?.map((inquirie, idx) => (
                 <tr
                   key={inquirie.id}
-                  className="text-center text-sm hover:bg-zinc-50"
+                  ref={(el) => {
+                    refs.current[inquirie.id] = el;
+                  }}
+                  className={cn(
+                    "text-center text-sm hover:bg-zinc-50",
+                    inquirie.id === id && "bg-green-100"
+                  )}
                 >
                   <td className="p-2 border border-[#dddddd]">{idx + 1}.</td>
                   <td className="p-2 border border-[#dddddd]">

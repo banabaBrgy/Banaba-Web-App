@@ -19,12 +19,19 @@ export async function answerInquiries(
         data: {
           answer,
         },
+        include: {
+          user: {
+            select: {
+              fullName: true,
+            },
+          },
+        },
       });
 
       const notification = await tx.notification.create({
         data: {
           userId: inquiries.userId,
-          message: `Your inquiry has been answered`,
+          message: `<strong>${inquiries.user.fullName}</strong>, your inquiry has been answered`,
           path: `/user/inquiries?id=${inquiries.id}`,
           notificationFor: "User",
         },

@@ -7,7 +7,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <div id="wrapper">
       <Navbar />
-      {/*     <Sidebar /> */}
+      <Sidebar />
       <div>{children}</div>
       <Footer />
     </div>

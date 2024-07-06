@@ -3,8 +3,15 @@
 import { approvedRequest } from "@/action/admin/request-pending";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import { DocumentRequest } from "@prisma/client";
-import React, { useState, useTransition } from "react";
+import React, {
+  ElementRef,
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { FaCheck } from "react-icons/fa";
 import { MdOutlineSearch } from "react-icons/md";
 import { toast } from "sonner";
@@ -17,13 +24,16 @@ interface RequestPendingRowProp {
         };
       })[]
     | null;
+  id: string;
 }
 
 export default function RequestPendingRow({
   requestPending,
+  id,
 }: RequestPendingRowProp) {
   const [pending, setTransition] = useTransition();
   const [search, setSearch] = useState("");
+  const refs = useRef<{ [keys: string]: ElementRef<"tr"> | null }>({});
 
   const tableHead = [
     "No.",
@@ -34,6 +44,16 @@ export default function RequestPendingRow({
     "Purposes",
     "Option",
   ];
+
+  useEffect(() => {
+    if (id && refs.current[id]) {
+      refs?.current[id]?.scrollIntoView({
+        inline: "center",
+        block: "center",
+        behavior: "smooth",
+      });
+    }
+  }, [id]);
 
   function onApprovedRequest(documentRequestId: string) {
     setTransition(async () => {
@@ -89,7 +109,13 @@ export default function RequestPendingRow({
               ?.map((requestPending, idx) => (
                 <tr
                   key={requestPending.id}
-                  className="text-center text-sm hover:bg-zinc-50"
+                  ref={(el) => {
+                    refs.current[requestPending.id] = el;
+                  }}
+                  className={cn(
+                    "text-center text-sm hover:bg-zinc-50",
+                    requestPending.id === id && "bg-green-100"
+                  )}
                 >
                   <td className="p-2 border border-[#dddddd]">{idx + 1}.</td>
                   <td className="p-2 border border-[#dddddd]">

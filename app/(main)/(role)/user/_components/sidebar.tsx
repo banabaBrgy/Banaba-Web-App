@@ -8,7 +8,7 @@ import { ChevronLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { ElementRef, useEffect, useRef } from "react";
 import { MdDashboard, MdAnnouncement } from "react-icons/md";
 import { FaClipboardList, FaFileAlt } from "react-icons/fa";
 import { RiInkBottleFill, RiQuestionFill } from "react-icons/ri";
@@ -22,6 +22,7 @@ export function Sidebar({ user }: SidebarProp) {
   const pathname = usePathname();
   const setCloseSidebar = useOpenSidebar((s) => s.setClose);
   const isSidebarOpen = useOpenSidebar((s) => s.isSidebarOpen);
+  const sidebarRef = useRef<ElementRef<"div">>(null);
 
   const sidebarLinks = [
     { id: "/user", name: "Dashboard", icon: <MdDashboard size={20} /> },
@@ -61,11 +62,24 @@ export function Sidebar({ user }: SidebarProp) {
     setCloseSidebar();
   }, [pathname, setCloseSidebar]);
 
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (!sidebarRef.current?.contains(e.target as any)) {
+        setCloseSidebar();
+      }
+    }
+
+    window.addEventListener("click", handleClick);
+
+    return () => window.addEventListener("click", handleClick);
+  }, [setCloseSidebar]);
+
   return (
     <div
+      ref={sidebarRef}
       className={cn(
         "fixed inset-y-0 bg-green-500 text-white w-[16rem] px-5 duration-200 z-[1001]",
-        !isSidebarOpen ? "lg:left-0 left-[-20rem]" : "left-0"
+        isSidebarOpen ? "left-0" : "lg:left-0 left-[-20rem]"
       )}
     >
       <div className="mt-4 lg:hidden">
