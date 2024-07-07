@@ -81,6 +81,7 @@ model Inquiries {
   subject   String
   message   String
   answer    String?
+  isPinned  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -91,6 +92,8 @@ model Announcement {
   photo     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  markAllAsRead MarkAllAsRead[]
 }
 
 model Programs {
@@ -99,6 +102,8 @@ model Programs {
   photo     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  markAllAsRead MarkAllAsRead[]
 }
 
 model CalendarOfActivities {
@@ -156,9 +161,13 @@ model Notification {
 }
 
 model MarkAllAsRead {
-  id             String       @id @default(cuid())
-  notificationId String
-  notification   Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  id             String        @id @default(cuid())
+  notificationId String?
+  notification   Notification? @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  announcementId String?
+  announcement   Announcement? @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+  programsId     String?
+  programs       Programs?     @relation(fields: [programsId], references: [id], onDelete: Cascade)
   userId         String
-  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

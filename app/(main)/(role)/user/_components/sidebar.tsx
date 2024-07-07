@@ -16,9 +16,15 @@ import { GrServices } from "react-icons/gr";
 
 interface SidebarProp {
   user: UserType | null;
+  unreadAnnouncement: number;
+  unreadPrograms: number;
 }
 
-export function Sidebar({ user }: SidebarProp) {
+export function Sidebar({
+  user,
+  unreadAnnouncement,
+  unreadPrograms,
+}: SidebarProp) {
   const pathname = usePathname();
   const setCloseSidebar = useOpenSidebar((s) => s.setClose);
   const isSidebarOpen = useOpenSidebar((s) => s.isSidebarOpen);
@@ -123,11 +129,23 @@ export function Sidebar({ user }: SidebarProp) {
             href={item.id}
             key={item.id}
             className={cn(
-              "flex items-center gap-2 p-3 rounded-md text-sm duration-200 hover:bg-green-500/60",
+              "flex items-center justify-between gap-2 p-3 rounded-md text-sm duration-200 hover:bg-green-500/60",
               pathname === item.id && "bg-white hover:bg-white text-black"
             )}
           >
-            {item.icon} {item.name}
+            <p className="flex items-center gap-2">
+              {item.icon} {item.name}
+            </p>{" "}
+            {item.name === "Announcement" && !!unreadAnnouncement && (
+              <span className="flex items-center justify-center bg-red-500 h-5 w-5 rounded-full text-[11px] text-white">
+                {unreadAnnouncement}
+              </span>
+            )}
+            {item.name === "Programs" && !!unreadPrograms && (
+              <span className="flex items-center justify-center bg-red-500 h-5 w-5 rounded-full text-[11px] text-white">
+                {unreadPrograms}
+              </span>
+            )}
           </Link>
         ))}
       </div>
