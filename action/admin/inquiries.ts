@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/db";
 import { pusherServer } from "@/lib/pusher";
+import { getUser } from "@/lib/user";
 import { revalidatePath } from "next/cache";
 
 export async function answerInquiries(
@@ -45,6 +46,42 @@ export async function answerInquiries(
         "user:notification",
         notification
       );
+    });
+
+    revalidatePath("/");
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+}
+
+export async function pinInquiries(inquiriesId: string, isPinned: boolean) {
+  try {
+    const user = await getUser();
+
+    if (user?.role !== "Admin") {
+      throw new Error("Something went wrong");
+    }
+
+    const isNoAnswer = await db.inquiries.findUnique({
+      where: {
+        id: inquiriesId,
+        answer: {
+          equals: null,
+        },
+      },
+    });
+
+    if (isNoAnswer) {
+      throw new Error("You can't pin inquiries without answer");
+    }
+
+    await db.inquiries.update({
+      where: {
+        id: inquiriesId,
+      },
+      data: {
+        isPinned,
+      },
     });
 
     revalidatePath("/");

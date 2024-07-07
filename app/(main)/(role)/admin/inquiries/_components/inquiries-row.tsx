@@ -12,10 +12,10 @@ import { MdOutlineSearch } from "react-icons/md";
 import { Button } from "@/components/ui/button";
 import { RiQuestionAnswerFill } from "react-icons/ri";
 import { BsFillPinAngleFill } from "react-icons/bs";
-import { Inquiries, User } from "@prisma/client";
+import { Inquiries } from "@prisma/client";
 import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
-import { answerInquiries } from "@/action/admin/inquiries";
+import { answerInquiries, pinInquiries } from "@/action/admin/inquiries";
 import { toast } from "sonner";
 
 interface InquiriesRowProp {
@@ -91,6 +91,18 @@ export default function InquiriesRow({ inquiries, id }: InquiriesRowProp) {
           inquiriesFormRef.current?.reset();
         })
         .catch((error) => toast.error(error.message));
+    });
+  }
+
+  function onPinInquiries(inquirieId: string, isPinned: boolean) {
+    setTransition(async () => {
+      await pinInquiries(inquirieId, isPinned ? false : true)
+        .then(() =>
+          toast.success(
+            isPinned ? "Unpinned successfully" : "Pinned successfully"
+          )
+        )
+        .catch((err) => toast.error(err.message));
     });
   }
 
@@ -228,8 +240,26 @@ export default function InquiriesRow({ inquiries, id }: InquiriesRowProp) {
                     >
                       <RiQuestionAnswerFill className="scale-[1.2]" />
                     </Button>
-                    <Button size="sm" variant="outline" className="shadow-md">
-                      <BsFillPinAngleFill className="scale-[1.2]" />
+                    <Button
+                      onClick={() =>
+                        onPinInquiries(inquirie.id, inquirie.isPinned)
+                      }
+                      disabled={pending}
+                      size="sm"
+                      variant="outline"
+                      className={cn(
+                        "shadow-md",
+                        inquirie.isPinned ? "bg-green-100" : ""
+                      )}
+                    >
+                      <BsFillPinAngleFill
+                        className={cn(
+                          "scale-[1.2] duration-200",
+                          inquirie.isPinned
+                            ? "rotate-[-45deg] text-green-500"
+                            : "rotate-0"
+                        )}
+                      />
                     </Button>
                   </td>
                 </tr>

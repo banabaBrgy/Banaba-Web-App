@@ -1,10 +1,15 @@
-"use client";
-
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { getPinnedInquiries } from "@/lib/faq";
 import React from "react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
-export default function FaqPage() {
+export default async function FaqPage() {
+  const faq = await getPinnedInquiries();
+
   return (
     <div className="min-h-screen pb-32">
       <div className="flex flex-col justify-center items-center gap-1 bg-green-700 pt-24 pb-7 mb-8 text-white">
@@ -14,7 +19,16 @@ export default function FaqPage() {
         <p className="title_outline uppercase text-xl font-extrabold">(Faq)</p>
       </div>
 
-      <div className="max-w-[65rem] mx-auto px-3"></div>
+      <div className="max-w-[65rem] mx-auto px-5">
+        <Accordion type="multiple" className="w-full">
+          {faq.map((faq) => (
+            <AccordionItem key={faq.id} value={faq.id}>
+              <AccordionTrigger>{faq.message}</AccordionTrigger>
+              <AccordionContent>{faq.answer}</AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </div>
     </div>
   );
 }
