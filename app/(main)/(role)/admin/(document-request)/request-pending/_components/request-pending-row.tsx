@@ -59,7 +59,7 @@ export default function RequestPendingRow({
     setTransition(async () => {
       await approvedRequest(documentRequestId)
         .then(() => toast.success("Approved successfully"))
-        .catch((error) => toast.error(error.message));
+        .catch(() => toast.error("Something went wrong"));
     });
   }
 

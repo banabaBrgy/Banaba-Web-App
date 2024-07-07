@@ -28,11 +28,14 @@ export default function DocumentTypeRow({
   function onCreateDocument(formData: FormData) {
     setTransition(async () => {
       await createDocument(formData)
-        .then(() => {
+        .then((data) => {
+          if (data?.error) {
+            return toast.error(data.error);
+          }
           toast.success("Created successfully");
           formRef.current?.reset();
         })
-        .catch((error) => toast.error(error.message));
+        .catch(() => toast.error("Something went wrong"));
     });
   }
 

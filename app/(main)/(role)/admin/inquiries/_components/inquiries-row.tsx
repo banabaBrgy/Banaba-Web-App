@@ -90,19 +90,23 @@ export default function InquiriesRow({ inquiries, id }: InquiriesRowProp) {
           setAnswer(null);
           inquiriesFormRef.current?.reset();
         })
-        .catch((error) => toast.error(error.message));
+        .catch(() => toast.error("Something went wrong"));
     });
   }
 
   function onPinInquiries(inquirieId: string, isPinned: boolean) {
     setTransition(async () => {
       await pinInquiries(inquirieId, isPinned ? false : true)
-        .then(() =>
+        .then((data) => {
+          if (data?.error) {
+            return toast.error(data.error);
+          }
+
           toast.success(
             isPinned ? "Unpinned successfully" : "Pinned successfully"
-          )
-        )
-        .catch((err) => toast.error(err.message));
+          );
+        })
+        .catch(() => toast.error("Something went wrong"));
     });
   }
 

@@ -11,10 +11,6 @@ export const createActivities = async (formData: FormData) => {
     const startDate = formData.get("startDate") as string;
     const endDate = formData.get("endDate") as string;
 
-    if (!event || !description || !startDate || !endDate) {
-      throw new Error("Event, Description, StartDate, EndDate is required");
-    }
-
     await db.calendarOfActivities.create({
       data: {
         event,

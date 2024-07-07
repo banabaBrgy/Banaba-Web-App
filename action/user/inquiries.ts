@@ -3,7 +3,6 @@
 import { db } from "@/lib/db";
 import { pusherServer } from "@/lib/pusher";
 import { getUser } from "@/lib/user";
-import { incompleteProfileInfo } from "@/utils/incomplete-profile-info";
 import { revalidatePath } from "next/cache";
 
 export const createInquiries = async (formData: FormData) => {
@@ -13,13 +12,11 @@ export const createInquiries = async (formData: FormData) => {
     const message = formData.get("message") as string;
 
     if (!user || !user.id) {
-      throw new Error("Unauthorized user!");
+      return { error: "Unauthorized user" };
     }
 
-    incompleteProfileInfo(user);
-
     if (!subject || !message) {
-      throw new Error("Subject and Message is required");
+      return { error: "Subject and Message is required" };
     }
 
     await db.$transaction(async (tx) => {

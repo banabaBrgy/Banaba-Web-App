@@ -47,34 +47,46 @@ export default function SecurityForm({ user }: SecurityFormProp) {
   function onValidateEmail() {
     setTransition(async () => {
       await validateEmail(inputValue.email)
-        .then(() => {
+        .then((data) => {
+          if (data?.error) {
+            return toast.error(data.error);
+          }
+
           setChange("email");
           sendOtpPopup.setOpen();
         })
-        .catch((error) => toast.error(error.message));
+        .catch(() => toast.error("Something went wrong"));
     });
   }
 
   function onValidatePhoneNumber() {
     setTransition(async () => {
       await validatePhoneNumber(inputValue.mobile)
-        .then(() => {
+        .then((data) => {
+          if (data?.error) {
+            toast.error(data.error);
+          }
+
           setChange("phone number");
           sendOtpPopup.setOpen();
         })
-        .catch((error) => toast.error(error.message));
+        .catch(() => toast.error("Something went wrong"));
     });
   }
 
   function onValidateChangePassword(formData: FormData) {
     setTransition(async () => {
       await validateChangePassword(formData, sendTo)
-        .then(() => {
+        .then((data) => {
+          if (data?.error) {
+            return toast.error(data.error);
+          }
+
           setChange("changePassword");
           sendOtpPopup.setOpen();
           changePasswordFormRef.current?.reset();
         })
-        .catch((error) => toast.error(error.message));
+        .catch(() => toast.error("Something went wrong"));
     });
   }
 
@@ -252,12 +264,15 @@ function SendOtpPopup({
       case "email":
         setTransition(async () => {
           await changeEmail(inputValue.email, otp)
-            .then(() => {
+            .then((data) => {
+              if (data?.error) {
+                return toast.error(data.error);
+              }
               toast.success("Changed email successfully");
               sendOtpPopup.setClose();
               setOtp("");
             })
-            .catch((error) => toast.error(error.message));
+            .catch(() => toast.error("Something went wrong"));
         });
         break;
       case "phone number":
@@ -266,12 +281,15 @@ function SendOtpPopup({
       case "changePassword":
         setTransition(async () => {
           await changePassword(inputValue.newPassword, otp)
-            .then(() => {
+            .then((data) => {
+              if (data?.error) {
+                return toast.error(data.error);
+              }
               toast.success("Changed password successfully");
               sendOtpPopup.setClose();
               setOtp("");
             })
-            .catch((error) => toast.error(error.message));
+            .catch(() => toast.error("Something went wrong"));
         });
     }
   }

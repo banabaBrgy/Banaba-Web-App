@@ -12,13 +12,15 @@ export function LoginRow() {
 
   function action(formData: FormData) {
     setTransition(async () => {
-      await actionLogIn(formData).then((data) => {
-        if (data?.error) {
-          return toast.error(data.error);
-        }
+      await actionLogIn(formData)
+        .then((data) => {
+          if (data?.error) {
+            return toast.error(data.error);
+          }
 
-        toast.success("Log in successfully");
-      });
+          toast.success("Log in successfully");
+        })
+        .catch(() => toast.error("Something went wrong"));
     });
   }
 

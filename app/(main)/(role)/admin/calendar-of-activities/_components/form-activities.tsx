@@ -19,7 +19,7 @@ export default function FormActivities() {
           toast.success("Created successfully");
           calendarActivitiesForm.current?.reset();
         })
-        .catch((error) => toast.error(error.message));
+        .catch(() => toast.error("Something went wrong"));
     });
   }
 

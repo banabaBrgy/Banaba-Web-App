@@ -92,7 +92,7 @@ export default function UserNotification({
           )
       );
     },
-    onError: (error) => toast.error(error.message),
+    onError: () => toast.error("Something went wrong"),
   });
 
   const mutationMarkAsUnRead = useMutation({
@@ -118,7 +118,7 @@ export default function UserNotification({
           )
       );
     },
-    onError: (error) => toast.error(error.message),
+    onError: () => toast.error("Something went wrong"),
   });
 
   const mutationRemoveNotification = useMutation({
@@ -133,7 +133,7 @@ export default function UserNotification({
           prev.filter((notif) => notif.id !== variable)
       );
     },
-    onError: (error) => toast.error(error.message),
+    onError: () => toast.error("Something went wrong"),
   });
 
   const allUnmarkAsReadNotif = userNotifications?.filter(
@@ -156,7 +156,7 @@ export default function UserNotification({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user-notifications"] });
     },
-    onError: (err) => toast.error(err.message),
+    onError: () => toast.error("Something went wrong"),
   });
 
   const mutationRemoveAllNotification = useMutation({
@@ -171,7 +171,7 @@ export default function UserNotification({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user-notifications"] });
     },
-    onError: (err) => toast.error(err.message),
+    onError: () => toast.error("Something went wrong"),
   });
 
   return (

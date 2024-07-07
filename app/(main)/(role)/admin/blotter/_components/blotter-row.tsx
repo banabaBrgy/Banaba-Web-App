@@ -2,7 +2,8 @@
 
 import ReactToPrint from "@/components/react-to-print";
 import { Input } from "@/components/ui/input";
-import React, { useState } from "react";
+import { cn } from "@/lib/utils";
+import React, { ElementRef, useEffect, useRef, useState } from "react";
 import { MdOutlineSearch } from "react-icons/md";
 
 interface BlotterRowProp {
@@ -23,10 +24,12 @@ interface BlotterRowProp {
         };
       }[]
     | null;
+  id: string;
 }
 
-export default function BlotterRow({ blotters }: BlotterRowProp) {
+export default function BlotterRow({ blotters, id }: BlotterRowProp) {
   const [search, setSearch] = useState("");
+  const refs = useRef<{ [key: string]: ElementRef<"tr"> | null }>({});
 
   const tableHead = [
     "No.",
@@ -38,6 +41,16 @@ export default function BlotterRow({ blotters }: BlotterRowProp) {
     "Date registered",
     "Print",
   ];
+
+  useEffect(() => {
+    if (id && refs.current[id]) {
+      refs?.current[id]?.scrollIntoView({
+        inline: "center",
+        block: "center",
+        behavior: "smooth",
+      });
+    }
+  }, [id]);
 
   return (
     <>
@@ -81,8 +94,14 @@ export default function BlotterRow({ blotters }: BlotterRowProp) {
               )
               ?.map((blotter, idx) => (
                 <tr
+                  ref={(el) => {
+                    refs.current[blotter.id] = el;
+                  }}
                   key={blotter.id}
-                  className="text-center text-sm hover:bg-zinc-50"
+                  className={cn(
+                    "text-center text-sm hover:bg-zinc-50",
+                    blotter.id === id && "bg-green-100"
+                  )}
                 >
                   <td className="border border-[#dddddd] p-2">{idx + 1}.</td>
                   <td className="border border-[#dddddd] p-2">

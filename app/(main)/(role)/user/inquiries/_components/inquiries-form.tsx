@@ -22,11 +22,12 @@ export default function InquiriesForm({ user }: InquiriesFormProp) {
   const onCreateInquiries = (formData: FormData) => {
     setTransition(async () => {
       await createInquiries(formData)
-        .then(() => {
+        .then((data) => {
+          if (data?.error) return toast.error(data.error);
           toast.success("Submitted successfully");
           inquiriesFormRef.current?.reset();
         })
-        .catch((error) => toast.error(error.message));
+        .catch(() => toast.error("Something went wrong"));
     });
   };
 
@@ -89,7 +90,10 @@ export default function InquiriesForm({ user }: InquiriesFormProp) {
         />
       </div>
 
-      <Button disabled={pending} className="w-full uppercase">
+      <Button
+        disabled={pending || missingProfileInfo}
+        className="w-full uppercase"
+      >
         {pending ? <Loader2 className="animate-spin" /> : "Submit"}
       </Button>
     </form>

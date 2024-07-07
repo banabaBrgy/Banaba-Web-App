@@ -36,12 +36,13 @@ export default function SystemUsersRow({
     systemUser: UserType
   ) {
     setTransition(async () => {
-      await changeRole(systemUser.id, e.target.value as "Admin" | "User").then(
-        () =>
+      await changeRole(systemUser.id, e.target.value as "Admin" | "User")
+        .then(() =>
           toast.success(
             `${systemUser.fullName} change role to ${e.target.value}`
           )
-      );
+        )
+        .catch(() => toast.error("Something went wrong"));
     });
   }
 

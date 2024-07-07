@@ -26,11 +26,14 @@ export default function ServicesForm({
   function handleMyRequest(formData: FormData) {
     setTransition(async () => {
       await requestDocument(formData)
-        .then(() => {
+        .then((data) => {
+          if (data?.error) {
+            return toast.error(data.error);
+          }
           toast.success("Requested successfully");
           formRef.current?.reset();
         })
-        .catch((error) => toast.error(error.message));
+        .catch(() => toast.error("Somthing went wrong"));
     });
   }
 
@@ -95,7 +98,10 @@ export default function ServicesForm({
           />
         </div>
 
-        <Button disabled={pending} className="w-full uppercase">
+        <Button
+          disabled={pending || missingProfileInfo}
+          className="w-full uppercase"
+        >
           {pending ? <Loader2 className="animate-spin" /> : "Submit"}
         </Button>
       </form>

@@ -126,7 +126,7 @@ export function FolderRow({ folders }: FolderRowProp) {
                 setOpenDeleteSelectedAll(false);
               }
             })
-            .catch((err) => toast.error(err.message));
+            .catch(() => toast.error("Something went wrong"));
         }
       }
     });
@@ -150,7 +150,7 @@ export function FolderRow({ folders }: FolderRowProp) {
           toast.success("Deleted successfully");
           setDelete(null);
         })
-        .catch((err) => toast.error(err.message));
+        .catch(() => toast.error("Something went wrong"));
     });
   }
 
@@ -161,7 +161,7 @@ export function FolderRow({ folders }: FolderRowProp) {
           toast.success("Added folder successfully");
           setAddFolder(false);
         })
-        .catch((err) => toast.error(err.message));
+        .catch(() => toast.error("Something went wrong"));
     });
   }
 
@@ -172,7 +172,7 @@ export function FolderRow({ folders }: FolderRowProp) {
           toast.success("Rename successfully");
           setEdit(null);
         })
-        .catch((err) => toast.error(err.message));
+        .catch(() => toast.error("Something went wrong"));
     });
   }
 

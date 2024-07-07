@@ -21,13 +21,15 @@ export function RegisterRow() {
   });
 
   async function onSubmit(data: z.infer<typeof registerSchema>) {
-    await actionRegister(data).then((data) => {
-      if (data?.error) {
-        return toast.error(data.error);
-      }
+    await actionRegister(data)
+      .then((data) => {
+        if (data?.error) {
+          return toast.error(data.error);
+        }
 
-      toast.success("Registered Successfully!");
-    });
+        toast.success("Registered Successfully!");
+      })
+      .catch(() => toast.error("Something went wrong"));
   }
 
   const chunkErrors = Object.values(errors);

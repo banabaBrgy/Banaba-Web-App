@@ -38,7 +38,7 @@ export default function FormAnnouncement() {
           toast.success("Created successfully");
           announcementFormRef.current?.reset();
         })
-        .catch((error) => toast.error(error.message));
+        .catch(() => toast.error("Something went wrong"));
     });
   }
 

@@ -34,11 +34,11 @@ export default function FormPrograms() {
       });
 
       await createPrograms(about, res.url)
-        .then((data) => {
+        .then(() => {
           toast.success("Created successfully");
           programsFormRef.current?.reset();
         })
-        .catch((error) => toast.error(error.message));
+        .catch(() => toast.error("Something went wrong"));
     });
   }
 
@@ -82,11 +82,7 @@ export default function FormPrograms() {
         variant="outline"
         className="w-full"
       >
-        {pending ? (
-          <Loader2 className="animate-spin" />
-        ) : (
-          " Create announcement"
-        )}
+        {pending ? <Loader2 className="animate-spin" /> : " Create programs"}
       </Button>
     </form>
   );

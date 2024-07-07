@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { CircleAlert, Loader2, X } from "lucide-react";
 import { createBlotter } from "@/action/user/blotter";
-import ReactToPrint from "@/components/react-to-print";
 import dynamic from "next/dynamic";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
@@ -92,7 +91,11 @@ export default function BlotterForm({ user }: BlotterFormProp) {
 
     setTransition(async () => {
       await createBlotter(value)
-        .then(() => {
+        .then((data) => {
+          if (data?.error) {
+            return toast.error(data.error);
+          }
+
           toast.success("Blotter created successfully");
           setValue((prev) => ({
             ...prev,
@@ -104,7 +107,7 @@ export default function BlotterForm({ user }: BlotterFormProp) {
             narrative: "",
           }));
         })
-        .catch((error) => toast.error(error.message));
+        .catch(() => toast.error("Something went wrong"));
     });
   }
 
@@ -249,7 +252,11 @@ export default function BlotterForm({ user }: BlotterFormProp) {
         </div>
 
         <div className="flex flex-col md:flex-row items-center gap-x-4 gap-y-2 mt-4">
-          <Button disabled={pending} type="submit" className="w-full uppercase">
+          <Button
+            disabled={pending || missingProfileInfo}
+            type="submit"
+            className="w-full uppercase"
+          >
             {pending ? <Loader2 className="animate-spin" /> : "Submit"}
           </Button>
         </div>

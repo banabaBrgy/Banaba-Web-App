@@ -49,10 +49,12 @@ export function ProfileForm({ user }: ProfileFormProp) {
 
       const url = res?.url || user?.profile;
 
-      await editProfile(formData, url).then(() => {
-        toast.success("Save changes successfully");
-        setProfile(null);
-      });
+      await editProfile(formData, url)
+        .then(() => {
+          toast.success("Save changes successfully");
+          setProfile(null);
+        })
+        .catch(() => toast.error("Something went wrong"));
     });
   }
 

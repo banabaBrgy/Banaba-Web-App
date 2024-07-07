@@ -7,10 +7,6 @@ export async function createDocument(formData: FormData) {
   try {
     const document = formData.get("document") as string;
 
-    if (!document) {
-      throw new Error("Document is required");
-    }
-
     const isDocumentExist = await db.documentType.findUnique({
       where: {
         document,
@@ -18,7 +14,7 @@ export async function createDocument(formData: FormData) {
     });
 
     if (isDocumentExist) {
-      throw new Error("Document is already exist");
+      return { error: "Document is already exist" };
     }
 
     await db.documentType.create({

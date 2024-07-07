@@ -55,7 +55,7 @@ export default function Sidebar() {
 
     window.addEventListener("click", handleClick);
 
-    return () => window.addEventListener("click", handleClick);
+    return () => window.removeEventListener("click", handleClick);
   }, [setClose]);
 
   useEffect(() => {

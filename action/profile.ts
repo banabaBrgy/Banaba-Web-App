@@ -133,7 +133,7 @@ async function sendPhoneVerificationCode(phoneNumber: string) {
 export async function validateEmail(email: string) {
   try {
     if (!email) {
-      throw new Error("Email is required");
+      return { error: "Email is required" };
     }
 
     const existed = await db.user.findUnique({
@@ -143,7 +143,7 @@ export async function validateEmail(email: string) {
     });
 
     if (existed && existed.email) {
-      throw new Error("Email is already exist");
+      return { error: "Email is already exist" };
     }
 
     await sendEmailVerificationCode(email);
@@ -160,11 +160,11 @@ export async function changeEmail(email: string, otp: string) {
       new Date(parseInt(user?.expiresAt as any)) < new Date();
 
     if (expiredVerificationCode) {
-      throw new Error("Verification code has expired");
+      return { error: "Verification code has expired" };
     }
 
     if (otp !== user?.verificationCode) {
-      throw new Error("Invalid verification code");
+      return { error: "Invalid verification code" };
     }
 
     await db.user.update({
@@ -188,7 +188,7 @@ export async function changeEmail(email: string, otp: string) {
 export async function validatePhoneNumber(phoneNumber: string) {
   try {
     if (!phoneNumber) {
-      throw new Error("Phone number is required");
+      return { error: "Phone number is required" };
     }
 
     const existed = await db.user.findUnique({
@@ -198,7 +198,7 @@ export async function validatePhoneNumber(phoneNumber: string) {
     });
 
     if (existed && existed.email) {
-      throw new Error("Phone number is already exist");
+      return { error: "Phone number is already exist" };
     }
 
     const changeFormat = `+63${phoneNumber.slice(1)}`;
@@ -220,7 +220,7 @@ export async function validateChangePassword(
     const confirmPassword = formData.get("confirmPassword") as string;
 
     if (!user) {
-      throw new Error("Anauthorized user");
+      return { error: "Anauthorized user" };
     }
 
     const myAccount = await db.user.findUnique({
@@ -230,11 +230,11 @@ export async function validateChangePassword(
     });
 
     if (newPassword !== confirmPassword) {
-      throw new Error("New password and Confirm password didn't match");
+      return { error: "New password and Confirm password didn't match" };
     }
 
     if (newPassword === currentPassword) {
-      throw new Error("Please provide a stronger password");
+      return { error: "Please provide a stronger password" };
     }
 
     const isPasswordMatch = await bcrypt.compare(
@@ -243,7 +243,7 @@ export async function validateChangePassword(
     );
 
     if (!isPasswordMatch) {
-      throw new Error("Invalid current password");
+      return { error: "Invalid current password" };
     }
 
     if (sendTo === false) {
@@ -259,22 +259,22 @@ export async function changePassword(newPassword: string, otp: string) {
     const user = await getUser();
 
     if (!user || !user.id) {
-      throw new Error("Anauthorized user");
+      return { error: "Anauthorized user" };
     }
 
     if (!newPassword || !otp) {
-      throw new Error("newPassword and otp is required");
+      return { error: "newPassword and otp is required" };
     }
 
     const isVerificationCodeExpired =
       new Date(parseInt(user.expiresAt as any)) < new Date();
 
     if (isVerificationCodeExpired) {
-      throw new Error("Verification code has expired");
+      return { error: "Verification code has expired" };
     }
 
     if (otp !== user.verificationCode) {
-      throw new Error("Invalid verification code");
+      return { error: "Invalid verification code" };
     }
 
     const hashPassword = await bcrypt.hash(newPassword, 10);

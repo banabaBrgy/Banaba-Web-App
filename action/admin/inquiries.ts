@@ -65,14 +65,11 @@ export async function pinInquiries(inquiriesId: string, isPinned: boolean) {
     const isNoAnswer = await db.inquiries.findUnique({
       where: {
         id: inquiriesId,
-        answer: {
-          equals: null,
-        },
       },
     });
 
-    if (isNoAnswer) {
-      throw new Error("You can't pin inquiries without answer");
+    if (!isNoAnswer?.answer) {
+      return { error: "You can't pin inquiries without answer" };
     }
 
     await db.inquiries.update({

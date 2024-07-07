@@ -3,7 +3,6 @@
 import { db } from "@/lib/db";
 import { pusherServer } from "@/lib/pusher";
 import { getUser } from "@/lib/user";
-import { incompleteProfileInfo } from "@/utils/incomplete-profile-info";
 import { revalidatePath } from "next/cache";
 
 export async function requestDocument(formData: FormData) {
@@ -11,10 +10,8 @@ export async function requestDocument(formData: FormData) {
     const user = await getUser();
 
     if (!user || !user.id) {
-      throw new Error("Unauthorized user");
+      return { error: "Unauthorized user" };
     }
-
-    incompleteProfileInfo(user);
 
     const documentType = formData.get("document") as string;
     const purposes = formData.get("purposes") as string;
