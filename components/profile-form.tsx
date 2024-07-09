@@ -19,6 +19,7 @@ interface ProfileFormProp {
 
 export function ProfileForm({ user }: ProfileFormProp) {
   const [pendingLogout, setLogoutTransition] = useTransition();
+  const [choosenFile, setChoosenFile] = useState("");
   const [pending, setTransition] = useTransition();
   const { edgestore } = useEdgeStore();
   const [profile, setProfile] = useState<File | null>(null);
@@ -53,6 +54,7 @@ export function ProfileForm({ user }: ProfileFormProp) {
         .then(() => {
           toast.success("Save changes successfully");
           setProfile(null);
+          setChoosenFile("");
         })
         .catch(() => toast.error("Something went wrong"));
     });
@@ -79,12 +81,28 @@ export function ProfileForm({ user }: ProfileFormProp) {
             className="sm:w-52 w-44 sm:h-52 h-44 object-cover rounded-full"
           />
           <label htmlFor="profile" className="cursor-pointer">
-            <RiUploadCloud2Fill className="absolute bottom-0 left-0 scale-[1.5] text-green-600" />
+            {choosenFile ? (
+              <div className="absolute bottom-0 left-0">
+                <Image
+                  src={choosenFile}
+                  alt="profile"
+                  width={500}
+                  height={200}
+                  priority
+                  className="w-7 h-7 rounded-full object-cover"
+                />
+              </div>
+            ) : (
+              <RiUploadCloud2Fill className="absolute bottom-0 left-0 scale-[1.5] text-green-600" />
+            )}
           </label>
           <input
             type="file"
             accept="image/webp, image/jpg, image/jpeg, image/png"
-            onChange={(e) => setProfile(e.target.files?.[0] as File)}
+            onChange={(e) => {
+              setProfile(e.target.files?.[0] as File);
+              setChoosenFile(URL.createObjectURL(e.target.files?.[0] as File));
+            }}
             id="profile"
             className="hidden"
           />

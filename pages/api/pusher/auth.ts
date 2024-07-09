@@ -9,7 +9,7 @@ export default async function handler(
   const user = await getServerSession(request);
 
   if (!user?.id) {
-    return response.status(403).json("Unauthorized");
+    return response.status(401).json("Unauthorized");
   }
 
   const socketId = request.body.socket_id;

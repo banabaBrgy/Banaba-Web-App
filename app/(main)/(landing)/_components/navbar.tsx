@@ -49,15 +49,17 @@ export function Navbar() {
           pathname === "/" ? "invisible" : "visible"
         )}
       >
-        <Image
-          src="/logo.png"
-          alt="Logo"
-          width={400}
-          height={399}
-          priority
-          className="slide-down lg:w-11 lg:h-11 w-9 h-9 rounded-full"
-        />
-        <h1 className="slide-down uppercase font-medium sm:block hidden">
+        <Link href="/">
+          <Image
+            src="/logo.png"
+            alt="Logo"
+            width={400}
+            height={399}
+            priority
+            className="slide-down lg:w-10 lg:h-10 w-9 h-9 rounded-full"
+          />
+        </Link>
+        <h1 className="slide-down uppercase font-medium sm:block hidden text-sm">
           Barangay Banaba East Batangas City
         </h1>
       </div>
