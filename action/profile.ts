@@ -109,7 +109,6 @@ async function sendPhoneVerificationCode(phoneNumber: string) {
       phone: phoneNumber,
       userid: user?.id,
       key: process.env.TEXT_BELT_API_KEY,
-      message: "Your verification code is $OTP this will expired in 3 minutes",
     });
 
     if (res.data.success === false) {
@@ -157,7 +156,7 @@ export async function changeEmail(email: string, otp: string) {
     const user = await getUser();
 
     const expiredVerificationCode =
-      new Date(parseInt(user?.expiresAt as any)) < new Date();
+      new Date(Number(user?.expiresAt)) < new Date();
 
     if (expiredVerificationCode) {
       return { error: "Verification code has expired" };
@@ -201,13 +200,42 @@ export async function validatePhoneNumber(phoneNumber: string) {
       return { error: "Phone number is already exist" };
     }
 
-    const changeFormat = `+63${phoneNumber.slice(1)}`;
+    const E164FORMAT = `+63${phoneNumber.slice(1)}`;
 
-    await sendPhoneVerificationCode(changeFormat);
+    await sendPhoneVerificationCode(E164FORMAT);
   } catch (error: any) {
     throw new Error(error.message);
   }
 }
+
+export const changePhoneNumber = async (mobile: string, otp: string) => {
+  const user = await getUser();
+
+  const isVerificationCodeExpired =
+    new Date(Number(user?.expiresAt)) < new Date();
+
+  if (isVerificationCodeExpired) {
+    return { error: "Verification has expired" };
+  }
+
+  if (otp !== user?.verificationCode) {
+    return { error: "Invalid verification code" };
+  }
+
+  await db.user.update({
+    where: {
+      id: user.id,
+    },
+    data: {
+      mobile,
+      verificationCode: null,
+      expiresAt: null,
+      isMobileVerified: new Date(),
+    },
+  });
+
+  revalidatePath("/");
+};
 
 export async function validateChangePassword(
   formData: FormData,
@@ -248,8 +276,16 @@ export async function validateChangePassword(
 
     if (sendTo === false) {
       await sendEmailVerificationCode(user.email);
+    } else {
+      if (!user.mobile) {
+        throw new Error("Phone number is required");
+      }
+
+      const E164FORMAT = `+63${user.mobile.slice(1)}`;
+      await sendPhoneVerificationCode(E164FORMAT);
     }
   } catch (error: any) {
+    console.log(error.message);
     throw new Error(error.message);
   }
 }

@@ -59,7 +59,7 @@ export async function pinInquiries(inquiriesId: string, isPinned: boolean) {
     const user = await getUser();
 
     if (user?.role !== "Admin") {
-      throw new Error("Something went wrong");
+      throw new Error("Unauthorized admin can only pinned inquiries");
     }
 
     const isNoAnswer = await db.inquiries.findUnique({

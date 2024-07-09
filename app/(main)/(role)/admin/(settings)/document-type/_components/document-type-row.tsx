@@ -120,7 +120,7 @@ export default function DocumentTypeRow({
           </div>
         </div>
 
-        <div className="overflow-auto">
+        <div className="overflow-auto" id="document-type">
           <table className="border-collapse w-full bg-white">
             <thead>
               <tr>

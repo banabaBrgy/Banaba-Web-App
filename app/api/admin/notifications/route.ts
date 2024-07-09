@@ -6,7 +6,7 @@ export async function GET() {
     const user = await getUser();
 
     if (!user?.id) {
-      return Response.json("Unauthorized user", { status: 403 });
+      return new Response("Unauthorized user", { status: 401 });
     }
 
     const notifications = await db.notification.findMany({
@@ -28,6 +28,6 @@ export async function GET() {
 
     return Response.json(notifications, { status: 200 });
   } catch (error: any) {
-    return Response.json(error.message);
+    return new Response(error.message);
   }
 }

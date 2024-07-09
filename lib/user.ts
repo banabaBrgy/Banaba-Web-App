@@ -18,6 +18,7 @@ export interface UserType {
   profile: string | null;
   role: string;
   isEmailVerified: Date | null;
+  isMobileVerified: Date | null;
   verificationCode: string | null;
   expiresAt: bigint | null;
   createdAt: Date;
@@ -54,6 +55,7 @@ export async function getUser() {
         profile: true,
         role: true,
         isEmailVerified: true,
+        isMobileVerified: true,
         verificationCode: true,
         expiresAt: true,
         createdAt: true,

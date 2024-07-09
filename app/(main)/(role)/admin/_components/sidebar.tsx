@@ -23,6 +23,7 @@ import { BsFillCalendar2WeekFill } from "react-icons/bs";
 import { ImUsers } from "react-icons/im";
 import { AiFillLike } from "react-icons/ai";
 import { DocumentRequest, Inquiries } from "@prisma/client";
+import { generate } from "@/action/generate-ai";
 
 interface SidebarProp {
   user: UserType | null;
@@ -206,6 +207,8 @@ export function Sidebar({
               {item.icon} {item.name}
             </Link>
           ))}
+
+          <Button onClick={() => generate()}>Sync info to ai</Button>
         </div>
       </div>
     </div>

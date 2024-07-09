@@ -17,6 +17,7 @@ import { MdVerifiedUser } from "react-icons/md";
 import {
   changeEmail,
   changePassword,
+  changePhoneNumber,
   validateChangePassword,
   validateEmail,
   validatePhoneNumber,
@@ -64,9 +65,8 @@ export default function SecurityForm({ user }: SecurityFormProp) {
       await validatePhoneNumber(inputValue.mobile)
         .then((data) => {
           if (data?.error) {
-            toast.error(data.error);
+            return toast.error(data.error);
           }
-
           setChange("phone number");
           sendOtpPopup.setOpen();
         })
@@ -101,7 +101,7 @@ export default function SecurityForm({ user }: SecurityFormProp) {
 
         <form action={onValidateEmail}>
           <CardContent className="space-y-2">
-            {user?.email && (
+            {user?.isEmailVerified && (
               <p className="text-xs flex items-center gap-1 text-green-500">
                 Verified <MdVerifiedUser />
               </p>
@@ -142,7 +142,7 @@ export default function SecurityForm({ user }: SecurityFormProp) {
 
         <form action={onValidatePhoneNumber}>
           <CardContent className="space-y-2">
-            {user?.mobile && (
+            {user?.isMobileVerified && (
               <p className="text-xs flex items-center gap-1 text-green-500">
                 Verified <MdVerifiedUser />
               </p>
@@ -229,18 +229,20 @@ export default function SecurityForm({ user }: SecurityFormProp) {
           <CardFooter className="flex flex-wrap items-center gap-3">
             <Button disabled={pending}>Change password</Button>
 
-            <div className="flex items-center gap-2">
-              <Switch
-                id="switch"
-                checked={sendTo}
-                disabled={pending}
-                onCheckedChange={(e) => setSendTo(e)}
-              />
-              <label htmlFor="switch" className="text-sm">
-                Verification code will send to your{" "}
-                {sendTo ? "phone number" : "email"}
-              </label>
-            </div>
+            {user?.mobile && (
+              <div className="flex items-center gap-2">
+                <Switch
+                  id="switch"
+                  checked={sendTo}
+                  disabled={pending}
+                  onCheckedChange={(e) => setSendTo(e)}
+                />
+                <label htmlFor="switch" className="text-sm">
+                  Verification code will send to your{" "}
+                  {sendTo ? "phone number" : "email"}
+                </label>
+              </div>
+            )}
           </CardFooter>
         </form>
       </Card>
@@ -268,7 +270,7 @@ function SendOtpPopup({
               if (data?.error) {
                 return toast.error(data.error);
               }
-              toast.success("Changed email successfully");
+              toast.success("Email saved successfully");
               sendOtpPopup.setClose();
               setOtp("");
             })
@@ -276,7 +278,19 @@ function SendOtpPopup({
         });
         break;
       case "phone number":
-        alert("phone number");
+        setTransition(async () => {
+          await changePhoneNumber(inputValue.mobile, otp)
+            .then((data) => {
+              if (data?.error) {
+                return toast.error(data.error);
+              }
+
+              toast.success("Phone number saved successfully");
+              sendOtpPopup.setClose();
+              setOtp("");
+            })
+            .catch(() => toast.error("Something went wrong"));
+        });
         break;
       case "changePassword":
         setTransition(async () => {
