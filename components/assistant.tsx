@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ElementRef, useEffect, useRef } from "react";
+import React, { ElementRef, useEffect, useRef, useState } from "react";
 import {
   Card,
   CardContent,
@@ -16,23 +16,23 @@ import Image from "next/image";
 import { IoChevronDownOutline } from "react-icons/io5";
 import { useShowAssistant } from "@/utils/zustand";
 import { usePathname } from "next/navigation";
+import { useChat } from "ai/react";
+import ReactMarkdown from "react-markdown";
+import Link from "next/link";
+import { UserType } from "@/lib/user";
 
-export default function Assistant() {
+interface AssistantProp {
+  user: UserType | null;
+}
+
+export default function Assistant({ user }: AssistantProp) {
   const cardRef = useRef<ElementRef<"div">>(null);
   const pathname = usePathname();
   const setClose = useShowAssistant((state) => state.setClose);
   const isOpen = useShowAssistant((state) => state.isOpen);
-  const message = [
-    {
-      id: "user",
-      content: "My Message cdscsdcdsdscsc  kmsdkcmskmdcskdmc",
-    },
-    {
-      id: "ai",
-      content: "Assistant Message nsjncjsdncjsdncjsdnc ncjsncjsdcnsdjn",
-    },
-    { id: "user", content: "My Message" },
-  ];
+  const { messages, input, handleInputChange, handleSubmit, reload } =
+    useChat();
+  const ref = useRef<ElementRef<"div">>(null);
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -45,6 +45,18 @@ export default function Assistant() {
 
     return () => window.removeEventListener("click", handleClick);
   }, [setClose]);
+
+  useEffect(() => {
+    if (ref.current) {
+      const isBottom =
+        ref.current.scrollHeight -
+        (ref.current.scrollTop + ref.current.clientHeight);
+
+      if (isBottom <= 100) {
+        ref.current.scrollTo({ top: ref.current.scrollHeight });
+      }
+    }
+  }, [messages]);
 
   if (pathname === "/log-in" || pathname === "/register") return;
 
@@ -68,20 +80,40 @@ export default function Assistant() {
         <CardDescription>Ask me anything about us.</CardDescription>
       </CardHeader>
 
-      <CardContent className="px-4 py-5 overflow-auto flex-1 space-y-5">
-        {message.map((m, idx) => (
+      <CardContent
+        id="scrollParent"
+        ref={ref}
+        className="px-4 py-5 overflow-auto flex-1 space-y-5"
+      >
+        {messages.map((m) => (
           <div
-            key={idx}
+            key={m.id}
             className={cn(
               "flex gap-2",
-              m.id === "user" ? "justify-end" : "justify-end flex-row-reverse"
+              m.role === "user" ? "justify-end" : "justify-end flex-row-reverse"
             )}
           >
-            <p className="p-2 border border-zinc-200 shadow-sm rounded-md text-sm break-words break-all max-w-[14rem] whitespace-pre-wrap">
-              {m.content}
-            </p>
+            <div className="p-2 border border-zinc-200 shadow-sm rounded-md text-sm max-w-[14rem] whitespace-pre-wrap">
+              <ReactMarkdown
+                components={{
+                  a: ({ node, ref, ...props }) => (
+                    <Link
+                      {...props}
+                      href={props.href ?? ""}
+                      className="text-blue-500 hover:underline"
+                    />
+                  ),
+                }}
+              >
+                {m.content}
+              </ReactMarkdown>
+            </div>
             <Image
-              src="/no-profile.webp"
+              src={
+                m.role === "assistant"
+                  ? "/logo.png"
+                  : user?.profile || "/no-profile.webp"
+              }
               alt="no-profile"
               width={200}
               height={299}
@@ -93,13 +125,24 @@ export default function Assistant() {
       </CardContent>
 
       <CardFooter className="p-4">
-        <form action="" className="flex items-center gap-3 w-full">
+        <form
+          onSubmit={(e) => {
+            reload();
+            handleSubmit(e);
+          }}
+          className="flex items-center gap-3 w-full"
+        >
           <TextareaAutosize
             maxRows={4}
-            className="rounded-md shadow-md resize-none outline-none focus:ring-2 ring-offset-2 ring-gray-400 border border-gray-300 flex-1 text-sm py-[9px] px-3"
+            value={input}
+            onChange={handleInputChange}
             placeholder="Ask me"
+            className="rounded-md shadow-md resize-none outline-none focus:ring-2 ring-offset-2 ring-gray-400 border border-gray-300 flex-1 text-sm py-[9px] px-3"
           />
-          <IoSend className="text-green-500 text-xl" cursor="pointer" />
+
+          <button type="submit">
+            <IoSend className="text-green-500 text-xl" cursor="pointer" />
+          </button>
         </form>
       </CardFooter>
     </Card>

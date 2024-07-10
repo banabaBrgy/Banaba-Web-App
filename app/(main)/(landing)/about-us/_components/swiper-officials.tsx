@@ -5,33 +5,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 
 export function SwiperOfficials() {
-  const officials = [
-    {
-      name: "Rolando A. Dinglasan",
-      status: "Punong Barangay",
-    },
-    {
-      name: "Cheryl R. Fernandez",
-      status: "Brgy. Kagawad",
-    },
-    {
-      name: "Helen C. Tubo",
-      status: "Brgy. Kagawad",
-    },
-    {
-      name: "Arvijune R. Villamore",
-      status: "Brgy. Kagawad",
-    },
-    {
-      name: "Kevin Ray H. Blanco",
-      status: "Brgy Kagawad",
-    },
-    {
-      name: "Reymark M. Castillo",
-      status: "Brgy Kagawad",
-    },
-  ];
-
   return (
     <Swiper
       breakpoints={{
@@ -50,18 +23,48 @@ export function SwiperOfficials() {
       }}
       spaceBetween={15}
     >
-      {officials.map((item, index) => (
-        <SwiperSlide
-          key={index}
-          className="relative aspect-[8/5] rounded-md overflow-hidden"
-        >
-          <div className="h-full w-full bg-gray-500/20"></div>
-          <div className="absolute bottom-2 left-3">
-            <p className="font-medium text-sm">{item.name}</p>
-            <p className="italic text-xs text-gray-600">{item.status}</p>
-          </div>
-        </SwiperSlide>
-      ))}
+      <SwiperSlide className="relative aspect-[8/5] rounded-md overflow-hidden">
+        <div className="h-full w-full bg-gray-500/20"></div>
+        <div className="absolute bottom-2 left-3">
+          <p className="font-medium text-sm">Rolando A. Dinglasan</p>
+          <p className="italic text-xs text-gray-600">Punong Barangay</p>
+        </div>
+      </SwiperSlide>
+      <SwiperSlide className="relative aspect-[8/5] rounded-md overflow-hidden">
+        <div className="h-full w-full bg-gray-500/20"></div>
+        <div className="absolute bottom-2 left-3">
+          <p className="font-medium text-sm">Cheryl R. Fernandez</p>
+          <p className="italic text-xs text-gray-600">Brgy. Kagawad</p>
+        </div>
+      </SwiperSlide>
+      <SwiperSlide className="relative aspect-[8/5] rounded-md overflow-hidden">
+        <div className="h-full w-full bg-gray-500/20"></div>
+        <div className="absolute bottom-2 left-3">
+          <p className="font-medium text-sm">Helen C. Tubo</p>
+          <p className="italic text-xs text-gray-600">Brgy. Kagawad</p>
+        </div>
+      </SwiperSlide>
+      <SwiperSlide className="relative aspect-[8/5] rounded-md overflow-hidden">
+        <div className="h-full w-full bg-gray-500/20"></div>
+        <div className="absolute bottom-2 left-3">
+          <p className="font-medium text-sm">Arvijune R. Villamore</p>
+          <p className="italic text-xs text-gray-600">Brgy. Kagawad</p>
+        </div>
+      </SwiperSlide>
+      <SwiperSlide className="relative aspect-[8/5] rounded-md overflow-hidden">
+        <div className="h-full w-full bg-gray-500/20"></div>
+        <div className="absolute bottom-2 left-3">
+          <p className="font-medium text-sm">Kevin Ray H. Blanco</p>
+          <p className="italic text-xs text-gray-600">Brgy. Kagawad</p>
+        </div>
+      </SwiperSlide>
+      <SwiperSlide className="relative aspect-[8/5] rounded-md overflow-hidden">
+        <div className="h-full w-full bg-gray-500/20"></div>
+        <div className="absolute bottom-2 left-3">
+          <p className="font-medium text-sm">Reymark M. Castillo</p>
+          <p className="italic text-xs text-gray-600">Brgy. Kagawad</p>
+        </div>
+      </SwiperSlide>
     </Swiper>
   );
 }

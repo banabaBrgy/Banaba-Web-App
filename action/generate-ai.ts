@@ -3,9 +3,14 @@
 import { DirectoryLoader } from "langchain/document_loaders/fs/directory";
 import { DocumentInterface } from "@langchain/core/documents";
 import { TextLoader } from "langchain/document_loaders/fs/text";
-import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
+/* import { RecursiveCharacterTextSplitter } from "langchain/text_splitter"; */
+import { getEmbeddingsCollection, getVectorStore } from "@/lib/astradb";
 
 export const generate = async () => {
+  const vectorStore = await getVectorStore();
+
+  (await getEmbeddingsCollection()).deleteAll();
+
   const loader = new DirectoryLoader(
     "app/(main)/(landing)",
     {
@@ -40,8 +45,8 @@ export const generate = async () => {
       };
     });
 
-  const splitter = RecursiveCharacterTextSplitter.fromLanguage("html");
-  const splitDocs = await splitter.splitDocuments(docs);
+  /*   const splitter = RecursiveCharacterTextSplitter.fromLanguage("html");
+  const splitDocs = await splitter.splitDocuments(docs); */
 
-  console.log(splitDocs);
+  await vectorStore.addDocuments(docs);
 };
