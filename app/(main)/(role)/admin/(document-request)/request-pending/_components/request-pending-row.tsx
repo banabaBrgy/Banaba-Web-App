@@ -1,6 +1,9 @@
 "use client";
 
-import { approvedRequest } from "@/action/admin/request-pending";
+import {
+  approvedRequest,
+  disapprovedRequestAction,
+} from "@/action/admin/request-pending";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -12,9 +15,10 @@ import React, {
   useState,
   useTransition,
 } from "react";
-import { FaCheck } from "react-icons/fa";
+import { AiFillLike, AiFillDislike } from "react-icons/ai";
 import { MdOutlineSearch } from "react-icons/md";
 import { toast } from "sonner";
+import { Textarea } from "@/components/ui/textarea";
 
 interface RequestPendingRowProp {
   requestPending:
@@ -34,6 +38,10 @@ export default function RequestPendingRow({
   const [pending, setTransition] = useTransition();
   const [search, setSearch] = useState("");
   const refs = useRef<{ [keys: string]: ElementRef<"tr"> | null }>({});
+  const [disapprovedRequest, setDisapprovedRequest] = useState<
+    (DocumentRequest & { requestedBy: { fullName: string } }) | null
+  >(null);
+  const disapprovedFormRef = useRef<ElementRef<"form">>(null);
 
   const tableHead = [
     "No.",
@@ -63,8 +71,71 @@ export default function RequestPendingRow({
     });
   }
 
+  function onDisapprovedRequest(formData: FormData) {
+    setTransition(async () => {
+      await disapprovedRequestAction(disapprovedRequest?.id, formData)
+        .then(() => {
+          toast.success("Disapproved request");
+          setDisapprovedRequest(null);
+          disapprovedFormRef.current?.reset();
+        })
+        .catch(() => toast.error("Something went wrong"));
+    });
+  }
+
   return (
     <>
+      <div
+        className={cn(
+          "fixed inset-0 flex items-center justify-center bg-black/80 z-[1001] duration-200",
+          disapprovedRequest?.id ? "visible opacity-100" : "invisible opacity-0"
+        )}
+      >
+        <form
+          action={onDisapprovedRequest}
+          key={disapprovedRequest?.id}
+          ref={disapprovedFormRef}
+          className={cn(
+            "bg-white p-5 rounded-md duration-200 min-w-[32rem] max-w-[32rem]",
+            disapprovedRequest?.id
+              ? "scale-100 opacity-100"
+              : "scale-95 opacity-0"
+          )}
+        >
+          <div className="mb-6">
+            <h1 className="text-xl font-bold mb-3">Disapproved request?</h1>
+
+            <p>
+              Are you sure you want to disapproved{" "}
+              <strong>
+                {disapprovedRequest?.requestedBy.fullName}{" "}
+                {disapprovedRequest?.documentType}
+              </strong>{" "}
+              request?
+            </p>
+
+            <Textarea
+              rows={5}
+              className="mt-3 border border-zinc-300"
+              name="reasonForDisapproval"
+              required
+              placeholder="Please provide the reason for disapproving this request..."
+            />
+          </div>
+
+          <div className="flex items-center justify-end gap-x-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setDisapprovedRequest(null)}
+            >
+              Cancel
+            </Button>
+            <Button type="submit">Continue</Button>
+          </div>
+        </form>
+      </div>
+
       <div className="flex items-center justify-between">
         <h1 className="font-semibold text-lg uppercase">
           Document Requested - Pending
@@ -82,7 +153,7 @@ export default function RequestPendingRow({
       </div>
 
       <div className="overflow-auto mt-4">
-        <table className="bg-white w-full">
+        <table className="border-collapse bg-white w-full">
           <thead>
             <tr>
               {tableHead.map((th, idx) => (
@@ -135,7 +206,7 @@ export default function RequestPendingRow({
                   <td className="p-2 border border-[#dddddd]">
                     {requestPending.purposes}
                   </td>
-                  <td className="p-2 border border-[#dddddd]">
+                  <td className="p-2 border border-[#dddddd] min-w-36 space-x-1">
                     <Button
                       onClick={() => onApprovedRequest(requestPending.id)}
                       title="Approved"
@@ -144,7 +215,17 @@ export default function RequestPendingRow({
                       disabled={pending}
                       className="shadow-md text-green-500"
                     >
-                      <FaCheck />
+                      <AiFillLike />
+                    </Button>
+                    <Button
+                      onClick={() => setDisapprovedRequest(requestPending)}
+                      title="Disapproved"
+                      size="sm"
+                      variant="outline"
+                      disabled={pending}
+                      className="shadow-md text-yellow-500"
+                    >
+                      <AiFillDislike />
                     </Button>
                   </td>
                 </tr>

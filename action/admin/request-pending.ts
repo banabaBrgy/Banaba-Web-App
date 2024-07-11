@@ -56,3 +56,53 @@ export async function approvedRequest(documentRequestId: string) {
     throw new Error(error.message);
   }
 }
+
+export async function disapprovedRequestAction(
+  documentRequestId: string | undefined,
+  formData: FormData
+) {
+  const reasonForDisapproval = formData.get("reasonForDisapproval") as string;
+
+  if (!reasonForDisapproval) {
+    throw new Error("Something went wrong");
+  }
+
+  await db.$transaction(async (tx) => {
+    const documentRequest = await db.documentRequest.update({
+      where: {
+        id: documentRequestId,
+      },
+      data: {
+        reasonForDisapproval,
+        status: "Disapproved",
+      },
+      include: {
+        requestedBy: {
+          select: {
+            fullName: true,
+          },
+        },
+      },
+    });
+
+    const notification = await tx.notification.create({
+      data: {
+        userId: documentRequest.requestedById,
+        message: `<strong>${documentRequest.requestedBy.fullName}</strong>, your document request for <strong>${documentRequest.documentType}</strong> has been disapproved`,
+        path: `/user/my-request?id=${documentRequest.id}`,
+        notificationFor: "User",
+      },
+      include: {
+        markAllAsRead: true,
+      },
+    });
+
+    await pusherServer.trigger(
+      documentRequest.requestedById,
+      "user:notification",
+      notification
+    );
+  });
+
+  revalidatePath("/");
+}

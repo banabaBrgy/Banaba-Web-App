@@ -17,11 +17,15 @@ import {
 import { RiFoldersFill } from "react-icons/ri";
 import { IoDocument } from "react-icons/io5";
 import { FaClipboardList } from "react-icons/fa";
-import { RiQuestionFill, RiInkBottleFill } from "react-icons/ri";
+import {
+  RiQuestionFill,
+  RiInkBottleFill,
+  RiArchiveDrawerFill,
+} from "react-icons/ri";
 import { GrServices } from "react-icons/gr";
 import { BsFillCalendar2WeekFill } from "react-icons/bs";
 import { ImUsers } from "react-icons/im";
-import { AiFillLike } from "react-icons/ai";
+import { AiFillDislike, AiFillLike } from "react-icons/ai";
 import { DocumentRequest, Inquiries } from "@prisma/client";
 import { generate } from "@/action/generate-ai";
 
@@ -92,14 +96,24 @@ export function Sidebar({
 
   const documentRequest = [
     {
+      id: "/admin/request-pending",
+      name: "Request Pending",
+      icon: <MdOutlinePendingActions size={20} />,
+    },
+    {
       id: "/admin/request-approved",
       name: "Request Approved",
       icon: <AiFillLike size={20} />,
     },
     {
-      id: "/admin/request-pending",
-      name: "Request Pending",
-      icon: <MdOutlinePendingActions size={20} />,
+      id: "/admin/request-disapproved",
+      name: "Request Disapproved",
+      icon: <AiFillDislike size={20} />,
+    },
+    {
+      id: "/admin/request-archived",
+      name: "Request Archived",
+      icon: <RiArchiveDrawerFill size={20} />,
     },
   ];
 

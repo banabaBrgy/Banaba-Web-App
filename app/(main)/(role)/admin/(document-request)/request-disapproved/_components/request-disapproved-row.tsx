@@ -6,30 +6,23 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { DocumentRequest } from "@prisma/client";
 import React, { useState, useTransition } from "react";
-import { MdOutlineSearch } from "react-icons/md";
 import { HiArchive } from "react-icons/hi";
+import { MdOutlineSearch } from "react-icons/md";
 import { toast } from "sonner";
 
-interface RequestApprovedRowProp {
-  requestApproved:
-    | (DocumentRequest & {
-        requestedBy: { fullName: string };
-        issuedBy: { fullName: string } | null;
-      })[]
-    | null;
+interface RequestDisapprovedRowProp {
+  disapprovedRequests: (DocumentRequest & {
+    requestedBy: { fullName: string };
+  })[];
 }
 
-export default function RequestApprovedRow({
-  requestApproved,
-}: RequestApprovedRowProp) {
+export function RequestDisapprovedRow({
+  disapprovedRequests,
+}: RequestDisapprovedRowProp) {
   const [pending, setTransition] = useTransition();
   const [search, setSearch] = useState("");
-  const [archiveApprovedRequest, setArchiveApprovedRequest] = useState<
-    | (DocumentRequest & {
-        requestedBy: { fullName: string };
-        issuedBy: { fullName: string } | null;
-      })
-    | null
+  const [archiveDisapprovedRequest, setArchiveDisapprovedRequest] = useState<
+    (DocumentRequest & { requestedBy: { fullName: string } }) | null
   >(null);
 
   const tableHead = [
@@ -38,18 +31,20 @@ export default function RequestApprovedRow({
     "Document type",
     "Requested by",
     "Date requested",
-    "Issued by",
-    "Date issued",
     "Purposes",
     "Option",
   ];
 
-  function onArchiveApprovedRequest() {
+  const dateTimeFormatter = Intl.DateTimeFormat("en-US", {
+    dateStyle: "medium",
+  });
+
+  function onArchiveDisapprovedRequest() {
     setTransition(async () => {
-      archieveRequest(archiveApprovedRequest?.id)
+      await archieveRequest(archiveDisapprovedRequest?.id)
         .then(() => {
           toast.success("Archived successfully");
-          setArchiveApprovedRequest(null);
+          setArchiveDisapprovedRequest(null);
         })
         .catch(() => toast.error("Something went wrong"));
     });
@@ -60,7 +55,7 @@ export default function RequestApprovedRow({
       <div
         className={cn(
           "fixed inset-0 flex items-center justify-center bg-black/80 z-[1001] duration-200",
-          archiveApprovedRequest?.id
+          archiveDisapprovedRequest?.id
             ? "visible opacity-100"
             : "invisible opacity-0"
         )}
@@ -68,29 +63,29 @@ export default function RequestApprovedRow({
         <div
           className={cn(
             "bg-white p-5 rounded-md duration-200 min-w-[32rem] max-w-[32rem]",
-            archiveApprovedRequest?.id
+            archiveDisapprovedRequest?.id
               ? "scale-100 opacity-100"
               : "scale-95 opacity-0"
           )}
         >
           <div className="mb-6">
             <h1 className="text-xl font-bold mb-3">
-              Archive approved request?
+              Archive diapproved request?
             </h1>
 
             <p>
               Are you sure you want to archive{" "}
               <strong>
-                {archiveApprovedRequest?.requestedBy.fullName}{" "}
-                {archiveApprovedRequest?.documentType}
+                {archiveDisapprovedRequest?.requestedBy.fullName}{" "}
+                {archiveDisapprovedRequest?.documentType}
               </strong>{" "}
-              approved request?
+              disapproved request?
             </p>
           </div>
 
           <div className="flex items-center justify-end gap-x-2">
             <Button
-              onClick={() => setArchiveApprovedRequest(null)}
+              onClick={() => setArchiveDisapprovedRequest(null)}
               type="button"
               variant="outline"
               disabled={pending}
@@ -98,7 +93,7 @@ export default function RequestApprovedRow({
               Cancel
             </Button>
             <Button
-              onClick={onArchiveApprovedRequest}
+              onClick={onArchiveDisapprovedRequest}
               disabled={pending}
               type="submit"
             >
@@ -125,7 +120,7 @@ export default function RequestApprovedRow({
       </div>
 
       <div className="overflow-auto mt-4">
-        <table className="bg-white w-full">
+        <table className="w-full bg-white">
           <thead>
             <tr>
               {tableHead.map((th, idx) => (
@@ -140,59 +135,37 @@ export default function RequestApprovedRow({
           </thead>
 
           <tbody>
-            {requestApproved
+            {disapprovedRequests
               ?.filter(
-                (requestApproved) =>
-                  requestApproved.id.toLowerCase().includes(search) ||
-                  requestApproved.documentType.toLowerCase().includes(search) ||
-                  requestApproved.requestedBy.fullName
-                    .toLowerCase()
-                    .includes(search) ||
-                  requestApproved.issuedBy?.fullName
-                    .toLowerCase()
-                    .includes(search)
+                (item) =>
+                  item.id.includes(search) ||
+                  item.documentType.toLowerCase().includes(search) ||
+                  item.requestedBy.fullName.toLowerCase().includes(search) ||
+                  item.purposes.toLowerCase().includes(search)
               )
-              ?.map((requestApproved, idx) => (
-                <tr
-                  key={requestApproved.id}
-                  className="text-center text-sm hover:bg-zinc-50"
-                >
-                  <td className="p-2 border border-[#dddddd]">{idx + 1}.</td>
-                  <td className="p-2 border border-[#dddddd]">
-                    {requestApproved.id}
+              ?.map((disapprovedRequest, idx) => (
+                <tr key={disapprovedRequest.id} className="text-center text-sm">
+                  <td className="border border-[#dddddd] p-2">{idx + 1}</td>
+                  <td className="border border-[#dddddd] p-2">
+                    {disapprovedRequest.id}
                   </td>
-                  <td className="p-2 border border-[#dddddd]">
-                    {requestApproved.documentType}
+                  <td className="border border-[#dddddd] p-2">
+                    {disapprovedRequest.documentType}
                   </td>
-                  <td className="p-2 border border-[#dddddd]">
-                    {requestApproved.requestedBy.fullName}
+                  <td className="border border-[#dddddd] p-2">
+                    {disapprovedRequest.requestedBy.fullName}
                   </td>
-                  <td className="p-2 border border-[#dddddd]">
-                    {new Date(requestApproved.createdAt).toLocaleDateString(
-                      [],
-                      {
-                        dateStyle: "medium",
-                      }
-                    )}
+                  <td className="border border-[#dddddd] p-2">
+                    {dateTimeFormatter.format(disapprovedRequest.createdAt)}
                   </td>
-                  <td className="p-2 border border-[#dddddd]">
-                    {requestApproved.issuedBy?.fullName}
-                  </td>
-                  <td className="p-2 border border-[#dddddd]">
-                    {requestApproved.dateIssued &&
-                      new Date(requestApproved.dateIssued).toLocaleDateString(
-                        [],
-                        {
-                          dateStyle: "medium",
-                        }
-                      )}
-                  </td>
-                  <td className="p-2 border border-[#dddddd]">
-                    {requestApproved.purposes}
+                  <td className="border border-[#dddddd] p-2">
+                    {disapprovedRequest.purposes}
                   </td>
                   <td className="p-2 border border-[#dddddd]">
                     <Button
-                      onClick={() => setArchiveApprovedRequest(requestApproved)}
+                      onClick={() =>
+                        setArchiveDisapprovedRequest(disapprovedRequest)
+                      }
                       title="Archive"
                       size="sm"
                       variant="outline"

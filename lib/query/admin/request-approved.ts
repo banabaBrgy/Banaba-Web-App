@@ -4,9 +4,11 @@ export const getRequestApproved = async () => {
   try {
     const requestApproved = await db.documentRequest.findMany({
       where: {
-        status: {
-          equals: "Approved",
-        },
+        status: "Approved",
+        isArchived: false,
+      },
+      orderBy: {
+        createdAt: "desc",
       },
       include: {
         requestedBy: {

@@ -130,7 +130,8 @@ export default function MyRequestRow({ myRequest, id }: MyRequestRowProp) {
                   <td
                     className={cn(
                       "border border-zinc-300 p-2 text-red-500 text-center uppercase",
-                      item.status === "Approved" && "text-green-500"
+                      item.status === "Approved" && "text-green-500",
+                      item.status === "Disapproved" && "text-yellow-500"
                     )}
                   >
                     {item.status}

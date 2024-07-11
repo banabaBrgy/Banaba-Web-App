@@ -6,11 +6,12 @@ import { GiQuillInk, GiTimeTrap } from "react-icons/gi";
 import { PiUsersThreeFill } from "react-icons/pi";
 import { FaVoteYea } from "react-icons/fa";
 import ReactBigCalendar from "@/components/react-big-calendar";
-import { getCalendarActivities } from "@/lib/query/admin/dashboard";
+import { getCalendarActivities, getTotals } from "@/lib/query/admin/dashboard";
 const Graph = dynamic(() => import("./_components/graph"), { ssr: false });
 
 export default async function AdminPage() {
   const calendarActivities = await getCalendarActivities();
+  const totals = await getTotals();
 
   const dashBoard = [
     {
@@ -20,7 +21,7 @@ export default async function AdminPage() {
       bg: "bg-gradient-to-tr from-blue-600 via-blue-400 to-blue-300",
     },
     {
-      total: 300,
+      total: totals.totalBlotters.length,
       name: "Total Blotter(s)",
       icon: <GiQuillInk size={50} />,
       bg: "bg-gradient-to-tr from-lime-600 via-lime-400 to-lime-300",
@@ -32,7 +33,7 @@ export default async function AdminPage() {
       bg: "bg-gradient-to-tr from-pink-600 via-pink-400 to-pink-300",
     },
     {
-      total: 100,
+      total: totals.totalPendingRequest.length,
       name: "Pending Request",
       icon: <GiTimeTrap size={50} />,
       bg: "bg-gradient-to-tr from-violet-600 via-violet-400 to-violet-300",
