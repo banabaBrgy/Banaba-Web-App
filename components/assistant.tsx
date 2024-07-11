@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ElementRef, useEffect, useRef, useState } from "react";
+import React, { ElementRef, useEffect, useRef } from "react";
 import {
   Card,
   CardContent,
@@ -30,8 +30,7 @@ export default function Assistant({ user }: AssistantProp) {
   const pathname = usePathname();
   const setClose = useShowAssistant((state) => state.setClose);
   const isOpen = useShowAssistant((state) => state.isOpen);
-  const { messages, input, handleInputChange, handleSubmit, reload } =
-    useChat();
+  const { messages, input, handleInputChange, handleSubmit } = useChat();
   const ref = useRef<ElementRef<"div">>(null);
 
   useEffect(() => {
@@ -64,11 +63,11 @@ export default function Assistant({ user }: AssistantProp) {
     <Card
       ref={cardRef}
       className={cn(
-        "fixed sm:right-4 right-0 flex flex-col sm:w-[26rem] sm:h-[37rem] h-full w-full rounded-b-none sm:rounded-t-lg rounded-none z-[1010] duration-300 shadow-xl overflow-hidden",
+        "fixed sm:right-4 right-0 flex flex-col sm:w-[28rem] sm:h-[37rem] h-full w-full rounded-b-none sm:rounded-t-lg rounded-none z-[1010] duration-300 shadow-xl overflow-hidden",
         isOpen ? "bottom-0" : "bottom-[-60rem]"
       )}
     >
-      <CardHeader className="p-4 border-b">
+      <CardHeader className="p-4 shadow">
         <div className="flex items-center justify-between">
           <CardTitle>Assistant</CardTitle>
           <IoChevronDownOutline
@@ -83,66 +82,77 @@ export default function Assistant({ user }: AssistantProp) {
       <CardContent
         id="scrollParent"
         ref={ref}
-        className="px-4 py-5 overflow-auto flex-1 space-y-5"
+        className="px-4 py-5 overflow-auto flex-1 bg-zinc-100 space-y-5 border-none"
       >
-        {messages.map((m) => (
-          <div
-            key={m.id}
-            className={cn(
-              "flex gap-2",
-              m.role === "user" ? "justify-end" : "justify-end flex-row-reverse"
-            )}
-          >
-            <div className="p-2 border border-zinc-200 shadow-sm rounded-md text-sm max-w-[14rem] whitespace-pre-wrap">
-              <ReactMarkdown
-                components={{
-                  a: ({ node, ref, ...props }) => (
-                    <Link
-                      {...props}
-                      href={props.href ?? ""}
-                      className="text-blue-500 hover:underline"
-                    />
-                  ),
-                }}
-              >
-                {m.content}
-              </ReactMarkdown>
+        {!!messages.length &&
+          messages.map((m) => (
+            <div
+              key={m.id}
+              className={cn(
+                "flex gap-2",
+                m.role === "user"
+                  ? "justify-end"
+                  : "justify-end flex-row-reverse"
+              )}
+            >
+              <div className="p-2 bg-white shadow rounded-md text-sm max-w-[19rem] whitespace-pre-wrap break-words">
+                <ReactMarkdown
+                  components={{
+                    a: ({ node, ref, ...props }) => (
+                      <Link
+                        {...props}
+                        href={props.href ?? ""}
+                        className="text-blue-500 hover:underline"
+                      />
+                    ),
+                  }}
+                >
+                  {m.content}
+                </ReactMarkdown>
+              </div>
+              <Image
+                src={
+                  m.role === "assistant"
+                    ? "/logo.png"
+                    : user?.profile || "/no-profile.webp"
+                }
+                alt="no-profile"
+                width={200}
+                height={299}
+                priority
+                className="w-8 h-8 rounded-full"
+              />
             </div>
-            <Image
-              src={
-                m.role === "assistant"
-                  ? "/logo.png"
-                  : user?.profile || "/no-profile.webp"
-              }
-              alt="no-profile"
-              width={200}
-              height={299}
-              priority
-              className="w-8 h-8 rounded-full"
-            />
+          ))}
+        {messages.length === 0 && (
+          <div className="flex items-center justify-center h-full">
+            No conversation yet
           </div>
-        ))}
+        )}
       </CardContent>
 
-      <CardFooter className="p-4">
+      <CardFooter className="px-4 py-2 shadow">
         <form
-          onSubmit={(e) => {
-            reload();
-            handleSubmit(e);
-          }}
-          className="flex items-center gap-3 w-full"
+          onSubmit={handleSubmit}
+          onKeyDown={(e) => e.keyCode === 13 && handleSubmit(e)}
+          className="relative flex items-center gap-3 w-full"
         >
           <TextareaAutosize
             maxRows={4}
             value={input}
             onChange={handleInputChange}
-            placeholder="Ask me"
-            className="rounded-md shadow-md resize-none outline-none focus:ring-2 ring-offset-2 ring-gray-400 border border-gray-300 flex-1 text-sm py-[9px] px-3"
+            placeholder="Start asking me..."
+            className="sidebar rounded-md shadow-md resize-none outline-none ring-gray-400 border border-gray-400 flex-1 text-sm py-[10px] pl-3 pr-12"
           />
 
-          <button type="submit">
-            <IoSend className="text-green-500 text-xl" cursor="pointer" />
-          </button>
+          <div className="absolute right-1 scroll-mr-3 inset-y-1 flex items-center">
+            <button
+              type="submit"
+              className="border p-2 bg-green-500 rounded-md"
+            >
+              <IoSend className="text-white" cursor="pointer" />
+            </button>
+          </div>
         </form>
       </CardFooter>
     </Card>
