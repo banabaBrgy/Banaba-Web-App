@@ -13,7 +13,7 @@ export default async function AnnouncementPage() {
         <FormAnnouncement />
       </div>
 
-      <div className="mt-4 space-y-4">
+      <div className="mt-4 space-y-4" id="announcement-row">
         <AnnouncementRow announcements={announcements} />
       </div>
     </div>

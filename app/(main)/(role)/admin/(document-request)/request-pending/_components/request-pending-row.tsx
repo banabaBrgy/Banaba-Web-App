@@ -97,9 +97,7 @@ export default function RequestPendingRow({
           ref={disapprovedFormRef}
           className={cn(
             "bg-white p-5 rounded-md duration-200 min-w-[32rem] max-w-[32rem]",
-            disapprovedRequest?.id
-              ? "scale-100 opacity-100"
-              : "scale-95 opacity-0"
+            disapprovedRequest?.id ? "scale-100 visible" : "scale-95 invisible"
           )}
         >
           <div className="mb-6">
@@ -119,6 +117,7 @@ export default function RequestPendingRow({
               className="mt-3 border border-zinc-300"
               name="reasonForDisapproval"
               required
+              autoFocus
               placeholder="Please provide the reason for disapproving this request..."
             />
           </div>

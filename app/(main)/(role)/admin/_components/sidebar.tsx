@@ -4,11 +4,11 @@ import { Button } from "@/components/ui/button";
 import { UserType } from "@/lib/user";
 import { cn } from "@/lib/utils";
 import { useOpenSidebar } from "@/utils/zustand";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useTransition } from "react";
 import {
   MdDashboard,
   MdAnnouncement,
@@ -28,6 +28,7 @@ import { ImUsers } from "react-icons/im";
 import { AiFillDislike, AiFillLike } from "react-icons/ai";
 import { DocumentRequest, Inquiries } from "@prisma/client";
 import { generate } from "@/action/generate-ai";
+import { toast } from "sonner";
 
 interface SidebarProp {
   user: UserType | null;
@@ -46,6 +47,7 @@ export function Sidebar({
   pendingRequest,
   noAnswersInquiries,
 }: SidebarProp) {
+  const [pending, setTransition] = useTransition();
   const pathname = usePathname();
   const setCloseSidebar = useOpenSidebar((s) => s.setClose);
   const isSidebarOpen = useOpenSidebar((s) => s.isSidebarOpen);
@@ -124,7 +126,7 @@ export function Sidebar({
   return (
     <div
       className={cn(
-        "sidebar fixed inset-y-0 bg-gradient-to-r from-green-600 via-green-500 to-green-400 text-white w-[16rem] px-5 duration-200 z-[1001] overflow-auto pb-20",
+        "sidebar fixed inset-y-0 bg-gradient-to-r from-green-600 via-green-500 to-green-400 text-white w-[16rem] px-5 duration-200 z-[1001] overflow-auto",
         !isSidebarOpen ? "lg:left-0 left-[-20rem]" : "left-0"
       )}
     >
@@ -221,9 +223,29 @@ export function Sidebar({
               {item.icon} {item.name}
             </Link>
           ))}
-
-          <Button onClick={() => generate()}>Sync info to ai</Button>
         </div>
+      </div>
+
+      <div className="sticky bottom-2 inset-x-4 mt-8">
+        <Button
+          onClick={() =>
+            setTransition(async () => {
+              await generate()
+                .then(() => toast.success("Sync info successfully"))
+                .catch(() => toast.error("Something went wrong"));
+            })
+          }
+          disabled={pending}
+          className="w-full bg-black/60 disabled:opacity-90 hover:bg-black/60 text-sm uppercase backdrop-blur-xl active:scale-95"
+        >
+          {pending ? (
+            <span className="flex items-center gap-2">
+              <Loader2 className="animate-spin" /> Syncing...
+            </span>
+          ) : (
+            "Sync info to ai"
+          )}
+        </Button>
       </div>
     </div>
   );

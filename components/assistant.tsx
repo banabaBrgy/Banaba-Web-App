@@ -30,7 +30,8 @@ export default function Assistant({ user }: AssistantProp) {
   const pathname = usePathname();
   const setClose = useShowAssistant((state) => state.setClose);
   const isOpen = useShowAssistant((state) => state.isOpen);
-  const { messages, input, handleInputChange, handleSubmit } = useChat();
+  const { messages, input, handleInputChange, handleSubmit, isLoading } =
+    useChat();
   const ref = useRef<ElementRef<"div">>(null);
 
   useEffect(() => {
@@ -134,7 +135,7 @@ export default function Assistant({ user }: AssistantProp) {
       <CardFooter className="px-4 py-2 shadow">
         <form
           onSubmit={handleSubmit}
-          onKeyDown={(e) => e.keyCode === 13 && handleSubmit(e)}
+          onKeyDown={(e) => e.keyCode === 13 && !isLoading && handleSubmit(e)}
           className="relative flex items-center gap-3 w-full"
         >
           <TextareaAutosize
@@ -142,15 +143,16 @@ export default function Assistant({ user }: AssistantProp) {
             value={input}
             onChange={handleInputChange}
             placeholder="Start asking me..."
-            className="sidebar rounded-md shadow-md resize-none outline-none ring-gray-400 border border-gray-400 flex-1 text-sm py-[10px] pl-3 pr-12"
+            className="sidebar rounded-md shadow-md resize-none outline-none ring-gray-400 border border-gray-300 flex-1 text-sm py-[10px] pl-3 pr-12"
           />
 
           <div className="absolute right-1 scroll-mr-3 inset-y-1 flex items-center">
             <button
+              disabled={isLoading}
               type="submit"
-              className="border p-2 bg-green-500 rounded-md"
+              className="p-2 rounded-md disabled:opacity-60"
             >
-              <IoSend className="text-white" cursor="pointer" />
+              <IoSend className="text-green-500 scale-[1.2]" cursor="pointer" />
             </button>
           </div>
         </form>
