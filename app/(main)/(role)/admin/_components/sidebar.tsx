@@ -23,7 +23,6 @@ import {
   RiArchiveDrawerFill,
 } from "react-icons/ri";
 import { GrServices } from "react-icons/gr";
-import { BsFillCalendar2WeekFill } from "react-icons/bs";
 import { ImUsers } from "react-icons/im";
 import { AiFillDislike, AiFillLike } from "react-icons/ai";
 import { DocumentRequest, Inquiries } from "@prisma/client";
@@ -76,11 +75,6 @@ export function Sidebar({
       icon: <RiInkBottleFill size={20} />,
     },
     { id: "/admin/services", name: "Services", icon: <GrServices size={20} /> },
-    {
-      id: "/admin/calendar-of-activities",
-      name: "Calendar of Activities",
-      icon: <BsFillCalendar2WeekFill size={17} />,
-    },
   ];
 
   const settings = [

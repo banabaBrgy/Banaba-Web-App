@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { GiQuillInk, GiTimeTrap } from "react-icons/gi";
 import { PiUsersThreeFill } from "react-icons/pi";
 import { FaVoteYea } from "react-icons/fa";
-import ReactBigCalendar from "@/components/react-big-calendar";
+import { ReactBigCalendar } from "./_components/react-big-calendar";
 import { getCalendarActivities, getTotals } from "@/lib/query/admin/dashboard";
 const Graph = dynamic(() => import("./_components/graph"), { ssr: false });
 

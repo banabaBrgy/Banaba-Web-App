@@ -4,8 +4,8 @@ import { GiQuillInk, GiTimeTrap } from "react-icons/gi";
 import { BiSolidUserCheck } from "react-icons/bi";
 import { cn } from "@/lib/utils";
 import { CountUpAnimation } from "@/components/count-up-animation";
-import ReactBigCalendar from "@/components/react-big-calendar";
 import { getCalendarActivities } from "@/lib/query/user/dashboard";
+import { ReactBigCalendar } from "./_components/react-bitg-calendar";
 
 export default async function ResidentPage() {
   const calendarActivities = await getCalendarActivities();

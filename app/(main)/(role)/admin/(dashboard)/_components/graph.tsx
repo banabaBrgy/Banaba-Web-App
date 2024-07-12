@@ -31,5 +31,7 @@ export default function Graph() {
     colorField: "name",
   };
 
-  return <Column {...config} className="min-h-[50dvh] mt-4" />;
+  return (
+    <Column {...config} className="min-h-[50dvh] mt-4 bg-white rounded-md" />
+  );
 }

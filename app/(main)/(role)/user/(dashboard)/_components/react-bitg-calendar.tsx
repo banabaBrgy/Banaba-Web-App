@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
-import { Calendar, momentLocalizer } from "react-big-calendar";
+import { CalendarOfActivities } from "@prisma/client";
+
+import { Calendar, momentLocalizer, View } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import {
@@ -10,37 +11,32 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "./ui/card";
+} from "@/components/ui/card";
+import { useCallback, useState } from "react";
 
 interface ReactBigCalendarProp {
-  calendarActivities:
-    | {
-        id: string;
-        event: string;
-        description: string;
-        startDate: string;
-        endDate: string;
-        createdAt: Date;
-        updatedAt: Date;
-      }[]
-    | undefined;
+  calendarActivities: CalendarOfActivities[] | undefined;
 }
 
 type ViewType = "month" | "week" | "work_week" | "day" | "agenda";
 
 const localizer = momentLocalizer(moment);
 
-export default function ReactBigCalendar({
+export const ReactBigCalendar = ({
   calendarActivities,
-}: ReactBigCalendarProp) {
+}: ReactBigCalendarProp) => {
   const [date, setDate] = useState(new Date());
   const [view, setView] = useState<ViewType>("month");
 
-  const events = calendarActivities?.map((ev) => ({
-    title: ev.event,
-    start: new Date(ev.startDate),
-    end: new Date(ev.endDate),
+  const eventLists = calendarActivities?.map((cal) => ({
+    title: cal.event,
+    start: new Date(cal.startDate),
+    end: new Date(cal.endDate),
+    resource: cal.description,
   }));
+
+  const onView = useCallback((newView: View) => setView(newView), [setView]);
+  const onNavigate = useCallback((date: Date) => setDate(date), [setDate]);
 
   return (
     <Card className="mt-5">
@@ -52,17 +48,17 @@ export default function ReactBigCalendar({
       <CardContent>
         <Calendar
           localizer={localizer}
-          events={events}
+          events={eventLists}
           views={["month", "week", "day", "agenda"]}
           date={date}
-          defaultDate={date}
           view={view}
-          defaultView={view}
+          startAccessor="start"
+          endAccessor="end"
           style={{ height: 550 }}
-          onView={(view) => setView(view)}
-          onNavigate={(date) => setDate(date)}
+          onView={onView}
+          onNavigate={onNavigate}
         />
       </CardContent>
     </Card>
   );
-}
+};
