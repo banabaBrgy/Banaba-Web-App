@@ -7,12 +7,8 @@ export async function GET(req: NextRequest) {
 
     const totalApprovedRequest = await db.documentRequest.findMany({
       where: {
-        documentType: {
-          equals: documentType,
-        },
-        status: {
-          equals: "Approved",
-        },
+        documentType: documentType,
+        status: "Approved",
       },
     });
 

@@ -24,6 +24,20 @@ export default function ServicesCard({ service, idx }: ServicesCardProp) {
     },
   });
 
+  const { data: totalDisapprovedRequest } = useQuery({
+    queryKey: ["total-disapproved-request", service.document],
+    queryFn: async () => {
+      try {
+        const res = await axios.get(
+          `/api/admin/services/total-disapproved-request?documentType=${service.document}`
+        );
+        return res.data;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+  });
+
   const { data: totalPendingRequest } = useQuery({
     queryKey: ["total-pending-request", service.document],
     queryFn: async () => {
@@ -39,12 +53,17 @@ export default function ServicesCard({ service, idx }: ServicesCardProp) {
     },
   });
 
+  console.log(service.document);
+
   return (
     <tr className="text-center text-sm hover:bg-zinc-50">
       <td className="border border-[#dddddd] p-2">{idx + 1}.</td>
       <td className="border border-[#dddddd] p-2">{service.document}</td>
       <td className="border border-[#dddddd] p-2">
         {totalApprovedRequest?.length}
+      </td>
+      <td className="border border-[#dddddd] p-2">
+        {totalDisapprovedRequest?.length}
       </td>
       <td className="border border-[#dddddd] p-2">
         {totalPendingRequest?.length}

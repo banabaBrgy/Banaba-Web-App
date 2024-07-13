@@ -7,12 +7,8 @@ export async function GET(req: NextRequest) {
 
     const totalPendingRequest = await db.documentRequest.findMany({
       where: {
-        documentType: {
-          equals: documentType,
-        },
-        status: {
-          equals: "Pending",
-        },
+        documentType: documentType,
+        status: "Pending",
       },
     });
 

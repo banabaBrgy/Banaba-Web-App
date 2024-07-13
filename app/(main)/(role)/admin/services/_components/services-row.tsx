@@ -17,6 +17,7 @@ export default function ServicesRow({ services }: ServicesRowProp) {
     "No.",
     "Document type",
     "Total approved request",
+    "Total disapproved request",
     "Total Pending Request",
   ];
 
