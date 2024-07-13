@@ -15,9 +15,13 @@ export default async function InquiriesPage({
 
   return (
     <div className="px-4 py-4">
-      <h1 className="font-semibold text-lg uppercase">Inquiries</h1>
+      <div>
+        <h1 className="sm:text-lg text-sm font-semibold uppercase">
+          Create Inquiries
+        </h1>
 
-      <InquiriesForm user={user} />
+        <InquiriesForm user={user} />
+      </div>
 
       <InquiriesRow inquiries={inquiries} id={id} />
     </div>

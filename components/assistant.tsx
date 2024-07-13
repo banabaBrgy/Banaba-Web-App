@@ -143,6 +143,7 @@ export default function Assistant({ user }: AssistantProp) {
             value={input}
             onChange={handleInputChange}
             placeholder="Start asking me..."
+            spellCheck={false}
             className="sidebar rounded-md shadow-md resize-none outline-none ring-gray-400 border border-gray-300 flex-1 text-sm py-[10px] pl-3 pr-12"
           />
 
