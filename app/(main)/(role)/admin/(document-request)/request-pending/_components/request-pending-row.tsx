@@ -130,7 +130,9 @@ export default function RequestPendingRow({
             >
               Cancel
             </Button>
-            <Button type="submit">Continue</Button>
+            <Button disabled={pending} type="submit">
+              Continue
+            </Button>
           </div>
         </form>
       </div>
