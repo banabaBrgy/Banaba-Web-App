@@ -14,7 +14,16 @@ export const generate = async () => {
   const pinnedInquiries = await getPinnedInquiries();
 
   const pinnedInquiriesDocs = [
-    { pageContent: JSON.stringify(pinnedInquiries), metadata: { url: "/faq" } },
+    {
+      pageContent: JSON.stringify(
+        pinnedInquiries.map((item) => ({
+          subject: item.subject,
+          question: item.message,
+          answer: item.answer,
+        }))
+      ),
+      metadata: { url: "/faq" },
+    },
   ];
 
   const loader = new DirectoryLoader(
