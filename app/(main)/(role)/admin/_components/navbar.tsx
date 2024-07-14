@@ -23,6 +23,7 @@ export function Navbar({ user }: NavbarProp) {
   const showAssistant = useShowAssistant();
   const openSidebar = useOpenSidebar();
   const [openNotif, setOpenNotif] = useState(false);
+  const [timeDate, setTimeDate] = useState("");
   const adminUnreadNotifications = useUnreadNotificationLength(
     (s) => s.adminUnreads
   );
@@ -35,6 +36,22 @@ export function Navbar({ user }: NavbarProp) {
     window.addEventListener("click", handleClick);
 
     return () => window.removeEventListener("click", handleClick);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const dateTimeFormatter = Intl.DateTimeFormat("en-US", {
+        dateStyle: "medium",
+        timeStyle: "medium",
+      });
+
+      const dateNow = dateTimeFormatter.format(new Date());
+      setTimeDate(`${dateNow}`);
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
 
   return (
@@ -62,6 +79,10 @@ export function Navbar({ user }: NavbarProp) {
       </div>
 
       <div className="flex items-center gap-1 text-gray-500">
+        <div className="flex items-center text-sm mr-2">
+          <p>{timeDate}</p>
+        </div>
+
         <div onClick={(e) => e.stopPropagation()} className="relative">
           <Button
             onClick={() => {

@@ -54,6 +54,7 @@ export const ReactBigCalendar = ({
           view={view}
           startAccessor="start"
           endAccessor="end"
+          popup
           style={{ height: 550 }}
           onView={onView}
           onNavigate={onNavigate}

@@ -38,7 +38,7 @@ export default function HealthCenterPage() {
         <div className="shrink-0 rounded-md overflow-hidden shadow-md border border-gray-300">
           <Image
             src="/health-center.jpg"
-            alt="Health-center"
+            alt="Barangay Banaba East Health Center"
             width={550}
             height={300}
             priority
