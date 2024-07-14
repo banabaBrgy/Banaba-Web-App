@@ -9,7 +9,7 @@ export default function HomePage() {
         <div className="slide-up shrink-0">
           <Image
             src="/logo.png"
-            alt="Barangay Banaba East Logo"
+            alt="Barangay Banaba Logo"
             width={800}
             height={500}
             priority
@@ -43,7 +43,7 @@ export default function HomePage() {
       <div className="relative flex-1 pr-3 lg:block hidden overflow-hidden">
         <div
           className="absolute inset-0 z-[10] rounded-l-[400px]"
-          /* Barangay Banaba East Background URL: /brg-bg.jpg  */
+          //BARANGAY IMAGE URL: /bgy-bg.jpg
           style={{
             background: `url(/brg-bg.jpg)`,
             backgroundRepeat: "no-repeat",

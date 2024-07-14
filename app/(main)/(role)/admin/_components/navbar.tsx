@@ -23,7 +23,7 @@ export function Navbar({ user }: NavbarProp) {
   const showAssistant = useShowAssistant();
   const openSidebar = useOpenSidebar();
   const [openNotif, setOpenNotif] = useState(false);
-  const [timeDate, setTimeDate] = useState("");
+  const [dateTime, setDateTime] = useState("");
   const adminUnreadNotifications = useUnreadNotificationLength(
     (s) => s.adminUnreads
   );
@@ -44,9 +44,8 @@ export function Navbar({ user }: NavbarProp) {
         dateStyle: "medium",
         timeStyle: "medium",
       });
-
-      const dateNow = dateTimeFormatter.format(new Date());
-      setTimeDate(`${dateNow}`);
+      const currentDateTime = dateTimeFormatter.format(new Date()).toString();
+      setDateTime(currentDateTime);
     }, 1000);
 
     return () => {
@@ -55,7 +54,7 @@ export function Navbar({ user }: NavbarProp) {
   }, []);
 
   return (
-    <nav className="sticky top-0 flex items-center justify-between md:px-4 px-3 lg:ml-[16rem] bg-white h-14 z-[1001]">
+    <nav className="sticky top-0 flex items-center justify-between md:px-4 px-3 shadow lg:ml-[16rem] bg-white h-14 z-[1001]">
       <div className="flex gap-2 items-center">
         <AlignJustify
           onClick={() => openSidebar.setOpen()}
@@ -79,8 +78,8 @@ export function Navbar({ user }: NavbarProp) {
       </div>
 
       <div className="flex items-center gap-1 text-gray-500">
-        <div className="flex items-center text-sm mr-2">
-          <p>{timeDate}</p>
+        <div className="flex items-center mr-2 text-sm">
+          <p>{dateTime}</p>
         </div>
 
         <div onClick={(e) => e.stopPropagation()} className="relative">

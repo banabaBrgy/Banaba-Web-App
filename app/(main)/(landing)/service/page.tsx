@@ -77,7 +77,7 @@ export default function ServicePage() {
       <div className="shadow-2xl mt-20">
         <Image
           src="/hand-shake-service.jpg"
-          alt="Hand Shake Image"
+          alt="Hand Shake"
           width={1010}
           height={990}
           priority

@@ -61,12 +61,11 @@ export async function POST(req: Request) {
   const prompt = ChatPromptTemplate.fromMessages([
     [
       "system",
-      `You are a helpful Assistant for a Barangay Banaba Web-based management system. ` +
-        "Answer the user's questions related to the Barangay Banaba information based on the below context. " +
-        "Whenever the information have images and links, provide the links and display the images to pages that contain more information about the topic from the given context." +
-        "Dont answer any question/topic that not related to Barangay Banaba like coding/programming, history except Barangay Banaba history, math, cooking, science and etc. " +
+      "You are a helpful Assistant for a Barangay Banaba Web-based management system you can only answer question about barangay and dont answer any coding or related to any programming like react, html etc." +
+        "Answer the user's questions related to the Barangay Banaba information based on the below context and use tagalog or filipino language to answer the question. " +
+        "Whenever the information have images or links, provide and display the links and images to pages that contain more information about the topic from the given context. " +
         "Format your messages in react markdown format.\n\n" +
-        "context:\n\n{context}",
+        "Context:\n{context}",
     ],
     new MessagesPlaceholder("chat_history"),
     ["user", "{input}"],
@@ -82,13 +81,13 @@ export async function POST(req: Request) {
   });
 
   const retrieverChain = await createRetrievalChain({
-    retriever: historyAwareRetrievalChain,
     combineDocsChain,
+    retriever: historyAwareRetrievalChain,
   });
 
   retrieverChain.invoke({
-    chat_history: chatHistory,
     input: currentMessageContent,
+    chat_history: chatHistory,
   });
 
   return new StreamingTextResponse(stream);

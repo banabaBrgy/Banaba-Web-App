@@ -38,7 +38,7 @@ export default function HealthCenterPage() {
         <div className="shrink-0 rounded-md overflow-hidden shadow-md border border-gray-300">
           <Image
             src="/health-center.jpg"
-            alt="Barangay Banaba East Health Center"
+            alt="Health Center Image"
             width={550}
             height={300}
             priority
@@ -139,7 +139,7 @@ export default function HealthCenterPage() {
           <div className="flex justify-center gap-3 mb-2">
             <Image
               src="/DOH-logo.png"
-              alt="Logo"
+              alt="DOH Logo"
               width={300}
               height={100}
               priority
@@ -147,7 +147,7 @@ export default function HealthCenterPage() {
             />
             <Image
               src="/logo.png"
-              alt="Logo"
+              alt="Barangay Banaba Logo"
               width={300}
               height={100}
               priority
@@ -155,7 +155,7 @@ export default function HealthCenterPage() {
             />
             <Image
               src="/health-office-logo.png"
-              alt="Logo"
+              alt="Health Center Logo"
               width={300}
               height={100}
               priority
