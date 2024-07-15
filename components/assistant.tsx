@@ -4,7 +4,6 @@ import React, { ElementRef, useEffect, useRef } from "react";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -64,20 +63,19 @@ export default function Assistant({ user }: AssistantProp) {
     <Card
       ref={cardRef}
       className={cn(
-        "fixed sm:right-4 right-0 flex flex-col sm:w-[28rem] sm:h-[37rem] h-full w-full rounded-b-none sm:rounded-t-lg rounded-none z-[1010] duration-300 shadow-xl overflow-hidden",
+        "fixed sm:right-4 right-0 flex flex-col sm:w-[28rem] sm:h-[37rem] h-full w-full rounded-b-none sm:rounded-t-lg rounded-none z-[1010] duration-300 shadow-xl border border-zinc-300 overflow-hidden",
         isOpen ? "bottom-0" : "bottom-[-60rem]"
       )}
     >
-      <CardHeader className="p-4 shadow">
+      <CardHeader className="px-4 py-2 shadow">
         <div className="flex items-center justify-between">
-          <CardTitle>Assistant</CardTitle>
+          <CardTitle className="text-lg">Assistant</CardTitle>
           <IoChevronDownOutline
             onClick={() => setClose()}
-            className="text-2xl"
+            className="text-xl text-zinc-500"
             cursor="pointer"
           />
         </div>
-        <CardDescription>Ask me anything about us.</CardDescription>
       </CardHeader>
 
       <CardContent
@@ -106,6 +104,16 @@ export default function Assistant({ user }: AssistantProp) {
                         className="text-blue-500 hover:underline"
                       />
                     ),
+                    img: ({ node, ref, ...props }) => (
+                      <Image
+                        {...props}
+                        src={props.src || ""}
+                        alt={props.alt || ""}
+                        width={500}
+                        height={500}
+                        className="text-blue-500 hover:underline w-auto h-auto"
+                      />
+                    ),
                   }}
                 >
                   {m.content}
@@ -126,8 +134,20 @@ export default function Assistant({ user }: AssistantProp) {
             </div>
           ))}
         {messages.length === 0 && (
-          <div className="flex items-center justify-center h-full">
-            No conversation yet
+          <div className="flex flex-col gap-2 items-center justify-center h-full mx-4">
+            <p className="font-medium text-center">
+              {user?.firstName ? `Hi ${user.firstName},` : "Hi,"} Im Rolando
+              your Barangay Banaba virtual assistant.
+            </p>
+            <p className="text-sm text-center text-zinc-500">
+              If you need help with information related to Barangay Banaba East,
+              ask me, and I will answer immediately.
+            </p>
+
+            <small className="text-center text-zinc-500">
+              (To get accurate answers, please ask questions related to Barangay
+              Banaba.)
+            </small>
           </div>
         )}
       </CardContent>

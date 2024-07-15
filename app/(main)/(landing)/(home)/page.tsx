@@ -43,7 +43,7 @@ export default function HomePage() {
       <div className="relative flex-1 pr-3 lg:block hidden overflow-hidden">
         <div
           className="absolute inset-0 z-[10] rounded-l-[400px]"
-          //BARANGAY IMAGE URL: /bgy-bg.jpg
+          //BARANGAY HALL IMAGE URL: /bgy-bg.jpg
           style={{
             background: `url(/brg-bg.jpg)`,
             backgroundRepeat: "no-repeat",
