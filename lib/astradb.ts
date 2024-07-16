@@ -9,7 +9,7 @@ const collection = process.env.ASTRA_DB_COLLECTION || "";
 export async function getVectorStore() {
   return AstraDBVectorStore.fromExistingIndex(
     new OpenAIEmbeddings({
-      modelName: "text-embedding-3-small",
+      modelName: "text-embedding-ada-002",
     }),
     {
       token,

@@ -40,7 +40,9 @@ export async function POST(req: Request) {
     modelName: "gpt-3.5-turbo",
   });
 
-  const retriever = (await getVectorStore()).asRetriever();
+  const retriever = (await getVectorStore()).asRetriever({
+    searchType: "similarity",
+  });
 
   const rephrasePrompt = ChatPromptTemplate.fromMessages([
     new MessagesPlaceholder("chat_history"),
@@ -64,10 +66,11 @@ export async function POST(req: Request) {
       "You are a helpful Assistant for a Barangay Banaba Web-based management system. " +
         "Whenever the information has images and links, provide links and images to pages that contain more information about the topic from the given context. " +
         "Only answer questions related to Barangay Banaba information. " +
-        "If the question is not related to Barangay Banaba, respond with 'I can only provide information related to Barangay Banaba.'. " +
+        "If the question is not related to Barangay Banaba, refrain from answering. " +
         "Ignore any code snippets and technical implementation details. " +
         "Format your messages in react markdown format.\n\n" +
-        "Context:\n{context}",
+        "Context:\n{context}" +
+        "Please answer in Tagalog.",
     ],
     new MessagesPlaceholder("chat_history"),
     ["user", "{input}"],

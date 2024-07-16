@@ -2,26 +2,13 @@
 
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { $Enums } from "@prisma/client";
+import { DocumentRequest } from "@prisma/client";
 import React, { ElementRef, useEffect, useRef, useState } from "react";
 import { MdOutlineSearch } from "react-icons/md";
 
 interface MyRequestRowProp {
   myRequest:
-    | {
-        id: string;
-        documentType: string;
-        requestedById: string;
-        purposes: string;
-        issuedById: string | null;
-        dateIssued: Date | null;
-        status: $Enums.DocumentRequestStatus;
-        createdAt: Date;
-        updatedAt: Date;
-        issuedBy: {
-          fullName: string;
-        } | null;
-      }[]
+    | (DocumentRequest & { issuedBy: { fullName: string } | null })[]
     | null;
   id: string;
 }
@@ -109,7 +96,6 @@ export default function MyRequestRow({ myRequest, id }: MyRequestRowProp) {
                   <td className="border border-zinc-300 p-2 text-center">
                     {item.documentType}
                   </td>
-
                   <td className="border border-zinc-300 p-2 text-center">
                     {new Date(item.createdAt).toLocaleDateString([], {
                       dateStyle: "medium",
