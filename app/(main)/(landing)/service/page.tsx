@@ -74,7 +74,7 @@ export default function ServicePage() {
         </div>
       </div>
 
-      <div className="shadow-2xl mt-20">
+      <div className="mt-20">
         <Image
           src="/hand-shake-service.jpg"
           alt="Hand Shake"

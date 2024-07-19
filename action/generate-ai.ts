@@ -63,5 +63,6 @@ export const generate = async () => {
       };
     });
 
-  await vectorStore.addDocuments([...docs, ...pinnedInquiriesDocs]);
+  const allDocs = [...docs, ...pinnedInquiriesDocs];
+  await vectorStore.addDocuments(allDocs);
 };

@@ -19,6 +19,7 @@ import { useChat } from "ai/react";
 import ReactMarkdown from "react-markdown";
 import Link from "next/link";
 import { UserType } from "@/lib/user";
+import { HiDotsHorizontal } from "react-icons/hi";
 
 interface AssistantProp {
   user: UserType | null;
@@ -32,6 +33,8 @@ export default function Assistant({ user }: AssistantProp) {
   const { messages, input, handleInputChange, handleSubmit, isLoading } =
     useChat();
   const ref = useRef<ElementRef<"div">>(null);
+
+  const isUser = messages.at(-1)?.role === "user";
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -51,7 +54,7 @@ export default function Assistant({ user }: AssistantProp) {
         ref.current.scrollHeight -
         (ref.current.scrollTop + ref.current.clientHeight);
 
-      if (isBottom <= 100) {
+      if (isBottom <= 300) {
         ref.current.scrollTo({ top: ref.current.scrollHeight });
       }
     }
@@ -83,61 +86,82 @@ export default function Assistant({ user }: AssistantProp) {
         ref={ref}
         className="px-4 py-5 overflow-auto flex-1 bg-zinc-100 space-y-5 border-none"
       >
-        {!!messages.length &&
-          messages.map((m) => (
+        {messages.map((m) => (
+          <div
+            key={m.id}
+            className={cn(
+              "flex gap-2",
+              m.role === "user" ? "justify-end" : "justify-end flex-row-reverse"
+            )}
+          >
             <div
-              key={m.id}
               className={cn(
-                "flex gap-2",
+                "p-2 bg-white shadow text-sm max-w-[19rem] whitespace-pre-wrap break-words",
                 m.role === "user"
-                  ? "justify-end"
-                  : "justify-end flex-row-reverse"
+                  ? "rounded-l-xl rounded-br-xl mt-3"
+                  : "rounded-r-xl rounded-bl-xl mt-3"
               )}
             >
-              <div className="p-2 bg-white shadow rounded-md text-sm max-w-[19rem] whitespace-pre-wrap break-words">
-                <ReactMarkdown
-                  components={{
-                    a: ({ node, ref, ...props }) => (
-                      <Link
-                        {...props}
-                        href={props.href ?? ""}
-                        className="text-blue-500 hover:underline"
-                      />
-                    ),
-                    img: ({ node, ref, ...props }) => (
-                      <Image
-                        {...props}
-                        src={props.src || ""}
-                        alt={props.alt || ""}
-                        width={500}
-                        height={500}
-                        className="text-blue-500 hover:underline w-auto h-auto"
-                      />
-                    ),
-                  }}
-                >
-                  {m.content}
-                </ReactMarkdown>
-              </div>
-              <Image
-                src={
-                  m.role === "assistant"
-                    ? "/logo.png"
-                    : user?.profile || "/no-profile.webp"
-                }
-                alt="no-profile"
-                width={200}
-                height={299}
-                priority
-                className="w-8 h-8 rounded-full"
-              />
+              <ReactMarkdown
+                components={{
+                  a: ({ node, ref, ...props }) => (
+                    <Link
+                      {...props}
+                      href={props.href ?? ""}
+                      className="text-blue-500 hover:underline"
+                    />
+                  ),
+                  img: ({ node, ref, ...props }) => (
+                    <Image
+                      {...props}
+                      src={props.src || ""}
+                      alt={props.alt || ""}
+                      width={500}
+                      height={500}
+                      className="text-blue-500 hover:underline w-auto h-auto"
+                    />
+                  ),
+                }}
+              >
+                {m.content}
+              </ReactMarkdown>
             </div>
-          ))}
+            <Image
+              src={
+                m.role === "assistant"
+                  ? "/logo.png"
+                  : user?.profile || "/no-profile.webp"
+              }
+              alt="no-profile"
+              width={200}
+              height={299}
+              priority
+              className="w-8 h-8 rounded-full"
+            />
+          </div>
+        ))}
+
+        {isUser && isLoading && (
+          <div className="flex gap-2">
+            <Image
+              src="/logo.png"
+              alt="no-profile"
+              width={200}
+              height={299}
+              priority
+              className="w-8 h-8 rounded-full"
+            />
+            <p className="bg-white p-2 rounded-md text-sm shadow">
+              <HiDotsHorizontal className="animate-bounce scale-[1.3]" />
+            </p>
+          </div>
+        )}
+
         {messages.length === 0 && (
           <div className="flex flex-col gap-2 items-center justify-center h-full mx-4">
             <p className="font-medium text-center">
-              {user?.firstName ? `Hi ${user.firstName},` : "Hi,"} Im Rolando
-              your Barangay Banaba virtual assistant.
+              {user?.firstName ? `Hi ${user.firstName},` : "Hi,"} I&quot;m your
+              Barangay Banaba virtual assistant.
             </p>
             <p className="text-sm text-center text-zinc-500">
               If you need help with information related to Barangay Banaba East,

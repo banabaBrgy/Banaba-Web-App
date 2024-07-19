@@ -9,7 +9,7 @@ const collection = process.env.ASTRA_DB_COLLECTION || "";
 export async function getVectorStore() {
   return AstraDBVectorStore.fromExistingIndex(
     new OpenAIEmbeddings({
-      modelName: "text-embedding-ada-002",
+      modelName: "text-embedding-3-large",
     }),
     {
       token,
@@ -17,7 +17,7 @@ export async function getVectorStore() {
       collection,
       collectionOptions: {
         vector: {
-          dimension: 1536,
+          dimension: 3072,
           metric: "cosine",
         },
       },

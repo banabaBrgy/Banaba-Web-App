@@ -6,10 +6,15 @@ export const getTotals = async () => {
       status: "Pending",
     },
   });
-
   const totalBlotters = await db.blotter.findMany({});
+  const inquiries = await db.inquiries.findMany({
+    where: {
+      answer: null,
+    },
+  });
+  const calendarActivities = await db.calendarOfActivities.findMany({});
 
-  return { totalPendingRequest, totalBlotters };
+  return { totalPendingRequest, totalBlotters, inquiries, calendarActivities };
 };
 
 export const getCalendarActivities = async () => {

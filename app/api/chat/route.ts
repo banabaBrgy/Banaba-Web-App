@@ -31,18 +31,16 @@ export async function POST(req: Request) {
   const { stream, handlers } = LangChainStream();
 
   const chatModel = new ChatOpenAI({
-    modelName: "gpt-3.5-turbo",
+    modelName: "gpt-4o-mini",
     streaming: true,
     callbacks: [handlers],
   });
 
   const rephrasingModel = new ChatOpenAI({
-    modelName: "gpt-3.5-turbo",
+    modelName: "gpt-4o-mini",
   });
 
-  const retriever = (await getVectorStore()).asRetriever({
-    searchType: "similarity",
-  });
+  const retriever = (await getVectorStore()).asRetriever();
 
   const rephrasePrompt = ChatPromptTemplate.fromMessages([
     new MessagesPlaceholder("chat_history"),
@@ -64,13 +62,14 @@ export async function POST(req: Request) {
     [
       "system",
       "You are a helpful Assistant for a Barangay Banaba Web-based management system. " +
-        "Whenever the information has images and links, provide links and images to pages that contain more information about the topic from the given context. " +
+        "Whenever the information has images and links, provide links and display images to pages that contain more information about the topic from the given context. " +
         "Only answer questions related to Barangay Banaba information. " +
         "If the question is not related to Barangay Banaba, refrain from answering. " +
+        "If user ask an image just use the url you will see in image dont add any https or domain if the image url dont have https or domain. " +
         "Ignore any code snippets and technical implementation details. " +
         "Format your messages in react markdown format.\n\n" +
         "Context:\n{context}" +
-        "Please answer in Tagalog.",
+        "Please answer in the same language as the user's query.",
     ],
     new MessagesPlaceholder("chat_history"),
     ["user", "{input}"],

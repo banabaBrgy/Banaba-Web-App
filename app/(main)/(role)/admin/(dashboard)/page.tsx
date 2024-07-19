@@ -12,11 +12,16 @@ const Graph = dynamic(() => import("./_components/graph"), { ssr: false });
 export default async function AdminPage() {
   const calendarActivities = await getCalendarActivities();
   const totals = await getTotals();
+  const currentMonthAct = totals.calendarActivities.filter(
+    (act) =>
+      act.createdAt.getFullYear === new Date().getFullYear &&
+      act.createdAt.getMonth() === new Date().getMonth()
+  );
 
   const dashBoard = [
     {
-      total: 59,
-      name: "Register Voter(s)",
+      total: currentMonthAct.length,
+      name: "Ongoing project(s) (This Month)",
       icon: <FaVoteYea size={50} />,
       bg: "bg-gradient-to-tr from-blue-600 via-blue-400 to-blue-300",
     },
@@ -27,8 +32,8 @@ export default async function AdminPage() {
       bg: "bg-gradient-to-tr from-lime-600 via-lime-400 to-lime-300",
     },
     {
-      total: 1334,
-      name: "Total Resident(s)",
+      total: totals.inquiries.length,
+      name: "Total inquirie(s)",
       icon: <PiUsersThreeFill size={50} />,
       bg: "bg-gradient-to-tr from-pink-600 via-pink-400 to-pink-300",
     },
@@ -64,7 +69,7 @@ export default async function AdminPage() {
         ))}
       </div>
 
-      <Graph />
+      <Graph totals={totals} />
 
       <ReactBigCalendar calendarActivities={calendarActivities} />
     </div>
