@@ -245,10 +245,6 @@ export default function BlotterForm({ user }: BlotterFormProp) {
             placeholder="Say something about the incident.."
             className="border border-gray-100 rounded-md"
           />
-          {/* <div
-            className="ql-editor"
-            dangerouslySetInnerHTML={{ __html: value.narrative }}
-          /> */}
         </div>
 
         <div className="flex flex-col md:flex-row items-center gap-x-4 gap-y-2 mt-4">

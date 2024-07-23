@@ -5,13 +5,7 @@ import { CalendarOfActivities } from "@prisma/client";
 import { Calendar, momentLocalizer, View } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { useCallback, useState } from "react";
 
 interface ReactBigCalendarProp {
@@ -39,13 +33,8 @@ export const ReactBigCalendar = ({
   const onNavigate = useCallback((date: Date) => setDate(date), [setDate]);
 
   return (
-    <Card className="mt-5">
-      <CardHeader>
-        <CardTitle>Calendar</CardTitle>
-        <CardDescription>Calendar holiday events</CardDescription>
-      </CardHeader>
-
-      <CardContent>
+    <Card>
+      <CardContent className="p-3">
         <Calendar
           localizer={localizer}
           events={eventLists}
@@ -55,7 +44,7 @@ export const ReactBigCalendar = ({
           startAccessor="start"
           endAccessor="end"
           popup
-          style={{ height: 550 }}
+          style={{ height: 540 }}
           onView={onView}
           onNavigate={onNavigate}
         />

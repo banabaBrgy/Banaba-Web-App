@@ -13,6 +13,7 @@ import { MdDashboard, MdAnnouncement } from "react-icons/md";
 import { FaClipboardList, FaFileAlt } from "react-icons/fa";
 import { RiInkBottleFill, RiQuestionFill } from "react-icons/ri";
 import { GrServices } from "react-icons/gr";
+import { IoMdAlert } from "react-icons/io";
 
 interface SidebarProp {
   user: UserType | null;
@@ -80,6 +81,15 @@ export function Sidebar({
     return () => window.removeEventListener("click", handleClick);
   }, [setCloseSidebar]);
 
+  const missingProfileInfo =
+    !user?.birthDate ||
+    !user?.age ||
+    !user?.gender ||
+    !user?.civilStatus ||
+    !user?.placeOfBirth ||
+    !user?.sitioPurok ||
+    !user?.mobile;
+
   return (
     <div
       ref={sidebarRef}
@@ -112,7 +122,9 @@ export function Sidebar({
             priority
             className="w-12 h-12 object-cover rounded-full"
           />
-          {/*  <span className="absolute -top-1 right-1 bg-red-500 p-[7px] rounded-full" /> */}
+          {missingProfileInfo && (
+            <IoMdAlert className="absolute -top-1 right-1 text-red-500 shrink-0 bg-green-500 rounded-full scale-125" />
+          )}
         </Link>
 
         <div className="space-y-1 flex-1">

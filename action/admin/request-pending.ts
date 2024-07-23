@@ -13,7 +13,7 @@ export async function approvedRequest(documentRequestId: string) {
     const user = await getUser();
 
     if (user?.role === "User") {
-      throw new Error("Something went wrong");
+      throw new Error("Admin can only issued");
     }
 
     await db.$transaction(async (tx) => {
@@ -83,6 +83,11 @@ export async function disapprovedRequestAction(
   formData: FormData
 ) {
   const reasonForDisapproval = formData.get("reasonForDisapproval") as string;
+  const user = await getUser();
+
+  if (user?.role === "User") {
+    throw new Error("Admin can only issued");
+  }
 
   if (!reasonForDisapproval) {
     throw new Error("Something went wrong");
@@ -95,6 +100,7 @@ export async function disapprovedRequestAction(
       },
       data: {
         reasonForDisapproval,
+        issuedById: user?.id,
         status: "Disapproved",
       },
       include: {

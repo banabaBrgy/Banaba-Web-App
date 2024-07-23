@@ -9,8 +9,8 @@ export default function AboutUsPage() {
       text: "117.7255",
     },
     {
-      title: "Projected Population 2022",
-      text: "2,511",
+      title: "Projected Population 2024",
+      text: ["Male: 1450", "Female: 1417", "Total: 2867"],
     },
     {
       title: "Classification",
@@ -54,7 +54,15 @@ export default function AboutUsPage() {
               <li key={index} className="flex">
                 <p className="w-[11.5rem] shrink-0">{item.title}</p>
                 <span className="font-extrabold ml-1 mr-5">:</span>
-                <p>{item.text}</p>
+                {typeof item.text === "string" ? (
+                  <p>{item.text}</p>
+                ) : (
+                  <div>
+                    {item.text.map((it, index) => (
+                      <p key={index}>{it}</p>
+                    ))}
+                  </div>
+                )}
               </li>
             ))}
           </ul>
@@ -85,28 +93,37 @@ export default function AboutUsPage() {
           </div>
 
           <h1 className="text-center font-semibold uppercase mb-2">Mission</h1>
-          <p className="text-center text-sm mb-10">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Alias,
-            debitis eveniet provident, corrupti labore blanditiis eaque dolores
-            natus vero aspernatur exercitationem nulla veritatis maiores
-            deserunt repellat amet voluptatum? Eos, distinctio. Lorem ipsum
-            dolor sit amet consectetur adipisicing elit. Reiciendis eius,
-            consequatur deleniti mollitia tempora dolorum voluptate qui hic eum
-            optio ullam itaque quae voluptas delectus recusandae suscipit cumque
-            tenetur perspiciatis.
-          </p>
+          <div className="space-y-3 mb-10">
+            <p className="text-sm">
+              Ang misyon ay and landas na tatahakin upang marating ang
+              pinapangarap na pananaw.
+            </p>
+            <ol className="list-decimal ml-5 space-y-3">
+              <li className="text-sm">
+                Maiangat ang antas ng pamumuhay ng mga mamayan at mapanatili ang
+                isang mapayapang pamayanan.
+              </li>
+              <li className="text-sm">
+                Sugpuin ang lubos na kahirapan sa pamamagitan ng pagtutulungan
+                at edukasyon.
+              </li>
+            </ol>
+          </div>
 
           <h1 className="text-center font-semibold uppercase mb-2">Vision</h1>
-          <p className="text-center text-sm">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Alias,
-            debitis eveniet provident, corrupti labore blanditiis eaque dolores
-            natus vero aspernatur exercitationem nulla veritatis maiores
-            deserunt repellat amet voluptatum? Eos, distinctio. Lorem ipsum
-            dolor sit amet consectetur adipisicing elit. Reiciendis eius,
-            consequatur deleniti mollitia tempora dolorum voluptate qui hic eum
-            optio ullam itaque quae voluptas delectus recusandae suscipit cumque
-            tenetur perspiciatis.
-          </p>
+          <div className="space-y-4">
+            <p className="text-sm">
+              Ang pananaw ay ang kalagayang nais matamong barangay na hinaharap.
+              Dito nakapaloob ang aspirasyon ng mga mamayang pinag buklod ng
+              iisang adhikain.
+            </p>
+            <p className="text-sm">
+              &quot;Isang Barangay na may maka-Diyos, makabayan at makataong
+              mamayan na gising sa mga bagay na nagaganap sa kapaligiran/bayan
+              at sama-samang nag sisikap upang maging maunlad, mapayapa, malinis
+              at masayang pamayanan.&quot;
+            </p>
+          </div>
         </div>
       </div>
 

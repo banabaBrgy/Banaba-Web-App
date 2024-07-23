@@ -1,28 +1,18 @@
 "use client";
 
-import ReactToPrint from "@/components/react-to-print";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { Blotter } from "@prisma/client";
+import { X } from "lucide-react";
 import React, { ElementRef, useEffect, useRef, useState } from "react";
+import { GrFormView } from "react-icons/gr";
 import { MdOutlineSearch } from "react-icons/md";
+import "react-quill/dist/quill.snow.css";
 
 interface BlotterRowProp {
   blotters:
-    | {
-        id: string;
-        userId: string;
-        incident: string;
-        placeOfIncident: string;
-        dateTime: string;
-        witnesses: string[];
-        narrative: string;
-        createdAt: Date;
-        updatedAt: Date;
-        user: {
-          fullName: string;
-          sitioPurok: string | null;
-        };
-      }[]
+    | (Blotter & { user: { fullName: string; sitioPurok: string | null } })[]
     | null;
   id: string;
 }
@@ -30,6 +20,8 @@ interface BlotterRowProp {
 export default function BlotterRow({ blotters, id }: BlotterRowProp) {
   const [search, setSearch] = useState("");
   const refs = useRef<{ [key: string]: ElementRef<"tr"> | null }>({});
+  const [viewNarrative, setViewNarrative] = useState("");
+  const viewNarrativeRef = useRef<ElementRef<"div">>(null);
 
   const tableHead = [
     "No.",
@@ -39,7 +31,7 @@ export default function BlotterRow({ blotters, id }: BlotterRowProp) {
     "Place of incidents",
     "Witnesses",
     "Date registered",
-    "Print",
+    "View narrative",
   ];
 
   useEffect(() => {
@@ -52,8 +44,59 @@ export default function BlotterRow({ blotters, id }: BlotterRowProp) {
     }
   }, [id]);
 
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (!viewNarrativeRef.current?.contains(e.target as any)) {
+        setViewNarrative("");
+      }
+    };
+
+    window.addEventListener("click", handleClick);
+
+    return () => {
+      window.removeEventListener("click", handleClick);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (viewNarrative) {
+      document.body.style.overflow = "clip";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [viewNarrative]);
+
   return (
     <>
+      <div
+        className={cn(
+          "fixed inset-0 bg-black/70 z-[1001] flex items-center px-3 py-8 overflow-auto duration-200",
+          viewNarrative ? "opacity-100 visible" : "invisible opacity-0"
+        )}
+      >
+        <div
+          ref={viewNarrativeRef}
+          className={cn(
+            "relative flex-1 max-w-[40rem] p-5 bg-white rounded-md mx-auto my-auto",
+            viewNarrative ? "scale-100 visible" : "invisible scale-95"
+          )}
+        >
+          <X
+            onClick={() => setViewNarrative("")}
+            cursor="pointer"
+            className="absolute right-3 top-2 text-zinc-500 scale-[.80]"
+          />
+
+          <div className="space-y-3">
+            <h1 className="font-semibold text-xl">Narrative</h1>
+
+            <div dangerouslySetInnerHTML={{ __html: viewNarrative }} />
+          </div>
+        </div>
+      </div>
+
       <div className="flex items-center justify-between">
         <h1 className="text-lg font-semibold uppercase">Blotter</h1>
 
@@ -69,7 +112,7 @@ export default function BlotterRow({ blotters, id }: BlotterRowProp) {
       </div>
 
       <div className="overflow-auto mt-4">
-        <table className="border-collapse w-full bg-white">
+        <table className="w-full bg-white">
           <thead>
             <tr>
               {tableHead.map((th) => (
@@ -99,33 +142,44 @@ export default function BlotterRow({ blotters, id }: BlotterRowProp) {
                   }}
                   key={blotter.id}
                   className={cn(
-                    "text-center text-sm hover:bg-zinc-50",
+                    "hover:bg-zinc-50",
                     blotter.id === id && "bg-green-100"
                   )}
                 >
-                  <td className="border border-[#dddddd] p-2">{idx + 1}.</td>
-                  <td className="border border-[#dddddd] p-2">
+                  <td className="text-center text-sm border border-[#dddddd] p-2">
+                    {idx + 1}.
+                  </td>
+                  <td className="text-center text-sm border border-[#dddddd] p-2">
                     {blotter.user.fullName}
                   </td>
-                  <td className="border border-[#dddddd] p-2">
+                  <td className="text-center text-sm border border-[#dddddd] p-2">
                     {blotter.user.sitioPurok}
                   </td>
-                  <td className="border border-[#dddddd] p-2">
+                  <td className="text-center text-sm border border-[#dddddd] p-2">
                     {blotter.incident}
                   </td>
-                  <td className="border border-[#dddddd] p-2">
+                  <td className="text-center text-sm border border-[#dddddd] p-2">
                     {blotter.placeOfIncident}
                   </td>
-                  <td className="border border-[#dddddd] p-2">
+                  <td className="text-center text-sm border border-[#dddddd] p-2">
                     {blotter.witnesses.join(", ")}
                   </td>
-                  <td className="border border-[#dddddd] p-2">
+                  <td className="text-center text-sm border border-[#dddddd] p-2">
                     {new Date(blotter.createdAt).toLocaleDateString([], {
                       dateStyle: "medium",
                     })}
                   </td>
-                  <td className="border border-[#dddddd] p-2">
-                    <ReactToPrint value={blotter} />
+                  <td className="text-center text-sm border border-[#dddddd] p-2">
+                    <Button
+                      onClick={(e) => {
+                        setViewNarrative(blotter.narrative);
+                        e.stopPropagation();
+                      }}
+                      size="sm"
+                      variant="outline"
+                    >
+                      <GrFormView className="scale-[2]" />
+                    </Button>
                   </td>
                 </tr>
               ))}

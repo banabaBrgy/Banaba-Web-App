@@ -111,7 +111,7 @@ async function sendPhoneVerificationCode(phoneNumber: string) {
       key: process.env.TEXT_BELT_API_KEY,
     });
 
-    console.log(res.data);
+    console.log(res.data, phoneNumber);
 
     await db.user.update({
       where: {

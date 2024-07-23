@@ -1,10 +1,20 @@
 "use client";
 
+import { deletePendingRequest } from "@/action/user/my-request";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { DocumentRequest } from "@prisma/client";
-import React, { ElementRef, useEffect, useRef, useState } from "react";
+import React, {
+  ElementRef,
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { MdOutlineSearch } from "react-icons/md";
+import { RiDeleteBinFill } from "react-icons/ri";
+import { toast } from "sonner";
 
 interface MyRequestRowProp {
   myRequest:
@@ -14,6 +24,7 @@ interface MyRequestRowProp {
 }
 
 export default function MyRequestRow({ myRequest, id }: MyRequestRowProp) {
+  const [pending, setTransition] = useTransition();
   const [search, setSearch] = useState("");
   const refs = useRef<{ [key: string]: ElementRef<"tr"> | null }>({});
 
@@ -26,6 +37,7 @@ export default function MyRequestRow({ myRequest, id }: MyRequestRowProp) {
     "Issued by",
     "Date issued",
     "Status",
+    "Option",
   ];
 
   useEffect(() => {
@@ -37,6 +49,14 @@ export default function MyRequestRow({ myRequest, id }: MyRequestRowProp) {
       });
     }
   }, [id]);
+
+  const onDeletePendingRequest = async (id: string) => {
+    setTransition(async () => {
+      await deletePendingRequest(id)
+        .then(() => toast.success("Deleted successfully"))
+        .catch(() => toast.error("Something went wrong"));
+    });
+  };
 
   return (
     <div className="px-4 py-4">
@@ -121,6 +141,19 @@ export default function MyRequestRow({ myRequest, id }: MyRequestRowProp) {
                     )}
                   >
                     {item.status}
+                  </td>
+                  <td className="border border-zinc-300 p-2 text-center">
+                    {item.status === "Pending" && (
+                      <Button
+                        disabled={pending}
+                        onClick={() => onDeletePendingRequest(item.id)}
+                        size="sm"
+                        variant="outline"
+                        className="shadow"
+                      >
+                        <RiDeleteBinFill color="red" />
+                      </Button>
+                    )}
                   </td>
                 </tr>
               ))}

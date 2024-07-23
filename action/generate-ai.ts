@@ -5,6 +5,7 @@ import { DocumentInterface } from "@langchain/core/documents";
 import { TextLoader } from "langchain/document_loaders/fs/text";
 import { getEmbeddingsCollection, getVectorStore } from "@/lib/astradb";
 import { getPinnedInquiries } from "@/lib/faq";
+import { getDocumentType } from "@/lib/query/admin/document-type";
 
 export const generate = async () => {
   const vectorStore = await getVectorStore();
@@ -12,6 +13,7 @@ export const generate = async () => {
   (await getEmbeddingsCollection()).deleteAll();
 
   const pinnedInquiries = await getPinnedInquiries();
+  const documentType = await getDocumentType();
 
   const pinnedInquiriesDocs = [
     {
@@ -22,6 +24,17 @@ export const generate = async () => {
         }))
       ),
       metadata: { url: "/faq" },
+    },
+  ];
+
+  const documentTypesDocs = [
+    {
+      pageContent: JSON.stringify(
+        documentType?.map((item) => ({
+          document: item.document,
+        }))
+      ),
+      metadata: { url: "/user/services" },
     },
   ];
 
@@ -63,6 +76,6 @@ export const generate = async () => {
       };
     });
 
-  const allDocs = [...docs, ...pinnedInquiriesDocs];
+  const allDocs = [...docs, ...pinnedInquiriesDocs, ...documentTypesDocs];
   await vectorStore.addDocuments(allDocs);
 };

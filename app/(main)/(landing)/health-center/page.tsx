@@ -59,80 +59,25 @@ export default function HealthCenterPage() {
         </div>
       </div>
 
-      <div className="flex justify-center lg:flex-row lg:items-start items-center flex-col gap-5 mt-12 mx-3">
-        <div className="slide-up w-full max-w-[48rem] border border-gray-300 rounded-md overflow-hidden shadow-md bg-white">
-          <h1 className="uppercase text-center p-6 bg-green-500 text-white">
-            Programs
-          </h1>
+      <div className="flex justify-center lg:flex-row lg:items-start items-center flex-col gap-5 mt-12 mx-3 ">
+        <div className="h-[36rem]">
+          <Image
+            src="/pertussis.jpg"
+            alt="Pertussis"
+            width={500}
+            height={500}
+            className="border border-gray-300 rounded-md shadow-md w-full h-full"
+          />
+        </div>
 
-          <div className="grid grid-cols-1">
-            <div className="flex border-b border-gray-300">
-              <p className="w-14 shrink-0 flex items-center justify-center">
-                1.
-              </p>
-              <p className="p-2 text-sm flex-1">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia
-                quas adipisci tempora? Numquam nostrum maiores in veritatis,
-                nihil soluta nemo animi placeat quidem consequatur ea mollitia
-                ratione! Non, voluptatem asperiores.
-              </p>
-            </div>
-            <div className="flex border-b border-gray-300">
-              <p className="w-14 shrink-0 flex items-center justify-center">
-                2.
-              </p>
-              <p className="p-2 text-sm flex-1">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia
-                quas adipisci tempora? Numquam nostrum maiores in veritatis,
-                nihil soluta nemo animi placeat quidem consequatur ea mollitia
-                ratione! Non, voluptatem asperiores.
-              </p>
-            </div>
-            <div className="flex border-b border-gray-300">
-              <p className="w-14 shrink-0 flex items-center justify-center">
-                2.
-              </p>
-              <p className="p-2 text-sm flex-1">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia
-                quas adipisci tempora? Numquam nostrum maiores in veritatis,
-                nihil soluta nemo animi placeat quidem consequatur ea mollitia
-                ratione! Non, voluptatem asperiores.
-              </p>
-            </div>
-            <div className="flex border-b border-gray-300">
-              <p className="w-14 shrink-0 flex items-center justify-center">
-                2.
-              </p>
-              <p className="p-2 text-sm flex-1">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia
-                quas adipisci tempora? Numquam nostrum maiores in veritatis,
-                nihil soluta nemo animi placeat quidem consequatur ea mollitia
-                ratione! Non, voluptatem asperiores.
-              </p>
-            </div>
-            <div className="flex border-b border-gray-300">
-              <p className="w-14 shrink-0 flex items-center justify-center">
-                2.
-              </p>
-              <p className="p-2 text-sm flex-1">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia
-                quas adipisci tempora? Numquam nostrum maiores in veritatis,
-                nihil soluta nemo animi placeat quidem consequatur ea mollitia
-                ratione! Non, voluptatem asperiores.
-              </p>
-            </div>
-            <div className="flex border-b border-gray-300">
-              <p className="w-14 shrink-0 flex items-center justify-center">
-                2.
-              </p>
-              <p className="p-2 text-sm flex-1">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia
-                quas adipisci tempora? Numquam nostrum maiores in veritatis,
-                nihil soluta nemo animi placeat quidem consequatur ea mollitia
-                ratione! Non, voluptatem asperiores.
-              </p>
-            </div>
-          </div>
+        <div className="h-[36rem]">
+          <Image
+            src="/nutrition-council.png"
+            alt="Nutrition council"
+            width={500}
+            height={500}
+            className="border border-gray-300 rounded-md shadow-md w-full h-full"
+          />
         </div>
 
         <div className="slide-up bg-white px-4 py-5 max-w-[22rem] shrink-0 rounded-md shadow-md border border-gray-300">

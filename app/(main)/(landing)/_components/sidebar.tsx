@@ -9,7 +9,7 @@ import { FaHome, FaUsers } from "react-icons/fa";
 import { GrServices } from "react-icons/gr";
 import { GiHealthNormal } from "react-icons/gi";
 import { BsFillQuestionCircleFill } from "react-icons/bs";
-import { AlignJustify } from "lucide-react";
+import { TbLayoutSidebarRightExpandFilled } from "react-icons/tb";
 import { useLandingSidebar } from "@/utils/zustand";
 
 export default function Sidebar() {
@@ -71,16 +71,6 @@ export default function Sidebar() {
       )}
     >
       <div className="flex items-center justify-between">
-        <button
-          onClick={() => setClose()}
-          className="group/resize bg-green-700 rounded-full w-10 h-10 flex items-center justify-center"
-        >
-          <AlignJustify
-            size={22}
-            className="scale-100 group-active/resize:scale-90"
-          />
-        </button>
-
         <Image
           src="/logo.png"
           alt="logo"
@@ -89,6 +79,17 @@ export default function Sidebar() {
           priority
           className="w-12 h-12 object-cover"
         />
+
+        <button
+          title="Close"
+          onClick={() => setClose()}
+          className="group/resize  rounded-full w-10 h-10 flex items-center justify-center"
+        >
+          <TbLayoutSidebarRightExpandFilled
+            size={30}
+            className="scale-100 group-active/resize:scale-90"
+          />
+        </button>
       </div>
 
       <div className="flex flex-col mt-7">
@@ -98,7 +99,7 @@ export default function Sidebar() {
             key={navLink.id}
             className={cn(
               "flex items-center gap-x-3 capitalize p-2 text-[14.5px]",
-              pathname === navLink.id && "bg-green-700 rounded-md "
+              pathname === navLink.id && "bg-white text-black rounded-md "
             )}
           >
             <span>{navLink.icon}</span>{" "}

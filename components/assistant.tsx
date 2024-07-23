@@ -30,8 +30,14 @@ export default function Assistant({ user }: AssistantProp) {
   const pathname = usePathname();
   const setClose = useShowAssistant((state) => state.setClose);
   const isOpen = useShowAssistant((state) => state.isOpen);
-  const { messages, input, handleInputChange, handleSubmit, isLoading } =
-    useChat();
+  const {
+    messages,
+    input,
+    handleInputChange,
+    handleSubmit,
+    isLoading,
+    reload,
+  } = useChat();
   const ref = useRef<ElementRef<"div">>(null);
 
   const isUser = messages.at(-1)?.role === "user";
@@ -111,16 +117,6 @@ export default function Assistant({ user }: AssistantProp) {
                       className="text-blue-500 hover:underline"
                     />
                   ),
-                  img: ({ node, ref, ...props }) => (
-                    <Image
-                      {...props}
-                      src={props.src || ""}
-                      alt={props.alt || ""}
-                      width={500}
-                      height={500}
-                      className="text-blue-500 hover:underline w-auto h-auto"
-                    />
-                  ),
                 }}
               >
                 {m.content}
@@ -151,8 +147,10 @@ export default function Assistant({ user }: AssistantProp) {
               priority
               className="w-8 h-8 rounded-full"
             />
-            <p className="bg-white p-2 rounded-md text-sm shadow">
-              <HiDotsHorizontal className="animate-bounce scale-[1.3]" />
+            <p className="flex gap-1 items-center bg-white p-3 rounded-md text-sm shadow rounded-r-xl rounded-bl-xl mt-3">
+              <span className="bg-zinc-400 h-2 w-2 animate-pulse rounded-full" />
+              <span className="bg-zinc-400 h-2 w-2 animate-pulse rounded-full" />
+              <span className="bg-zinc-400 h-2 w-2 animate-pulse rounded-full" />
             </p>
           </div>
         )}
@@ -160,7 +158,7 @@ export default function Assistant({ user }: AssistantProp) {
         {messages.length === 0 && (
           <div className="flex flex-col gap-2 items-center justify-center h-full mx-4">
             <p className="font-medium text-center">
-              {user?.firstName ? `Hi ${user.firstName},` : "Hi,"} I&quot;m your
+              {user?.firstName ? `Hi ${user.firstName},` : "Hi,"} I&apos;m your
               Barangay Banaba virtual assistant.
             </p>
             <p className="text-sm text-center text-zinc-500">
@@ -190,7 +188,6 @@ export default function Assistant({ user }: AssistantProp) {
             spellCheck={false}
             className="sidebar rounded-md shadow-md resize-none outline-none ring-gray-400 border border-gray-300 flex-1 text-sm py-[10px] pl-3 pr-12"
           />
-
           <div className="absolute right-1 scroll-mr-3 inset-y-1 flex items-center">
             <button
               disabled={isLoading}

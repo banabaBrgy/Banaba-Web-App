@@ -12,7 +12,7 @@ export function Footer() {
   if (pathname === "/") return;
 
   return (
-    <footer className="border-zinc-300 border-t bg-zinc-400 text-white">
+    <footer className=" bg-[#45474B] text-white">
       <div className="flex lg:flex-row flex-col gap-20 justify-between px-3 md:px-20 py-8">
         <div className="flex flex-col items-center gap-5">
           <Image
@@ -28,8 +28,8 @@ export function Footer() {
           </p>
         </div>
 
-        <div className="flex sm:flex-row flex-col lg:gap-28 gap-16">
-          <div className="flex flex-col gap-5 text-sm">
+        <div className="flex sm:flex-row flex-col sm:items-start items-center justify-center lg:gap-28 gap-16">
+          <div className="flex flex-col sm:items-start items-center gap-5 text-sm">
             <h1 className="font-bold text-lg uppercase">More pages</h1>
 
             <Link className="hover:underline" href="/">
@@ -52,7 +52,7 @@ export function Footer() {
             </Link>
           </div>
 
-          <div className="flex flex-col gap-5 text-sm">
+          <div className="flex flex-col  sm:items-start items-center gap-5 text-sm">
             <h1 className="font-bold text-lg uppercase">Visit us</h1>
 
             <a
@@ -60,8 +60,8 @@ export function Footer() {
               target="_blank"
               href="https://www.facebook.com/barangay.banabasilangan.3?mibextid=ZbWKwL"
             >
-              <FaFacebook className="text-blue-600 scale-[1.8]" /> Our facebook
-              page
+              <FaFacebook className="text-blue-600 scale-[1.8] bg-white rounded-full" />{" "}
+              Our facebook page
             </a>
             <div></div>
           </div>

@@ -64,18 +64,32 @@ export function Navbar() {
         </h1>
       </div>
 
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          landingSidebar.setOpen();
-        }}
-        className={cn(
-          "slide-down flex items-center lg:hidden visible",
-          landingSidebar.isOpen && "invisible"
-        )}
-      >
-        <AlignJustify />
-      </button>
+      <div className="flex items-center gap-2 lg:hidden">
+        <Image
+          src="/assistant-logo.png"
+          alt="assistant-logo"
+          width={200}
+          height={200}
+          priority
+          onClick={(e) => {
+            e.stopPropagation();
+            !showAssistant.isOpen
+              ? showAssistant.setOpen()
+              : showAssistant.setClose();
+          }}
+          className="w-10 h-10 active:scale-[.95] cursor-pointer"
+        />
+
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            landingSidebar.setOpen();
+          }}
+          className="slide-down flex items-center"
+        >
+          <AlignJustify />
+        </button>
+      </div>
 
       <div className="slide-down lg:flex hidden items-center">
         {navLinks.map((link) => (
