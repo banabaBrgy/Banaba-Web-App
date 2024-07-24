@@ -3,7 +3,11 @@ import { getUser } from "@/lib/user";
 
 export const getAnnouncement = async () => {
   try {
-    const announcement = await db.announcement.findMany({});
+    const announcement = await db.announcement.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
 
     return announcement;
   } catch (error: any) {

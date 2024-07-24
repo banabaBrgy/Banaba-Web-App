@@ -3,7 +3,11 @@ import { getUser } from "@/lib/user";
 
 export const getPrograms = async () => {
   try {
-    const programs = await db.programs.findMany({});
+    const programs = await db.programs.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
 
     return programs;
   } catch (error: any) {

@@ -39,7 +39,9 @@ export default function ProgramsRow({ programs }: ProgramsRowProp) {
         <tbody>
           {programs?.map((program) => (
             <tr key={program.id} className="text-sm text-center">
-              <td className="p-2 border border-[#dddddd]">{program.about}</td>
+              <td className="p-2 border border-[#dddddd] max-w-[15rem]">
+                {program.about}
+              </td>
               <td className="p-2 border border-[#dddddd]">
                 <Image
                   src={program.photo}
@@ -47,7 +49,7 @@ export default function ProgramsRow({ programs }: ProgramsRowProp) {
                   width={500}
                   height={590}
                   priority
-                  className="w-auto h-auto mx-auto"
+                  className="w-auto h-auto max-w-[35rem] mx-auto"
                 />
               </td>
               <td className="p-2 border border-[#dddddd]">

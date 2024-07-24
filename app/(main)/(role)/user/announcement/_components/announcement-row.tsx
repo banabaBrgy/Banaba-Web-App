@@ -41,7 +41,7 @@ export default function AnnouncementRow({
         <tbody>
           {announcements?.map((announcement) => (
             <tr key={announcement.id} className="text-sm text-center">
-              <td className="p-2 border border-[#dddddd]">
+              <td className="p-2 border border-[#dddddd] max-w-[15rem]">
                 {announcement.about}
               </td>
               <td className="p-2 border border-[#dddddd]">
@@ -51,7 +51,7 @@ export default function AnnouncementRow({
                   width={500}
                   height={590}
                   priority
-                  className="w-auto h-auto mx-auto"
+                  className="w-auto h-auto max-w-[35rem] mx-auto"
                 />
               </td>
               <td className="p-2 border border-[#dddddd]">
