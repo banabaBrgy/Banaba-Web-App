@@ -6,7 +6,6 @@ import { revalidatePath } from "next/cache";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 import bcrypt from "bcrypt";
-import axios from "axios";
 
 export async function editProfile(
   formData: FormData,
@@ -101,32 +100,6 @@ async function sendEmailVerificationCode(email: string) {
   }
 }
 
-async function sendPhoneVerificationCode(phoneNumber: string) {
-  try {
-    const user = await getUser();
-
-    const res = await axios.post("https://textbelt.com/otp/generate", {
-      phone: phoneNumber,
-      userid: user?.id,
-      key: process.env.TEXT_BELT_API_KEY,
-    });
-
-    console.log(res.data, phoneNumber);
-
-    await db.user.update({
-      where: {
-        id: user?.id,
-      },
-      data: {
-        verificationCode: res.data.otp,
-        expiresAt: new Date().getTime() + 3 * 60 * 1000,
-      },
-    });
-  } catch (error: any) {
-    throw new Error(error.message);
-  }
-}
-
 export async function validateEmail(email: string) {
   try {
     if (!email) {
@@ -182,47 +155,12 @@ export async function changeEmail(email: string, otp: string) {
   }
 }
 
-export async function validatePhoneNumber(phoneNumber: string) {
-  try {
-    if (!phoneNumber) {
-      return { error: "Phone number is required" };
-    }
-
-    const existed = await db.user.findUnique({
-      where: {
-        mobile: phoneNumber,
-      },
-    });
-
-    if (existed && existed.email) {
-      return { error: "Phone number is already exist" };
-    }
-
-    const E164FORMAT = `+63${phoneNumber.slice(1)}`;
-
-    await sendPhoneVerificationCode(E164FORMAT);
-  } catch (error: any) {
-    throw new Error(error.message);
-  }
-}
-
-export const changePhoneNumber = async (mobile: string, otp: string) => {
+export const changePhoneNumber = async (mobile: string) => {
   const user = await getUser();
-
-  const isVerificationCodeExpired =
-    new Date(Number(user?.expiresAt)) < new Date();
-
-  if (isVerificationCodeExpired) {
-    return { error: "Verification has expired" };
-  }
-
-  if (otp !== user?.verificationCode) {
-    return { error: "Invalid verification code" };
-  }
 
   await db.user.update({
     where: {
-      id: user.id,
+      id: user?.id,
     },
     data: {
       mobile,
@@ -235,10 +173,7 @@ export const changePhoneNumber = async (mobile: string, otp: string) => {
   revalidatePath("/");
 };
 
-export async function validateChangePassword(
-  formData: FormData,
-  sendTo: boolean
-) {
+export async function validateChangePassword(formData: FormData) {
   try {
     const user = await getUser();
     const currentPassword = formData.get("currentPassword") as string;
@@ -272,16 +207,7 @@ export async function validateChangePassword(
       return { error: "Invalid current password" };
     }
 
-    if (sendTo === false) {
-      await sendEmailVerificationCode(user.email);
-    } else {
-      if (!user.mobile) {
-        throw new Error("Phone number is required");
-      }
-
-      const E164FORMAT = `+63${user.mobile.slice(1)}`;
-      await sendPhoneVerificationCode(E164FORMAT);
-    }
+    await sendEmailVerificationCode(user.email);
   } catch (error: any) {
     console.log(error.message);
     throw new Error(error.message);

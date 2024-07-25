@@ -70,8 +70,9 @@ export default function ServicePage() {
 
         <p>
           4. Please ensure that you are a current resident of the Barangay
-          Banaba East in order to proceed. It's important that your residency
-          status within the community is verified for the approval of request.
+          Banaba East in order to proceed. It&apos;s important that your
+          residency status within the community is verified for the approval of
+          request.
         </p>
 
         <p>

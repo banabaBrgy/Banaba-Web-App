@@ -1,6 +1,12 @@
 "use client";
 
-import React, { ElementRef, useRef, useState, useTransition } from "react";
+import React, {
+  ElementRef,
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { TabsContent } from "@/components/ui/tabs";
 import {
   Card,
@@ -20,14 +26,18 @@ import {
   changePhoneNumber,
   validateChangePassword,
   validateEmail,
-  validatePhoneNumber,
 } from "@/action/profile";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "./ui/input-otp";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useSendOtpPopup } from "@/utils/zustand";
-import { Switch } from "./ui/switch";
 import { CircleAlert } from "lucide-react";
+import {
+  signInWithPhoneNumber,
+  RecaptchaVerifier,
+  ConfirmationResult,
+} from "firebase/auth";
+import { auth } from "@/firebase";
 
 interface SecurityFormProp {
   user: UserType | null;
@@ -38,12 +48,25 @@ export default function SecurityForm({ user }: SecurityFormProp) {
   const changePasswordFormRef = useRef<ElementRef<"form">>(null);
   const [pending, setTransition] = useTransition();
   const [change, setChange] = useState("");
-  const [sendTo, setSendTo] = useState(false);
+  const [recaptchaVerifier, setRecaptchaVerifier] =
+    useState<RecaptchaVerifier | null>(null);
+  const [confirmationResult, setConfirmationResult] =
+    useState<ConfirmationResult | null>(null);
   const [inputValue, setInputValue] = useState({
     email: user?.email || "",
     mobile: user?.mobile || "",
     newPassword: "",
   });
+
+  useEffect(() => {
+    const recaptcha = new RecaptchaVerifier(auth, "recaptcha-container", {
+      size: "invisible",
+    });
+
+    setRecaptchaVerifier(recaptcha);
+
+    return () => recaptcha.clear();
+  }, []);
 
   function onValidateEmail() {
     setTransition(async () => {
@@ -61,22 +84,37 @@ export default function SecurityForm({ user }: SecurityFormProp) {
   }
 
   function onValidatePhoneNumber() {
+    if (!recaptchaVerifier) {
+      return toast.error("Recaptcha is required");
+    }
+
     setTransition(async () => {
-      await validatePhoneNumber(inputValue.mobile)
-        .then((data) => {
-          if (data?.error) {
-            return toast.error(data.error);
-          }
-          setChange("phone number");
-          sendOtpPopup.setOpen();
-        })
-        .catch(() => toast.error("Something went wrong"));
+      try {
+        const E164FORMAT = `+63${inputValue.mobile.slice(1)}`;
+        const confirmationResult = await signInWithPhoneNumber(
+          auth,
+          E164FORMAT,
+          recaptchaVerifier
+        );
+
+        setConfirmationResult(confirmationResult);
+        setChange("phone number");
+        sendOtpPopup.setOpen();
+      } catch (error: any) {
+        if (error.code === "auth/invalid-phone-number") {
+          toast.error("Invalid phone number");
+        } else if (error.code === "auth/too-many-requests") {
+          toast.error("Too many requests. Please try again later");
+        } else {
+          toast.error("Something went wrong.");
+        }
+      }
     });
   }
 
   function onValidateChangePassword(formData: FormData) {
     setTransition(async () => {
-      await validateChangePassword(formData, sendTo)
+      await validateChangePassword(formData)
         .then((data) => {
           if (data?.error) {
             return toast.error(data.error);
@@ -91,171 +129,168 @@ export default function SecurityForm({ user }: SecurityFormProp) {
   }
 
   return (
-    <TabsContent value="security" className="space-y-3">
-      <SendOtpPopup inputValue={inputValue} change={change} />
+    <>
+      <div id="recaptcha-container"></div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Email</CardTitle>
-        </CardHeader>
+      <TabsContent value="security" className="space-y-3">
+        <SendOtpPopup
+          inputValue={inputValue}
+          change={change}
+          confirmationResult={confirmationResult}
+        />
 
-        <form action={onValidateEmail}>
-          <CardContent className="space-y-2">
-            {user?.isEmailVerified && (
-              <p className="text-xs flex items-center gap-1 text-green-500">
-                Verified <MdVerifiedUser />
-              </p>
-            )}
-            <Input
-              type="email"
-              onChange={(e) =>
-                setInputValue((prev) => ({ ...prev, email: e.target.value }))
-              }
-              required
-              value={inputValue.email}
-              placeholder="Enter your email"
-            />
-          </CardContent>
+        <Card>
+          <CardHeader>
+            <CardTitle>Email</CardTitle>
+          </CardHeader>
 
-          <CardFooter>
-            <Button
-              disabled={
-                user?.email === inputValue.email || !inputValue.email || pending
-              }
-            >
-              Save email
-            </Button>
-          </CardFooter>
-        </form>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Phone number</CardTitle>
-          {!user?.mobile && (
-            <CardDescription className="flex items-center gap-1 text-red-500">
-              Please input your valid phone number{" "}
-              <CircleAlert className="text-red-500" size={17} />
-            </CardDescription>
-          )}
-        </CardHeader>
-
-        <form action={onValidatePhoneNumber}>
-          <CardContent className="space-y-2">
-            {user?.isMobileVerified && (
-              <p className="text-xs flex items-center gap-1 text-green-500">
-                Verified <MdVerifiedUser />
-              </p>
-            )}
-            <Input
-              type="tel"
-              onChange={(e) =>
-                setInputValue((prev) => ({ ...prev, mobile: e.target.value }))
-              }
-              pattern="[0-9]{4}[0-9]{3}[0-9]{4}"
-              required
-              value={inputValue?.mobile}
-              placeholder="Enter your phone number ex: 09123456789"
-            />
-          </CardContent>
-
-          <CardFooter>
-            <Button
-              disabled={
-                inputValue.mobile === user?.mobile ||
-                !inputValue.mobile ||
-                pending
-              }
-            >
-              Save phone number
-            </Button>
-          </CardFooter>
-        </form>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Change password</CardTitle>
-        </CardHeader>
-
-        <form action={onValidateChangePassword} ref={changePasswordFormRef}>
-          <CardContent className="space-y-3">
-            <div className="space-y-2">
-              <label htmlFor="currentPassword" className="text-sm">
-                Current password
-              </label>
+          <form action={onValidateEmail}>
+            <CardContent className="space-y-2">
+              {user?.isEmailVerified && (
+                <p className="text-xs flex items-center gap-1 text-green-500">
+                  Verified <MdVerifiedUser />
+                </p>
+              )}
               <Input
-                type="password"
-                id="currentPassword"
-                name="currentPassword"
-                required
-                placeholder="Enter current password"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label htmlFor="newPassword" className="text-sm">
-                New password
-              </label>
-              <Input
-                type="password"
+                type="email"
                 onChange={(e) =>
-                  setInputValue((prev) => ({
-                    ...prev,
-                    newPassword: e.target.value,
-                  }))
+                  setInputValue((prev) => ({ ...prev, email: e.target.value }))
                 }
-                id="newPassword"
-                name="newPassword"
                 required
-                placeholder="Enter new password"
+                value={inputValue.email}
+                placeholder="Enter your email"
               />
-            </div>
+            </CardContent>
 
-            <div className="space-y-2">
-              <label htmlFor="confirmPassword" className="text-sm">
-                Confirm password
-              </label>
-              <Input
-                type="password"
-                id="confirmPassword"
-                name="confirmPassword"
-                required
-                placeholder="Enter confirm password"
-              />
-            </div>
-          </CardContent>
+            <CardFooter>
+              <Button
+                disabled={
+                  user?.email === inputValue.email ||
+                  !inputValue.email ||
+                  pending
+                }
+              >
+                Save email
+              </Button>
+            </CardFooter>
+          </form>
+        </Card>
 
-          <CardFooter className="flex flex-wrap items-center gap-3">
-            <Button disabled={pending}>Change password</Button>
-
-            {user?.mobile && (
-              <div className="flex items-center gap-2">
-                <Switch
-                  id="switch"
-                  checked={sendTo}
-                  disabled={pending}
-                  onCheckedChange={(e) => setSendTo(e)}
-                />
-                <label htmlFor="switch" className="text-sm">
-                  Verification code will send to your{" "}
-                  {sendTo ? "phone number" : "email"}
-                </label>
-              </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Phone number</CardTitle>
+            {!user?.mobile && (
+              <CardDescription className="flex items-center gap-1 text-red-500">
+                Please input your valid phone number{" "}
+                <CircleAlert className="text-red-500" size={17} />
+              </CardDescription>
             )}
-          </CardFooter>
-        </form>
-      </Card>
-    </TabsContent>
+          </CardHeader>
+
+          <form action={onValidatePhoneNumber}>
+            <CardContent className="space-y-2">
+              {user?.isMobileVerified && (
+                <p className="text-xs flex items-center gap-1 text-green-500">
+                  Verified <MdVerifiedUser />
+                </p>
+              )}
+              <Input
+                type="tel"
+                onChange={(e) =>
+                  setInputValue((prev) => ({ ...prev, mobile: e.target.value }))
+                }
+                pattern="[0-9]{4}[0-9]{3}[0-9]{4}"
+                required
+                value={inputValue?.mobile}
+                placeholder="Enter your phone number ex: 09123456789"
+              />
+            </CardContent>
+
+            <CardFooter>
+              <Button
+                disabled={
+                  inputValue.mobile === user?.mobile ||
+                  !inputValue.mobile ||
+                  pending
+                }
+              >
+                Save phone number
+              </Button>
+            </CardFooter>
+          </form>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Change password</CardTitle>
+          </CardHeader>
+
+          <form action={onValidateChangePassword} ref={changePasswordFormRef}>
+            <CardContent className="space-y-3">
+              <div className="space-y-2">
+                <label htmlFor="currentPassword" className="text-sm">
+                  Current password
+                </label>
+                <Input
+                  type="password"
+                  id="currentPassword"
+                  name="currentPassword"
+                  required
+                  placeholder="Enter current password"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="newPassword" className="text-sm">
+                  New password
+                </label>
+                <Input
+                  type="password"
+                  onChange={(e) =>
+                    setInputValue((prev) => ({
+                      ...prev,
+                      newPassword: e.target.value,
+                    }))
+                  }
+                  id="newPassword"
+                  name="newPassword"
+                  required
+                  placeholder="Enter new password"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="confirmPassword" className="text-sm">
+                  Confirm password
+                </label>
+                <Input
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  required
+                  placeholder="Enter confirm password"
+                />
+              </div>
+            </CardContent>
+
+            <CardFooter className="flex flex-wrap items-center gap-3">
+              <Button disabled={pending}>Change password</Button>
+            </CardFooter>
+          </form>
+        </Card>
+      </TabsContent>
+    </>
   );
 }
 
 function SendOtpPopup({
   inputValue,
   change,
+  confirmationResult,
 }: {
   inputValue: { email: string; mobile: string; newPassword: string };
   change: string;
+  confirmationResult: ConfirmationResult | null;
 }) {
   const [pending, setTransition] = useTransition();
   const sendOtpPopup = useSendOtpPopup();
@@ -279,17 +314,28 @@ function SendOtpPopup({
         break;
       case "phone number":
         setTransition(async () => {
-          await changePhoneNumber(inputValue.mobile, otp)
-            .then((data) => {
-              if (data?.error) {
-                return toast.error(data.error);
-              }
-
-              toast.success("Phone number saved successfully");
-              sendOtpPopup.setClose();
-              setOtp("");
-            })
-            .catch(() => toast.error("Something went wrong"));
+          try {
+            const res = await confirmationResult?.confirm(otp);
+            console.log(res);
+            if (res?.user) {
+              await changePhoneNumber(inputValue.mobile)
+                .then(() => {
+                  toast.success("Phone number saved successfully");
+                  sendOtpPopup.setClose();
+                  setOtp("");
+                })
+                .catch(() => toast.error("Something went wrong"));
+            }
+          } catch (error: any) {
+            console.log(error.code);
+            if (error.code === "auth/invalid-verification-code") {
+              toast.error("Invalid verification code");
+            } else if (error.code === "auth/code-expired") {
+              toast.error("Verification has expired");
+            } else {
+              toast.error("Something went wrong");
+            }
+          }
         });
         break;
       case "changePassword":
