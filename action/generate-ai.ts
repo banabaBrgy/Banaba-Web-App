@@ -6,8 +6,6 @@ import { TextLoader } from "langchain/document_loaders/fs/text";
 import { getEmbeddingsCollection, getVectorStore } from "@/lib/astradb";
 import { getPinnedInquiries } from "@/lib/faq";
 import { getDocumentType } from "@/lib/query/admin/document-type";
-import { getAnnouncement } from "@/lib/query/admin/announcement";
-import { getPrograms } from "@/lib/query/admin/programs";
 
 export const generate = async () => {
   const vectorStore = await getVectorStore();
@@ -16,13 +14,6 @@ export const generate = async () => {
 
   const pinnedInquiries = await getPinnedInquiries();
   const documentType = await getDocumentType();
-  const announcement = await getAnnouncement();
-  const programs = await getPrograms();
-
-  const dateTimeFormatter = Intl.DateTimeFormat("en-US", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  });
 
   const pinnedInquiriesDocs = [
     {
@@ -44,32 +35,6 @@ export const generate = async () => {
         }))
       ),
       metadata: { url: "/user/services" },
-    },
-  ];
-
-  const docAnnouncement = [
-    {
-      pageContent: JSON.stringify(
-        announcement?.map((item) => ({
-          about: item.about,
-          photo: item.photo,
-          dateUploaded: dateTimeFormatter.format(item.createdAt),
-        }))
-      ),
-      metadata: { url: "user/announcement" },
-    },
-  ];
-
-  const docPrograms = [
-    {
-      pageContent: JSON.stringify(
-        programs?.map((item) => ({
-          about: item.about,
-          photo: item.photo,
-          dateUploaded: dateTimeFormatter.format(item.createdAt),
-        }))
-      ),
-      metadata: { url: "user/programs" },
     },
   ];
 
@@ -111,13 +76,7 @@ export const generate = async () => {
       };
     });
 
-  const allDocs = [
-    ...docs,
-    ...pinnedInquiriesDocs,
-    ...documentTypesDocs,
-    ...docAnnouncement,
-    ...docPrograms,
-  ];
+  const allDocs = [...docs, ...pinnedInquiriesDocs, ...documentTypesDocs];
 
   await vectorStore.addDocuments(allDocs);
 };

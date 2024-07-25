@@ -36,7 +36,7 @@ export default function Assistant({ user }: AssistantProp) {
     handleInputChange,
     handleSubmit,
     isLoading,
-    reload,
+    setInput,
   } = useChat();
   const ref = useRef<ElementRef<"div">>(null);
 
@@ -177,7 +177,11 @@ export default function Assistant({ user }: AssistantProp) {
       <CardFooter className="px-4 py-2 shadow">
         <form
           onSubmit={handleSubmit}
-          onKeyDown={(e) => e.keyCode === 13 && !isLoading && handleSubmit(e)}
+          onKeyDown={(e) => {
+            e.ctrlKey && e.keyCode === 13 && setInput((prev) => `${prev}\n`);
+
+            e.keyCode === 13 && !isLoading && handleSubmit(e);
+          }}
           className="relative flex items-center gap-3 w-full"
         >
           <TextareaAutosize

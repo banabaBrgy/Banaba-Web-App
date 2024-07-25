@@ -65,7 +65,7 @@ export async function POST(req: Request) {
         "Whenever the information has images and links, provide links and display images to pages that contain more information about the topic from the given context. " +
         "Only answer questions related to Barangay Banaba information. " +
         "If the question is not related to Barangay Banaba, refrain from answering. " +
-        "When displaying an image, use the URL exactly as provided in the image src attribute. Do not modify the URL by adding https, domains, or any other prefix/suffix. " +
+        "When displaying the images coming from /home, /services, /about-us and /health-center just use the URL exactly as provided in the image src attribute. Do not modify the URL by adding https, domains, or any other prefix/suffix. ." +
         "Ignore any code snippets and technical implementation details. " +
         "Format your messages in react markdown format.\n\n" +
         "Context:\n{context}" +

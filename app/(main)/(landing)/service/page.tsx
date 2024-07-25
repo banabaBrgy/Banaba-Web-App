@@ -48,6 +48,58 @@ export default function ServicePage() {
         </h1>
       </div>
 
+      <div className="space-y-2 max-w-[65rem] mx-auto hidden">
+        <p>To request a document from the barangay, follow these steps:</p>
+
+        <p>
+          1. Determine the specific document you need. Common documents include
+          barangay clearance, certificates of residency, or permits for various
+          activities.
+        </p>
+
+        <p>
+          2. Visit our service page. On our service page you can choose the
+          document you want to request.
+        </p>
+
+        <p>
+          3. Before requesting a document, you will need to create an account.
+          This step is essential to initiate the document request process
+          efficiently.
+        </p>
+
+        <p>
+          4. Please ensure that you are a current resident of the Barangay
+          Banaba East in order to proceed. It's important that your residency
+          status within the community is verified for the approval of request.
+        </p>
+
+        <p>
+          5. Complete your profile information to proceed with the document
+          request.
+        </p>
+
+        <p>
+          6. Provide the necessary information such as, document needed and
+          purpose. Complete all information accurately.
+        </p>
+
+        <p>
+          7. Submit your application and wait for the approval. Please ensure
+          that the email address associated with your login is active, as the
+          approval notification will be sent via email.
+        </p>
+
+        <p>
+          8. Once your request is approved, you may claim the document from the
+          Barangay hall.
+        </p>
+
+        <p>9. Pay any applicable fees.</p>
+
+        <p>10. Review the document request history on services page.</p>
+      </div>
+
       <div className="flex flex-col gap-y-8 max-w-[80rem] mx-auto px-3 mt-14">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-y-10">
           {ourServices.map((item, index) => (

@@ -4,6 +4,7 @@ import { getUser } from "@/lib/user";
 import { Navbar } from "./_components/navbar";
 import { getUnreadAnnouncement } from "@/lib/query/user/announcement";
 import { getUnreadPrograms } from "@/lib/query/user/programs";
+import { notFound } from "next/navigation";
 
 export default async function UserLayout({
   children,
@@ -13,6 +14,10 @@ export default async function UserLayout({
   const user = await getUser();
   const unreadAnnouncement = await getUnreadAnnouncement();
   const unreadPrograms = await getUnreadPrograms();
+
+  /* if (user?.role !== "User") {
+    return notFound();
+  } */
 
   return (
     <div className="min-h-[100dvh] bg-gray-100">
