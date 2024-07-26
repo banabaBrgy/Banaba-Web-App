@@ -25,7 +25,7 @@ export default async function FaqPage() {
         <Accordion type="multiple" className="w-full">
           {faq.map((faq) => (
             <AccordionItem key={faq.id} value={faq.id}>
-              <AccordionTrigger>{faq.message}</AccordionTrigger>
+              <AccordionTrigger>{faq.subject}</AccordionTrigger>
               <AccordionContent>{faq.answer}</AccordionContent>
             </AccordionItem>
           ))}

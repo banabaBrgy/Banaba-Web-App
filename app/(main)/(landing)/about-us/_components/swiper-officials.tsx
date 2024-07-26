@@ -26,7 +26,7 @@ export function SwiperOfficials() {
     >
       <SwiperSlide className="relative aspect-[8/7] rounded overflow-hidden border border-zinc-200 shadow-md">
         <Image
-          src="/kapitan.png  "
+          src="/kapitan.png"
           alt="Rolando A. Dinglasan"
           width={500}
           height={500}

@@ -176,11 +176,19 @@ export default function Assistant({ user }: AssistantProp) {
 
       <CardFooter className="px-4 py-2 shadow">
         <form
-          onSubmit={handleSubmit}
+          onSubmit={(e) => {
+            ref.current?.scrollTo({ top: ref.current?.scrollHeight });
+            handleSubmit(e);
+          }}
           onKeyDown={(e) => {
-            e.ctrlKey && e.keyCode === 13 && setInput((prev) => `${prev}\n`);
+            if (e.ctrlKey && e.keyCode === 13) {
+              return setInput((prev) => `${prev}\n`);
+            }
 
-            e.keyCode === 13 && !isLoading && handleSubmit(e);
+            if (e.keyCode === 13 && !isLoading) {
+              ref.current?.scrollTo({ top: ref.current?.scrollHeight });
+              handleSubmit(e);
+            }
           }}
           className="relative flex items-center gap-3 w-full"
         >

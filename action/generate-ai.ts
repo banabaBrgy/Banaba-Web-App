@@ -19,7 +19,7 @@ export const generate = async () => {
     {
       pageContent: JSON.stringify(
         pinnedInquiries.map((item) => ({
-          question: item.message,
+          question: item.subject,
           answer: item.answer,
         }))
       ),
