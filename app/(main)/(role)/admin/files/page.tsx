@@ -2,6 +2,12 @@ import React from "react";
 import { FolderRow } from "./_components/folder-row";
 import { getFolders } from "@/lib/query/admin/files";
 
+export async function generateMetadata() {
+  return {
+    title: "Files",
+  };
+}
+
 export default async function FilesPage() {
   const folders = await getFolders();
 

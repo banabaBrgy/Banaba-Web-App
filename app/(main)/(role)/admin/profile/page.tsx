@@ -12,6 +12,14 @@ import {
 import SecurityForm from "@/components/security-form";
 import { FaExclamation } from "react-icons/fa";
 
+export async function generateMetadata() {
+  const user = await getUser();
+
+  return {
+    title: `Hi, ${user?.fullName}`,
+  };
+}
+
 export default async function ProfilePage() {
   const user = await getUser();
 

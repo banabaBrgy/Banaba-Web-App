@@ -2,6 +2,12 @@ import React from "react";
 import { RequestArchivedRow } from "./_components/request-archived-row";
 import { getRequestArchived } from "@/lib/query/admin/request-archived";
 
+export async function generateMetadata() {
+  return {
+    title: "Request Archived",
+  };
+}
+
 const RequestArchivedPage = async () => {
   const requestArchiveds = await getRequestArchived();
 

@@ -3,6 +3,12 @@ import FormAnnouncement from "./_components/form-announcement";
 import AnnouncementRow from "./_components/announcement-row";
 import { getAnnouncement } from "@/lib/query/admin/announcement";
 
+export async function generateMetadata() {
+  return {
+    title: "Announcement",
+  };
+}
+
 export default async function AnnouncementPage() {
   const announcements = await getAnnouncement();
 

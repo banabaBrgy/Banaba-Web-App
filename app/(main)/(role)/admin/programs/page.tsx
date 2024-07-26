@@ -3,6 +3,12 @@ import FormPrograms from "./_components/form-programs";
 import ProgramsRow from "./_components/programs-row";
 import { getPrograms } from "@/lib/query/admin/programs";
 
+export async function generateMetadata() {
+  return {
+    title: "Programs",
+  };
+}
+
 export default async function ProgramsPage() {
   const programs = await getPrograms();
 

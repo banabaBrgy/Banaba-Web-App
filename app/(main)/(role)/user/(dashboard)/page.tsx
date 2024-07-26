@@ -1,6 +1,12 @@
 import React from "react";
 import { getCalendarActivities } from "@/lib/query/user/dashboard";
-import { ReactBigCalendar } from "./_components/react-bitg-calendar";
+import { ReactBigCalendar } from "./_components/react-big-calendar";
+
+export async function generateMetadata() {
+  return {
+    title: "Dashboard",
+  };
+}
 
 export default async function ResidentPage() {
   const calendarActivities = await getCalendarActivities();

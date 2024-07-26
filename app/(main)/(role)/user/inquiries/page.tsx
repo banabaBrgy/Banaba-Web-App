@@ -4,6 +4,12 @@ import { getUser } from "@/lib/user";
 import { InquiriesRow } from "./_components/inquiries-row";
 import { getInquiries } from "@/lib/query/user/inquiries";
 
+export async function generateMetadata() {
+  return {
+    title: "Inquiries",
+  };
+}
+
 export default async function InquiriesPage({
   searchParams,
 }: {

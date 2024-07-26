@@ -2,6 +2,12 @@ import { getPrograms } from "@/lib/query/user/programs";
 import React from "react";
 import ProgramsRow from "./_components/programs-row";
 
+export async function generateMetadata() {
+  return {
+    title: "Programs",
+  };
+}
+
 export default async function ProgramsPage() {
   const programs = await getPrograms();
 

@@ -2,6 +2,12 @@ import { getServices } from "@/lib/query/admin/services";
 import React from "react";
 import ServicesRow from "./_components/services-row";
 
+export async function generateMetadata() {
+  return {
+    title: "Services",
+  };
+}
+
 export default async function ServicesPage() {
   const services = await getServices();
 

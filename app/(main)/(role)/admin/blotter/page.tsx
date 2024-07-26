@@ -2,6 +2,12 @@ import { getBlotters } from "@/lib/query/admin/blotter";
 import React from "react";
 import BlotterRow from "./_components/blotter-row";
 
+export async function generateMetadata() {
+  return {
+    title: "Blotter",
+  };
+}
+
 export default async function BlotterPage({
   searchParams,
 }: {

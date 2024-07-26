@@ -3,6 +3,12 @@ import React from "react";
 import SystemUsersRow from "./_components/system-users-row";
 import { getUser } from "@/lib/user";
 
+export async function generateMetadata() {
+  return {
+    title: "System Users",
+  };
+}
+
 export default async function SystemUsersPage() {
   const systemUsers = await getSystemUsers();
   const user = await getUser();

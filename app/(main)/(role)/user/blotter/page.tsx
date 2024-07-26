@@ -12,6 +12,12 @@ import CreatedBlotterTable from "./_components/created-blotter-table";
 import { getCreatedBlotters } from "@/lib/query/user/blotter";
 import { getUser } from "@/lib/user";
 
+export async function generateMetadata() {
+  return {
+    title: "Blotter",
+  };
+}
+
 export default async function BlotterPage() {
   const user = await getUser();
   const createdBlotters = await getCreatedBlotters();

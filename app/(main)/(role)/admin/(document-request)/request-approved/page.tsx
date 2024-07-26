@@ -2,6 +2,12 @@ import { getRequestApproved } from "@/lib/query/admin/request-approved";
 import React from "react";
 import RequestApprovedRow from "./_components/request-approved-row";
 
+export async function generateMetadata() {
+  return {
+    title: "Request Approved",
+  };
+}
+
 export default async function RequestApprovePage() {
   const requestApproved = await getRequestApproved();
 

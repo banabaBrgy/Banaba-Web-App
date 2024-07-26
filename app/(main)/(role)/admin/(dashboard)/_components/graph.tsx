@@ -29,7 +29,7 @@ export default function Graph({ totals }: GraphProp) {
   const data = [
     {
       total: currentMonthAct.length,
-      name: "Register Voter(s)",
+      name: "Ongoing project(s) (This Month)",
     },
     {
       total: totals.totalBlotters.length,

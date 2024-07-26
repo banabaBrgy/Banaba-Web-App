@@ -3,6 +3,12 @@ import ServicesForm from "./_components/services-form";
 import { getDocumentType } from "@/lib/query/user/services";
 import { getUser } from "@/lib/user";
 
+export async function generateMetadata() {
+  return {
+    title: "Services",
+  };
+}
+
 export default async function ServicesPage() {
   const user = await getUser();
   const documentTypes = await getDocumentType();

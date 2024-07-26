@@ -9,6 +9,12 @@ import { ReactBigCalendar } from "./_components/react-big-calendar";
 import { getCalendarActivities, getTotals } from "@/lib/query/admin/dashboard";
 const Graph = dynamic(() => import("./_components/graph"), { ssr: false });
 
+export async function generateMetadata() {
+  return {
+    title: "Dashboard",
+  };
+}
+
 export default async function AdminPage() {
   const calendarActivities = await getCalendarActivities();
   const totals = await getTotals();

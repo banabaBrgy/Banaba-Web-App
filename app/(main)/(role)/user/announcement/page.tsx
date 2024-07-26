@@ -2,6 +2,12 @@ import { getAnnouncement } from "@/lib/query/user/announcement";
 import React from "react";
 import AnnouncementRow from "./_components/announcement-row";
 
+export async function generateMetadata() {
+  return {
+    title: "Announcement",
+  };
+}
+
 export default async function AnnouncementPage() {
   const announcements = await getAnnouncement();
 

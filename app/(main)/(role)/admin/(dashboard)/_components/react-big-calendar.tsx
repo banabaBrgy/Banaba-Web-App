@@ -364,7 +364,7 @@ export function ReactBigCalendar({ calendarActivities }: ReactBigCalendarProp) {
       <Card className="mt-5" onClick={(e) => e.stopPropagation()}>
         <CardHeader>
           <CardTitle>Calendar</CardTitle>
-          <CardDescription>Calendar holiday events</CardDescription>
+          <CardDescription>Calendar of activities</CardDescription>
         </CardHeader>
 
         <CardContent>

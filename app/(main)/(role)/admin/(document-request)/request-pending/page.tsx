@@ -2,6 +2,12 @@ import { getRequestPending } from "@/lib/query/admin/request-pending";
 import React from "react";
 import RequestPendingRow from "./_components/request-pending-row";
 
+export async function generateMetadata() {
+  return {
+    title: "Request Pending",
+  };
+}
+
 export default async function RequestPendingPage({
   searchParams,
 }: {

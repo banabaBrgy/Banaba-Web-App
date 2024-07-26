@@ -2,6 +2,12 @@ import React from "react";
 import DocumentTypeRow from "./_components/document-type-row";
 import { getDocumentType } from "@/lib/query/admin/document-type";
 
+export async function generateMetadata() {
+  return {
+    title: "Document Type",
+  };
+}
+
 export default async function DocumentTypePage() {
   const documentTypes = await getDocumentType();
 
