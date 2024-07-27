@@ -284,8 +284,8 @@ export function FilesRow({ files, folderId }: FilesRowProp) {
           <div className="space-y-3">
             <h1 className="font-semibold text-lg">Delete folder</h1>
             <p className="text-sm text-gray-500">
-              This action cannot be undone. This will permanently delete this
-              folder.
+              This action cannot be undone. This will permanently delete this{" "}
+              <strong>{del?.fileName}</strong> file.
             </p>
           </div>
 

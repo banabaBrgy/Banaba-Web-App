@@ -5,6 +5,20 @@ import React from "react";
 import { IoChevronForwardOutline } from "react-icons/io5";
 import { FilesRow } from "./_components/files-row";
 
+export async function generateMetadata({
+  params,
+}: {
+  params: { folderId: string };
+}) {
+  const { folderId } = params;
+  const folders = await getFolders();
+  const folderNameOpen = folders?.find((fol) => fol.id === folderId);
+
+  return {
+    title: `${folderNameOpen?.folderName}`,
+  };
+}
+
 export default async function FolderIdPage({
   params,
 }: {

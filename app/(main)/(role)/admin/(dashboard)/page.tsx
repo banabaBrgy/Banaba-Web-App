@@ -20,7 +20,7 @@ export default async function AdminPage() {
   const totals = await getTotals();
   const currentMonthAct = totals.calendarActivities.filter(
     (act) =>
-      act.createdAt.getFullYear === new Date().getFullYear &&
+      act.createdAt.getFullYear() === new Date().getFullYear() &&
       act.createdAt.getMonth() === new Date().getMonth()
   );
 

@@ -79,8 +79,7 @@ export default function FormAnnouncement() {
       <Button
         disabled={pending}
         type="submit"
-        variant="outline"
-        className="w-full"
+        className="w-full uppercase text-xs bg-green-500 hover:bg-green-500/80"
       >
         {pending ? (
           <Loader2 className="animate-spin" />
