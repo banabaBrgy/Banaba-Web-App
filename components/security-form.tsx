@@ -169,6 +169,7 @@ export default function SecurityForm({ user }: SecurityFormProp) {
                   !inputValue.email ||
                   pending
                 }
+                className="bg-green-500 hover:bg-green-500/80 uppercase text-xs"
               >
                 Save email
               </Button>
@@ -213,6 +214,7 @@ export default function SecurityForm({ user }: SecurityFormProp) {
                   !inputValue.mobile ||
                   pending
                 }
+                className="bg-green-500 hover:bg-green-500/80 uppercase text-xs"
               >
                 Save phone number
               </Button>
@@ -274,7 +276,12 @@ export default function SecurityForm({ user }: SecurityFormProp) {
             </CardContent>
 
             <CardFooter className="flex flex-wrap items-center gap-3">
-              <Button disabled={pending}>Change password</Button>
+              <Button
+                disabled={pending}
+                className="bg-green-500 hover:bg-green-500/80 uppercase text-xs"
+              >
+                Change password
+              </Button>
             </CardFooter>
           </form>
         </Card>

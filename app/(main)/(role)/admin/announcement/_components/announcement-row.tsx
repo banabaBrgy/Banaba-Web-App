@@ -15,6 +15,7 @@ import { RiDeleteBin6Fill } from "react-icons/ri";
 import { MdEdit, MdOutlineSearch } from "react-icons/md";
 import { toast } from "sonner";
 import { IoIosSave } from "react-icons/io";
+import TextareaAutoSize from "react-textarea-autosize";
 
 interface AnnouncementRowProp {
   announcements: Announcement[] | null;
@@ -147,8 +148,7 @@ export default function AnnouncementRow({
                   <td className="border border-[#dddddd] p-2">{idx + 1}.</td>
                   <td className="border border-[#dddddd] p-2">
                     {edit?.id === announcement.id ? (
-                      <Input
-                        type="text"
+                      <TextareaAutoSize
                         onChange={({ target: { value } }) =>
                           setEdit(
                             (prev) =>
@@ -156,6 +156,7 @@ export default function AnnouncementRow({
                           )
                         }
                         defaultValue={announcement.about}
+                        className="border border-zinc-300 rounded-md p-1 w-full outline-none focus:ring-2 ring-zinc-400 ring-offset-2"
                       />
                     ) : (
                       announcement.about

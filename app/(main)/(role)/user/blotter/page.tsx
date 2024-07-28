@@ -26,26 +26,32 @@ export default async function BlotterPage() {
     <div className="md:px-4 px-3 py-4">
       <Tabs defaultValue="create">
         <TabsList className="w-full">
-          <TabsTrigger value="create" className="w-full">
+          <TabsTrigger
+            value="create"
+            className="md:text-sm text-xs w-full uppercase"
+          >
             Create blotter
           </TabsTrigger>
-          <TabsTrigger value="created" className="w-full">
+          <TabsTrigger
+            value="created"
+            className="md:text-sm text-xs w-full uppercase"
+          >
             Created blotter
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="create">
           <Card>
-            <CardHeader>
-              <CardTitle className="text-lg uppercase">
+            <CardHeader className="sm:p-6 p-3">
+              <CardTitle className="sm:text-lg text-base uppercase">
                 Blotter Information Form
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="sm:text-sm text-xs">
                 Fill all information to submit your blotter
               </CardDescription>
             </CardHeader>
 
-            <CardContent>
+            <CardContent className="sm:p-6 p-3">
               <BlotterForm user={user} />
             </CardContent>
           </Card>

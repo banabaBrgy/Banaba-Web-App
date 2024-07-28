@@ -224,7 +224,7 @@ export default function BlotterForm({ user }: BlotterFormProp) {
             onClick={onAddWitnesses}
             type="button"
             variant="secondary"
-            className="w-full"
+            className="w-full text-xs uppercase"
           >
             Add witnesses
           </Button>
@@ -251,7 +251,7 @@ export default function BlotterForm({ user }: BlotterFormProp) {
           <Button
             disabled={pending || missingProfileInfo}
             type="submit"
-            className="w-full uppercase"
+            className="w-full bg-green-500 hover:bg-green-500/80 uppercase text-xs"
           >
             {pending ? <Loader2 className="animate-spin" /> : "Submit"}
           </Button>

@@ -34,10 +34,12 @@ export async function POST(req: Request) {
     modelName: "gpt-4o-mini",
     streaming: true,
     callbacks: [handlers],
+    temperature: 0,
   });
 
   const rephrasingModel = new ChatOpenAI({
     modelName: "gpt-4o-mini",
+    temperature: 0,
   });
 
   const retriever = (await getVectorStore()).asRetriever();

@@ -92,7 +92,7 @@ export default function InquiriesForm({ user }: InquiriesFormProp) {
 
       <Button
         disabled={pending || missingProfileInfo}
-        className="w-full uppercase"
+        className="w-full bg-green-500 hover:bg-green-500/80 text-xs uppercase"
       >
         {pending ? <Loader2 className="animate-spin" /> : "Submit"}
       </Button>

@@ -12,6 +12,7 @@ import { RiDeleteBin6Fill } from "react-icons/ri";
 import { MdEdit, MdOutlineSearch } from "react-icons/md";
 import { toast } from "sonner";
 import { IoIosSave } from "react-icons/io";
+import TextareaAutoSize from "react-textarea-autosize";
 
 interface ProgramsRowProp {
   programs: Programs[] | null;
@@ -146,14 +147,14 @@ export default function ProgramsRow({ programs }: ProgramsRowProp) {
                   <td className="p-2 border border-[#dddddd]">{idx + 1}.</td>
                   <td className="p-2 border border-[#dddddd]">
                     {edit?.id === program.id ? (
-                      <Input
-                        type="text"
+                      <TextareaAutoSize
                         defaultValue={program.about}
                         onChange={({ target: { value } }) =>
                           setEdit(
                             (prev) => ({ ...prev, about: value } as Programs)
                           )
                         }
+                        className="border border-zinc-300 rounded-md p-1 w-full outline-none focus:ring-2 ring-zinc-400 ring-offset-2"
                       />
                     ) : (
                       program.about

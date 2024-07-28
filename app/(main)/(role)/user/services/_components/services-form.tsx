@@ -100,7 +100,7 @@ export default function ServicesForm({
 
         <Button
           disabled={pending || missingProfileInfo}
-          className="w-full uppercase"
+          className="w-full bg-green-500 hover:bg-green-500/80 uppercase text-xs"
         >
           {pending ? <Loader2 className="animate-spin" /> : "Submit"}
         </Button>

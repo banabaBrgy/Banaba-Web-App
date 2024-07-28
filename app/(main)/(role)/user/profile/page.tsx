@@ -35,14 +35,20 @@ export default async function ProfilePage() {
     <div className="sm:px-4 px-3 py-4">
       <Tabs defaultValue="profile" className=" w-full">
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="profile" className="flex items-center gap-1">
-            Profile{" "}
+          <TabsTrigger
+            value="profile"
+            className="md:text-sm text-xs flex items-center gap-1"
+          >
+            PROFILE{" "}
             {missingProfileInfo && (
               <FaExclamation className="text-red-500" size={13} />
             )}
           </TabsTrigger>
-          <TabsTrigger value="security" className="flex items-center gap-1">
-            Security{" "}
+          <TabsTrigger
+            value="security"
+            className="md:text-sm text-xs flex items-center gap-1"
+          >
+            SECURITY{" "}
             {!user?.mobile && (
               <FaExclamation className="text-red-500" size={13} />
             )}

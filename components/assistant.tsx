@@ -9,7 +9,6 @@ import {
   CardTitle,
 } from "./ui/card";
 import TextareaAutosize from "react-textarea-autosize";
-import { IoSend } from "react-icons/io5";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { IoChevronDownOutline } from "react-icons/io5";
@@ -19,7 +18,7 @@ import { useChat } from "ai/react";
 import ReactMarkdown from "react-markdown";
 import Link from "next/link";
 import { UserType } from "@/lib/user";
-import { HiDotsHorizontal } from "react-icons/hi";
+import { RiSendPlaneFill } from "react-icons/ri";
 
 interface AssistantProp {
   user: UserType | null;
@@ -76,7 +75,7 @@ export default function Assistant({ user }: AssistantProp) {
         isOpen ? "bottom-0" : "bottom-[-60rem]"
       )}
     >
-      <CardHeader className="px-4 py-2 shadow">
+      <CardHeader className="px-3 py-2 shadow">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">Assistant</CardTitle>
           <IoChevronDownOutline
@@ -90,7 +89,7 @@ export default function Assistant({ user }: AssistantProp) {
       <CardContent
         id="scrollParent"
         ref={ref}
-        className="px-4 py-5 overflow-auto flex-1 bg-zinc-100 space-y-5 border-none"
+        className="px-4 py-5 overflow-auto flex-1 bg-gray-100 space-y-2 border-none"
       >
         {messages.map((m) => (
           <div
@@ -102,10 +101,10 @@ export default function Assistant({ user }: AssistantProp) {
           >
             <div
               className={cn(
-                "p-2 bg-white shadow text-sm max-w-[19rem] whitespace-pre-wrap break-words",
+                "p-2 bg-white text-sm whitespace-pre-wrap break-words mb-2",
                 m.role === "user"
-                  ? "rounded-l-xl rounded-br-xl mt-3"
-                  : "rounded-r-xl rounded-bl-xl mt-3"
+                  ? "rounded-l-xl rounded-tr-xl ml-14"
+                  : "rounded-r-xl rounded-tl-xl mr-14"
               )}
             >
               <ReactMarkdown
@@ -122,35 +121,40 @@ export default function Assistant({ user }: AssistantProp) {
                 {m.content}
               </ReactMarkdown>
             </div>
-            <Image
-              src={
-                m.role === "assistant"
-                  ? "/logo.png"
-                  : user?.profile || "/no-profile.webp"
-              }
-              alt="no-profile"
-              width={200}
-              height={299}
-              priority
-              className="w-8 h-8 rounded-full"
-            />
+
+            <div className="flex items-end shrink-0">
+              <Image
+                src={
+                  m.role === "assistant"
+                    ? "/assistant-logo.png"
+                    : user?.profile || "/no-profile.webp"
+                }
+                alt="no-profile"
+                width={200}
+                height={299}
+                priority
+                className="w-8 h-8 rounded-full"
+              />
+            </div>
           </div>
         ))}
 
         {isUser && isLoading && (
           <div className="flex gap-2">
-            <Image
-              src="/logo.png"
-              alt="no-profile"
-              width={200}
-              height={299}
-              priority
-              className="w-8 h-8 rounded-full"
-            />
-            <p className="flex gap-1 items-center bg-white p-3 rounded-md text-sm shadow rounded-r-xl rounded-bl-xl mt-3">
-              <span className="bg-zinc-400 h-2 w-2 animate-pulse rounded-full" />
-              <span className="bg-zinc-400 h-2 w-2 animate-pulse rounded-full" />
-              <span className="bg-zinc-400 h-2 w-2 animate-pulse rounded-full" />
+            <div className="flex items-end shrink-0">
+              <Image
+                src="/assistant-logo.png"
+                alt="no-profile"
+                width={200}
+                height={299}
+                priority
+                className="w-8 h-8 rounded-full"
+              />
+            </div>
+            <p className="flex gap-1 items-center bg-white p-3 text-sm rounded-r-xl rounded-tl-xl mb-2">
+              <span className="bg-zinc-400 h-2 w-2 animate-bounce rounded-full" />
+              <span className="bg-zinc-400 h-2 w-2 animate-bounce rounded-full" />
+              <span className="bg-zinc-400 h-2 w-2 animate-bounce rounded-full" />
             </p>
           </div>
         )}
@@ -174,7 +178,7 @@ export default function Assistant({ user }: AssistantProp) {
         )}
       </CardContent>
 
-      <CardFooter className="px-4 py-2 shadow">
+      <CardFooter className="px-3 py-2 bg-gray-100">
         <form
           onSubmit={(e) => {
             ref.current?.scrollTo({ top: ref.current?.scrollHeight });
@@ -190,25 +194,27 @@ export default function Assistant({ user }: AssistantProp) {
               handleSubmit(e);
             }
           }}
-          className="relative flex items-center gap-3 w-full"
+          className="relative flex gap-3 w-full"
         >
           <TextareaAutosize
             maxRows={4}
             value={input}
             onChange={handleInputChange}
-            placeholder="Start asking me..."
+            placeholder="Send a message..."
             spellCheck={false}
-            className="sidebar rounded-md shadow-md resize-none outline-none ring-gray-400 border border-gray-300 flex-1 text-sm py-[10px] pl-3 pr-12"
+            className="sidebar rounded-[22px] shadow resize-none outline-none flex-1 text-sm py-[12px] pl-4 pr-14"
           />
-          <div className="absolute right-1 scroll-mr-3 inset-y-1 flex items-center">
-            <button
-              disabled={isLoading}
-              type="submit"
-              className="p-2 rounded-md disabled:opacity-60"
-            >
-              <IoSend className="text-green-500 scale-[1.2]" cursor="pointer" />
-            </button>
-          </div>
+
+          <button
+            disabled={isLoading}
+            type="submit"
+            className="absolute right-2 bottom-[6.5px] p-2 rounded-full disabled:opacity-60 bg-green-500"
+          >
+            <RiSendPlaneFill
+              className="scale-[1.2] text-white"
+              cursor="pointer"
+            />
+          </button>
         </form>
       </CardFooter>
     </Card>

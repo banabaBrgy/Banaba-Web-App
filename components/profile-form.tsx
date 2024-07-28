@@ -247,7 +247,7 @@ export function ProfileForm({ user }: ProfileFormProp) {
 
           <Button
             disabled={pending || !user}
-            className="uppercase sm:col-span-2 mt-3"
+            className="bg-green-500 hover:bg-green-500/80 uppercase text-xs sm:col-span-2 mt-3"
           >
             {pending ? <Loader2 className="animate-spin" /> : "Save changes"}
           </Button>
