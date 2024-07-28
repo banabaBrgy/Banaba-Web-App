@@ -26,6 +26,7 @@ import {
   changePhoneNumber,
   validateChangePassword,
   validateEmail,
+  validatePhoneNumber,
 } from "@/action/profile";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "./ui/input-otp";
 import { cn } from "@/lib/utils";
@@ -90,6 +91,15 @@ export default function SecurityForm({ user }: SecurityFormProp) {
 
     setTransition(async () => {
       try {
+        const isPhoneNumberExisted = await validatePhoneNumber(
+          inputValue.mobile
+        );
+
+        if (isPhoneNumberExisted) {
+          toast.error("Phone number is already exist");
+          return;
+        }
+
         const E164FORMAT = `+63${inputValue.mobile.slice(1)}`;
         const confirmationResult = await signInWithPhoneNumber(
           auth,

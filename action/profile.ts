@@ -155,6 +155,20 @@ export async function changeEmail(email: string, otp: string) {
   }
 }
 
+export const validatePhoneNumber = async (mobile: string) => {
+  const isPhoneNumberExisted = await db.user.findUnique({
+    where: {
+      mobile,
+    },
+  });
+
+  if (isPhoneNumberExisted && isPhoneNumberExisted.mobile) {
+    return true;
+  }
+
+  return false;
+};
+
 export const changePhoneNumber = async (mobile: string) => {
   const user = await getUser();
 
