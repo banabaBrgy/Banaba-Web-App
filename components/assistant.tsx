@@ -208,7 +208,7 @@ export default function Assistant({ user }: AssistantProp) {
           <button
             disabled={isLoading}
             type="submit"
-            className="absolute right-2 bottom-[6.5px] p-2 rounded-full disabled:opacity-60 bg-green-500"
+            className="absolute right-2 bottom-[6px] p-2 rounded-full disabled:opacity-60 bg-green-500"
           >
             <RiSendPlaneFill
               className="scale-[1.2] text-white"

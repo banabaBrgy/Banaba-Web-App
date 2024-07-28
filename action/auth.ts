@@ -166,7 +166,7 @@ async function sendEmailVerificationCode(
       from: process.env.MY_EMAIL,
       to: email,
       subject: "Verification code",
-      html: `<h1>${verificationCode}</h1>`,
+      html: `<h1>Your verification code is ${verificationCode} please don't share it to anyone</h1>`,
     };
 
     transporter.sendMail(mailOptions, function (error, info) {

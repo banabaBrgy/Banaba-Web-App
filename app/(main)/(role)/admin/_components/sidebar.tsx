@@ -224,7 +224,7 @@ export function Sidebar({
         </div>
       </div>
 
-      <div className="sticky bottom-2 inset-x-4 mt-8">
+      <div className="sticky bottom-2 inset-x-4 mt-8 invisible">
         <Button
           onClick={() =>
             setTransition(async () => {

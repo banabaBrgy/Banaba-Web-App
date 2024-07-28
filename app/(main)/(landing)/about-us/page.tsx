@@ -69,7 +69,10 @@ export default function AboutUsPage() {
 
           <div className="border-red-500 flex-1">
             <iframe
-              // This is not image this is a google map location for Barangay Banaba
+              //USE THIS GOOGLE MAP URL IF THE USER ASK WHERE TO SEE THE BARANGAY HALL
+              // https://www.google.com/maps/place/BANABA+EAST,+BARANGAY+HALL/@13.8131099,121.0643702,17z/data=!3m1!4b1!4m6!3m5!1s0x33bd0fcd69c6b5a5:0x336c8e16b2e275ee!8m2!3d13.8131047!4d121.0669451!16s%2Fg%2F11c51v_7jj?entry=ttu
+
+              // DONT USE THIS GOOGLE MAP SRC AND DONT INCLUDE IT AI THIS IS PRIVATE
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d443.3895555919666!2d121.06663250231648!3d13.813154321376269!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33bd0fcd69c6b5a5%3A0x336c8e16b2e275ee!2sBANABA%20EAST%2C%20BARANGAY%20HALL!5e1!3m2!1sen!2sph!4v1715939574766!5m2!1sen!2sph"
               className="w-full h-full rounded-b-md"
               style={{ border: "0" }}

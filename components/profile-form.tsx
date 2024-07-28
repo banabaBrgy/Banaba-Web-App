@@ -12,6 +12,7 @@ import { CircleAlert, Loader2 } from "lucide-react";
 import { editProfile } from "@/action/profile";
 import { useEdgeStore } from "@/lib/edgestore";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { cn } from "@/lib/utils";
 
 interface ProfileFormProp {
   user: UserType | null;
@@ -156,7 +157,10 @@ export function ProfileForm({ user }: ProfileFormProp) {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="birthDate" className="text-sm">
+            <label
+              htmlFor="birthDate"
+              className={cn("text-sm", !user?.birthDate && "text-red-500")}
+            >
               Birth date
             </label>
             <Input
@@ -170,7 +174,10 @@ export function ProfileForm({ user }: ProfileFormProp) {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="age" className="text-sm">
+            <label
+              htmlFor="age"
+              className={cn("text-sm", !user?.birthDate && "text-red-500")}
+            >
               Age
             </label>
             <Input
@@ -184,7 +191,10 @@ export function ProfileForm({ user }: ProfileFormProp) {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="gender" className="text-sm">
+            <label
+              htmlFor="gender"
+              className={cn("text-sm", !user?.birthDate && "text-red-500")}
+            >
               Gender
             </label>
             <select
@@ -201,7 +211,10 @@ export function ProfileForm({ user }: ProfileFormProp) {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="civilStatus" className="text-sm">
+            <label
+              htmlFor="civilStatus"
+              className={cn("text-sm", !user?.birthDate && "text-red-500")}
+            >
               Civil status
             </label>
             <select
@@ -218,7 +231,10 @@ export function ProfileForm({ user }: ProfileFormProp) {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="placeOfBirth" className="text-sm">
+            <label
+              htmlFor="placeOfBirth"
+              className={cn("text-sm", !user?.birthDate && "text-red-500")}
+            >
               Place of birth
             </label>
             <Input
@@ -232,7 +248,10 @@ export function ProfileForm({ user }: ProfileFormProp) {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="sitioPurok" className="text-sm">
+            <label
+              htmlFor="sitioPurok"
+              className={cn("text-sm", !user?.birthDate && "text-red-500")}
+            >
               Sitio/Purok
             </label>
             <Input
