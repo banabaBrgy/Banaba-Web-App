@@ -5,6 +5,7 @@ import { HiOutlineIdentification } from "react-icons/hi2";
 import { BriefcaseBusiness, FileText, FolderSync } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function ServicePage() {
   const ourServices = [
@@ -98,7 +99,10 @@ export default function ServicePage() {
 
         <p>9. Pay any applicable fees.</p>
 
-        <p>10. Review the document request history on services page.</p>
+        <p>
+          10. Review the document request history on{" "}
+          {process.env.MAIN_BASE_URL + "/user/my-request"} page.
+        </p>
       </div>
 
       <div className="flex flex-col gap-y-8 max-w-[80rem] mx-auto px-3 mt-14">
@@ -123,7 +127,9 @@ export default function ServicePage() {
         </div>
 
         <div className="flex justify-center mt-10">
-          <Button className="slide-up py-6 px-20 uppercase">Apply now</Button>
+          <Link href="/user/services">
+            <Button className="slide-up py-6 px-20 uppercase">Apply now</Button>
+          </Link>
         </div>
       </div>
 

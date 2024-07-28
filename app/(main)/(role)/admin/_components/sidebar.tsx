@@ -160,7 +160,11 @@ export function Sidebar({
             key={item.id}
             className={cn(
               "flex items-center justify-between gap-2 p-3 rounded-md text-sm duration-200 hover:bg-green-500/60",
-              pathname === item.id && "bg-white hover:bg-white text-black"
+              pathname === item.id ||
+                (pathname?.includes("/admin/files") &&
+                  item.id === "/admin/files")
+                ? "bg-white hover:bg-white text-black"
+                : ""
             )}
           >
             <p className="flex items-center gap-2">

@@ -15,9 +15,9 @@ export default async function UserLayout({
   const unreadAnnouncement = await getUnreadAnnouncement();
   const unreadPrograms = await getUnreadPrograms();
 
-  /* if (user?.role !== "User") {
+  if (user?.role !== "User") {
     return notFound();
-  } */
+  }
 
   return (
     <div className="min-h-[100dvh] bg-gray-100">
