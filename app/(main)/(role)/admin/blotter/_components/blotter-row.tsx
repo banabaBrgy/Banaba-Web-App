@@ -92,7 +92,10 @@ export default function BlotterRow({ blotters, id }: BlotterRowProp) {
           <div className="space-y-3">
             <h1 className="font-semibold text-xl">Narrative</h1>
 
-            <div dangerouslySetInnerHTML={{ __html: viewNarrative }} />
+            <div
+              className="ql-editor"
+              dangerouslySetInnerHTML={{ __html: viewNarrative }}
+            />
           </div>
         </div>
       </div>
@@ -171,6 +174,7 @@ export default function BlotterRow({ blotters, id }: BlotterRowProp) {
                   </td>
                   <td className="text-center text-sm border border-[#dddddd] p-2">
                     <Button
+                      title="Show narrative"
                       onClick={(e) => {
                         setViewNarrative(blotter.narrative);
                         e.stopPropagation();

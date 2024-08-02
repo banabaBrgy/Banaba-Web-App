@@ -2,11 +2,21 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import React, { ElementRef, useEffect, useRef, useState } from "react";
+import React, {
+  ElementRef,
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { MdOutlineSearch } from "react-icons/md";
 import { GrFormView } from "react-icons/gr";
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
+import { PiTrashFill } from "react-icons/pi";
+import { Blotter } from "@prisma/client";
+import { deleteBlotter } from "@/action/user/blotter";
+import { toast } from "sonner";
 
 interface CreatedBlotterTableProp {
   createdBlotters:
@@ -30,9 +40,12 @@ interface CreatedBlotterTableProp {
 export default function CreatedBlotterTable({
   createdBlotters,
 }: CreatedBlotterTableProp) {
+  const [pending, setTransition] = useTransition();
   const [search, setSearch] = useState("");
   const [viewNarrative, setViewNarrative] = useState("");
+  const [delBlotter, setDeleteBlotter] = useState<Blotter | null>(null);
   const viewNarrativeRef = useRef<ElementRef<"div">>(null);
+  const deleteBlotterPopUpRef = useRef<ElementRef<"div">>(null);
 
   const tableHead = [
     "No.",
@@ -67,11 +80,36 @@ export default function CreatedBlotterTable({
     };
   }, [viewNarrative]);
 
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (!deleteBlotterPopUpRef.current?.contains(e.target as any)) {
+        setDeleteBlotter(null);
+      }
+    };
+
+    window.addEventListener("click", handleClick);
+
+    return () => {
+      window.removeEventListener("click", handleClick);
+    };
+  }, []);
+
+  const onDeleteBlotter = () => {
+    setTransition(async () => {
+      await deleteBlotter(delBlotter?.id)
+        .then(() => {
+          setDeleteBlotter(null);
+          toast.success("Deleted successfully");
+        })
+        .catch(() => toast.error("Something went wrong"));
+    });
+  };
+
   return (
     <>
       <div
         className={cn(
-          "fixed inset-0 bg-black/70 z-[1001] flex items-center px-3 py-8 overflow-auto duration-200",
+          "fixed inset-0 bg-black/70 z-[1001] flex px-3 py-8 overflow-auto duration-200",
           viewNarrative ? "opacity-100 visible" : "invisible opacity-0"
         )}
       >
@@ -91,7 +129,47 @@ export default function CreatedBlotterTable({
           <div className="space-y-3">
             <h1 className="font-semibold text-xl">Narrative</h1>
 
-            <div dangerouslySetInnerHTML={{ __html: viewNarrative }} />
+            <div
+              className="ql-editor"
+              dangerouslySetInnerHTML={{ __html: viewNarrative }}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div
+        className={cn(
+          "fixed inset-0 flex items-center justify-center bg-black/80 z-[1001] duration-200",
+          delBlotter?.id ? "visible opacity-100" : "invisible opacity-0"
+        )}
+      >
+        <div
+          ref={deleteBlotterPopUpRef}
+          className={cn(
+            "bg-white p-5 rounded-md flex-1 max-w-[30rem] duration-200",
+            delBlotter?.id
+              ? "visible opacity-100 scale-100"
+              : "invisible opacity-0 scale-95"
+          )}
+        >
+          <h1 className="text-lg font-semibold">Are you absolutely sure?</h1>
+
+          <p className="mt-2 text-sm text-zinc-500">
+            This action cannot be undone. This will permanently delete this
+            blotter.
+          </p>
+
+          <div className="flex items-center justify-end gap-2 mt-4">
+            <Button
+              disabled={pending}
+              onClick={() => setDeleteBlotter(null)}
+              variant="outline"
+            >
+              Cancel
+            </Button>
+            <Button disabled={pending} onClick={onDeleteBlotter}>
+              Continue
+            </Button>
           </div>
         </div>
       </div>
@@ -154,17 +232,33 @@ export default function CreatedBlotterTable({
                         dateStyle: "medium",
                       })}
                     </td>
-                    <td className="p-2 border border-zinc-300 text-center">
+                    <td className="p-2 border border-zinc-300 text-center space-x-1 space-y-1">
                       <Button
+                        disabled={pending}
                         onClick={(e) => {
                           setViewNarrative(blotter.narrative);
                           e.stopPropagation();
                         }}
+                        title="Show narrative"
                         variant="outline"
                         size="sm"
                         className="shadow-md"
                       >
                         <GrFormView className="scale-[2]" />
+                      </Button>
+
+                      <Button
+                        disabled={pending}
+                        onClick={(e) => {
+                          setDeleteBlotter(blotter);
+                          e.stopPropagation();
+                        }}
+                        title="Delete"
+                        variant="outline"
+                        size="sm"
+                        className="shadow-md"
+                      >
+                        <PiTrashFill className="scale-[1.2] text-red-500" />
                       </Button>
                     </td>
                   </tr>

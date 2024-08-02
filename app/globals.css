@@ -115,7 +115,7 @@
 
 .ql-editor {
   overflow-y: scroll;
-  resize: vertical;
+  resize: none;
   min-height: 25dvh;
 }
 
@@ -129,6 +129,10 @@
 .ql-editor a {
   color: #0066cc;
   text-decoration: underline;
+}
+
+.ql-editor li {
+  list-style: circle;
 }
 
 .ql-container {

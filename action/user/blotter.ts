@@ -62,3 +62,13 @@ export async function createBlotter(value: ValueType) {
     throw new Error(error.message);
   }
 }
+
+export const deleteBlotter = async (id: string | undefined) => {
+  await db.blotter.delete({
+    where: {
+      id,
+    },
+  });
+
+  revalidatePath("/");
+};
