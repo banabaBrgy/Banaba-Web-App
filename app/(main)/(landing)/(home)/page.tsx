@@ -4,7 +4,7 @@ import React from "react";
 
 export default function HomePage() {
   return (
-    <div className="waves-top flex gap-14 min-h-[100dvh]">
+    <div className="waves-top flex gap-14 min-h-[100vh]">
       <div className="flex flex-col gap-3 items-center justify-center basis-[35rem] lg:mx-0 mx-auto pl-3 pr-3 lg:pr-0">
         <div className="slide-up shrink-0">
           <Image

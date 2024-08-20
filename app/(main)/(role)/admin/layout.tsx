@@ -16,14 +16,14 @@ export default async function Layout({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-gray-100">
+    <div className="min-h-[100vh] bg-gray-100">
       <Navbar user={user} />
       <Sidebar
         user={user}
         pendingRequest={pendingRequest}
         noAnswersInquiries={noAnswersInquiries}
       />
-      <div className="lg:ml-[16rem]">{children}</div>
+      <div>{children}</div>
     </div>
   );
 }

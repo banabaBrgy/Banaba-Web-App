@@ -145,7 +145,7 @@ export default function ProgramsRow({ programs }: ProgramsRowProp) {
                   className="text-center text-sm hover:bg-zinc-50"
                 >
                   <td className="p-2 border border-[#dddddd]">{idx + 1}.</td>
-                  <td className="p-2 border border-[#dddddd]">
+                  <td className="p-2 border border-[#dddddd] min-w-[15rem]">
                     {edit?.id === program.id ? (
                       <TextareaAutoSize
                         defaultValue={program.about}
@@ -181,7 +181,7 @@ export default function ProgramsRow({ programs }: ProgramsRowProp) {
                       dateStyle: "medium",
                     })}
                   </td>
-                  <td className="space-x-1 space-y-1 p-2 w-40 border border-[#dddddd]">
+                  <td className="space-x-1 space-y-1 p-2 w-40 border border-[#dddddd] min-w-[10rem]">
                     <Button
                       onClick={() => {
                         setEdit((prev) =>

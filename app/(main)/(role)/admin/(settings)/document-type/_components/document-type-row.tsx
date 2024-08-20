@@ -100,7 +100,10 @@ export default function DocumentTypeRow({
             />
           </div>
 
-          <Button disabled={pending} variant="outline" className="w-full">
+          <Button
+            disabled={pending}
+            className="w-full uppercase text-xs bg-green-500 hover:bg-green-500/80"
+          >
             {pending ? <Loader2 className="animate-spin" /> : "Create"}
           </Button>
         </form>

@@ -38,14 +38,14 @@ export function Navbar({ user }: NavbarProp) {
   }, []);
 
   return (
-    <nav className="sticky top-0 flex items-center justify-between md:px-4 shadow px-3 lg:ml-[16rem] bg-white h-14 z-[1001]">
+    <nav className="sticky top-0 flex items-center justify-between md:px-4 shadow px-3 bg-white h-14 z-[1001]">
       <div className="flex gap-2 items-center">
         <AlignJustify
           onClick={(e) => {
             e.stopPropagation();
             openSidebar.setOpen();
           }}
-          className="lg:hidden block"
+          className="cursor-pointer text-gray-500"
         />
 
         <Link href="/">

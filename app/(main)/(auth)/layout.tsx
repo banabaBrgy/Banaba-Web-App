@@ -18,7 +18,7 @@ export default async function AuthLayout({
   }
 
   return (
-    <div className="waves-top relative flex items-center justify-center min-h-[100dvh]">
+    <div className="waves-top relative flex items-center justify-center min-h-[100vh]">
       <Link href="/" title="home">
         <Image
           src="/logo.png"

@@ -210,19 +210,19 @@ export default function InquiriesRow({ inquiries, id }: InquiriesRowProp) {
                   <td className="p-2 border border-[#dddddd]">
                     {inquirie.user.fullName}
                   </td>
-                  <td className="p-2 border border-[#dddddd]">
+                  <td className="p-2 border border-[#dddddd] break-words">
                     {inquirie.user.email}
                   </td>
                   <td className="p-2 border border-[#dddddd]">
                     {inquirie.user.mobile}
                   </td>
-                  <td className="p-2 border border-[#dddddd]">
+                  <td className="p-2 border border-[#dddddd] min-w-[20rem]">
                     {inquirie.subject}
                   </td>
-                  <td className="p-2 border border-[#dddddd] whitespace-pre-wrap">
+                  <td className="p-2 border border-[#dddddd] whitespace-pre-wrap min-w-[20rem]">
                     {inquirie.message}
                   </td>
-                  <td className="p-2 border border-[#dddddd] whitespace-pre-wrap">
+                  <td className="p-2 border border-[#dddddd] whitespace-pre-wrap min-w-[20rem]">
                     {inquirie.answer}
                   </td>
                   <td className="p-2 border border-[#dddddd]">
@@ -230,7 +230,7 @@ export default function InquiriesRow({ inquiries, id }: InquiriesRowProp) {
                       dateStyle: "medium",
                     })}
                   </td>
-                  <td className="space-y-1 space-x-1 p-2 w-28 border border-[#dddddd]">
+                  <td className="space-y-1 space-x-1 p-2 w-28 border border-[#dddddd] min-w-[7rem]">
                     <Button
                       size="sm"
                       variant="outline"

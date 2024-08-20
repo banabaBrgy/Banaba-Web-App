@@ -102,7 +102,11 @@ export function ProfileForm({ user }: ProfileFormProp) {
             accept="image/webp, image/jpg, image/jpeg, image/png"
             onChange={(e) => {
               setProfile(e.target.files?.[0] as File);
-              setChoosenFile(URL.createObjectURL(e.target.files?.[0] as File));
+              if (e.target.files?.length) {
+                setChoosenFile(
+                  URL.createObjectURL((e.target.files?.[0] as File) || "")
+                );
+              }
             }}
             id="profile"
             className="hidden"

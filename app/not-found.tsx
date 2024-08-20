@@ -8,7 +8,7 @@ const NotFound = () => {
   const router = useRouter();
 
   return (
-    <div className="min-h-[100dvh] flex flex-col items-center justify-center">
+    <div className="min-h-[100vh] flex flex-col items-center justify-center">
       <h1 className="font-black sm:text-8xl text-6xl mb-6 text-green-500">
         Oops!
       </h1>

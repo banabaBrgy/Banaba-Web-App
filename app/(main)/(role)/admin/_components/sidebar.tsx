@@ -121,22 +121,14 @@ export function Sidebar({
     <div
       className={cn(
         "sidebar fixed inset-y-0 bg-gradient-to-r from-green-600 via-green-500 to-green-400 text-white w-[16rem] px-5 duration-200 z-[1001] overflow-auto",
-        !isSidebarOpen ? "lg:left-0 left-[-20rem]" : "left-0"
+        !isSidebarOpen ? "left-[-20rem]" : "left-0"
       )}
     >
-      <div className="mt-4 lg:hidden">
-        <Button
-          onClick={() => setCloseSidebar()}
-          size="icon"
-          style={{ boxShadow: "1px 1px 7px rgba(0, 0, 0, .2)" }}
-          className="bg-green-600 hover:bg-green-600 active:scale-[.95]"
-        >
-          <ChevronLeft size={20} />
-        </Button>
-      </div>
-
       <div className="flex items-center gap-3 mt-5">
-        <Link href="/admin/profile" className="relative active:scale-[.95]">
+        <Link
+          href="/admin/profile"
+          className="relative active:scale-[.95] shrink-0"
+        >
           <Image
             src={user?.profile || "/no-profile.webp"}
             alt="profile"
@@ -147,9 +139,24 @@ export function Sidebar({
           />
         </Link>
 
-        <div className="space-y-1">
-          <p className="font-semibold text-lg">{user?.firstName}</p>
-          <p className="text-xs">{user?.role}</p>
+        <div className="flex items-center gap-2 flex-1">
+          <div className="max-w-[6.5rem] flex-1">
+            <Link href="/admin/profile">
+              <p className="font-semibold text-lg truncate">
+                {user?.firstName}
+              </p>
+            </Link>
+            <p className="text-xs">{user?.role}</p>
+          </div>
+
+          <Button
+            onClick={() => setCloseSidebar()}
+            size="icon"
+            style={{ boxShadow: "1px 1px 7px rgba(0, 0, 0, .2)" }}
+            className="bg-green-600 hover:bg-green-600 active:scale-[.95] shrink-0"
+          >
+            <ChevronLeft size={20} />
+          </Button>
         </div>
       </div>
 
@@ -159,7 +166,7 @@ export function Sidebar({
             href={item.id}
             key={item.id}
             className={cn(
-              "flex items-center justify-between gap-2 p-3 rounded-md text-sm duration-200 hover:bg-green-500/60",
+              "flex items-center justify-between gap-2 p-3 rounded-md text-sm duration-200 hover:bg-green-700",
               pathname === item.id ||
                 (pathname?.includes("/admin/files") &&
                   item.id === "/admin/files")
@@ -188,7 +195,7 @@ export function Sidebar({
               href={item.id}
               key={item.id}
               className={cn(
-                "flex items-center justify-between p-3 rounded-md text-sm duration-200 hover:bg-green-500/60",
+                "flex items-center justify-between p-3 rounded-md text-sm duration-200 hover:bg-green-700",
                 pathname === item.id && "bg-white hover:bg-white text-black"
               )}
             >
@@ -214,7 +221,7 @@ export function Sidebar({
               href={item.id}
               key={item.id}
               className={cn(
-                "flex items-center gap-2 p-3 rounded-md text-sm duration-200 hover:bg-green-500/60",
+                "flex items-center gap-2 p-3 rounded-md text-sm duration-200 hover:bg-green-700",
                 pathname === item.id && "bg-white hover:bg-white text-black"
               )}
             >

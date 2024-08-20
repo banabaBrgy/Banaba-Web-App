@@ -34,7 +34,7 @@ interface UseUnreadNotificationLength {
 // use inside resident and admin page
 export const useOpenSidebar = create<UseOpenSidebarType>((set) => ({
   isSidebarOpen: false,
-  setOpen: () => set({ isSidebarOpen: true }),
+  setOpen: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
   setClose: () => set({ isSidebarOpen: false }),
 }));
 

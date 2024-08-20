@@ -146,7 +146,7 @@ export default function AnnouncementRow({
                   className="text-sm text-center hover:bg-zinc-50"
                 >
                   <td className="border border-[#dddddd] p-2">{idx + 1}.</td>
-                  <td className="border border-[#dddddd] p-2">
+                  <td className="border border-[#dddddd] p-2 min-w-[15rem]">
                     {edit?.id === announcement.id ? (
                       <TextareaAutoSize
                         onChange={({ target: { value } }) =>
@@ -183,7 +183,7 @@ export default function AnnouncementRow({
                       dateStyle: "medium",
                     })}
                   </td>
-                  <td className="space-x-1 space-y-1 border border-[#dddddd] w-40 p-2">
+                  <td className="space-x-1 space-y-1 border border-[#dddddd] min-w-[10rem] p-2">
                     <Button
                       onClick={() => {
                         setEdit((prev) =>
