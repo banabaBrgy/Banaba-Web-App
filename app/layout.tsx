@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter as FontSans } from "next/font/google";
+import { Inter } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 import "./animation.css";
@@ -9,9 +9,8 @@ import { cn } from "@/lib/utils";
 import ReactQueryProvider from "@/utils/react-query-provider";
 import { ActiveUserProvider } from "@/utils/active-user-provider";
 
-const font = FontSans({
+const font = Inter({
   subsets: ["latin"],
-  variable: "--font-sans",
 });
 
 export const metadata: Metadata = {
@@ -29,7 +28,7 @@ export default async function RootLayout({
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
-          font.variable
+          font.className
         )}
       >
         <EdgeStoreProvider>
