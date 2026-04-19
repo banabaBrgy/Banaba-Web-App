@@ -32,12 +32,12 @@ import { toast } from "sonner";
 interface SidebarProp {
   user: UserType | null;
   pendingRequest:
-    | (DocumentRequest & {
-        requestedBy: {
-          fullName: string;
-        };
-      })[]
-    | null;
+  | (DocumentRequest & {
+    requestedBy: {
+      fullName: string;
+    };
+  })[]
+  | null;
   noAnswersInquiries: Inquiries[] | undefined;
 }
 
@@ -231,7 +231,7 @@ export function Sidebar({
         </div>
       </div>
 
-      <div className="sticky bottom-2 inset-x-4 mt-8 invisible">
+      <div className="sticky bottom-2 inset-x-4 mt-8 ">
         <Button
           onClick={() =>
             setTransition(async () => {

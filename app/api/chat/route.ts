@@ -3,67 +3,64 @@ import {
   StreamingTextResponse,
   Message as VercelChatMessage,
 } from "ai";
-import { ChatOpenAI } from "@langchain/openai";
+import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import {
   ChatPromptTemplate,
   PromptTemplate,
   MessagesPlaceholder,
 } from "@langchain/core/prompts";
-import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
-import { createHistoryAwareRetriever } from "langchain/chains/history_aware_retriever";
-import { createRetrievalChain } from "langchain/chains/retrieval";
+import { createStuffDocumentsChain } from "@langchain/classic/chains/combine_documents";
+// import { createHistoryAwareRetriever } from "@langchain/classic/chains/history_aware_retriever";
+import { createRetrievalChain } from "@langchain/classic/chains/retrieval";
 import { getVectorStore } from "@/lib/astradb";
 import { HumanMessage, AIMessage } from "@langchain/core/messages";
 
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
-  const { messages } = await req.json();
+  try {
+    const { messages } = await req.json();
 
-  const chatHistory = messages
-    .slice(0, -1)
-    .map((m: VercelChatMessage) =>
-      m.role === "user" ? new HumanMessage(m.content) : new AIMessage(m.content)
-    );
+    const chatHistory = messages
+      .slice(0, -1)
+      .map((m: VercelChatMessage) =>
+        m.role === "user" ? new HumanMessage(m.content) : new AIMessage(m.content)
+      );
 
-  const currentMessageContent = messages.at(-1).content;
+    const currentMessageContent = messages.at(-1).content;
 
-  const { stream, handlers } = LangChainStream();
+    const { stream, handlers } = LangChainStream();
 
-  const chatModel = new ChatOpenAI({
-    modelName: "gpt-4o-mini",
-    streaming: true,
-    callbacks: [handlers],
-    temperature: 0,
-  });
+    const chatModel = new ChatGoogleGenerativeAI({
+      model: "gemini-2.5-flash",
+      streaming: true,
+      callbacks: [handlers],
+      temperature: 0,
+    });
 
-  const rephrasingModel = new ChatOpenAI({
-    modelName: "gpt-4o-mini",
-    temperature: 0,
-  });
+    /* const rephrasingModel = new ChatGoogleGenerativeAI({
+      model: "gemini-3.1-flash-lite-preview",
+      temperature: 0,
+    }); */
 
-  const retriever = (await getVectorStore()).asRetriever();
+    const retriever = (await getVectorStore()).asRetriever();
 
-  const rephrasePrompt = ChatPromptTemplate.fromMessages([
-    new MessagesPlaceholder("chat_history"),
-    ["user", "{input}"],
-    [
-      "user",
-      "Given the above conversation, generate a search query to look up in order to get information relevant to the current question. " +
-        "Don't leave out any relevant keywords. Only return the query and no other text.",
-    ],
-  ]);
+    /* const rephrasePrompt = ChatPromptTemplate.fromMessages([
+      new MessagesPlaceholder("chat_history"),
+      ["user", "{input}"],
+      ["user", "Given the above conversation, generate a search query to look up in order to get information relevant to the current question. " + "Don't leave out any relevant keywords. Only return the query and no other text."],
+    ]); */
 
-  const historyAwareRetrievalChain = await createHistoryAwareRetriever({
-    llm: rephrasingModel,
-    retriever,
-    rephrasePrompt,
-  });
+    /* const historyAwareRetrievalChain = await createHistoryAwareRetriever({
+      llm: rephrasingModel,
+      retriever,
+      rephrasePrompt,
+    }); */
 
-  const prompt = ChatPromptTemplate.fromMessages([
-    [
-      "system",
-      "You are a helpful Assistant for a Barangay Banaba Web-based management system. " +
+    const prompt = ChatPromptTemplate.fromMessages([
+      [
+        "system",
+        "You are a helpful Assistant for a Barangay Banaba Web-based management system. " +
         "Whenever the information has images and links, provide links and display images to pages that contain more information about the topic from the given context. " +
         "Only answer questions related to Barangay Banaba information. " +
         "If the question is not related to Barangay Banaba, refrain from answering. " +
@@ -73,29 +70,35 @@ export async function POST(req: Request) {
         "Format your messages in react markdown format.\n\n" +
         "Context:\n{context}" +
         "Please answer in the same language as the user's query.",
-    ],
-    new MessagesPlaceholder("chat_history"),
-    ["user", "{input}"],
-  ]);
+      ],
+      new MessagesPlaceholder("chat_history"),
+      ["user", "{input}"],
+    ]);
 
-  const combineDocsChain = await createStuffDocumentsChain({
-    llm: chatModel,
-    prompt,
-    documentPrompt: PromptTemplate.fromTemplate(
-      "Page URL: {url}\n\nPage Content:\n{page_content}"
-    ),
-    documentSeparator: "\n--------\n",
-  });
+    const combineDocsChain = await createStuffDocumentsChain({
+      llm: chatModel,
+      prompt,
+      documentPrompt: PromptTemplate.fromTemplate(
+        "Page URL: {url}\n\nPage Content:\n{page_content}"
+      ),
+      documentSeparator: "\n--------\n",
+    });
 
-  const retrieverChain = await createRetrievalChain({
-    combineDocsChain,
-    retriever: historyAwareRetrievalChain,
-  });
+    const retrieverChain = await createRetrievalChain({
+      combineDocsChain,
+      retriever,
+    });
 
-  retrieverChain.invoke({
-    input: currentMessageContent,
-    chat_history: chatHistory,
-  });
+    await retrieverChain.invoke({
+      input: currentMessageContent,
+      chat_history: chatHistory,
+    });
 
-  return new StreamingTextResponse(stream);
+    return new StreamingTextResponse(stream);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log("Error in API route:", error.message);
+    }
+    throw new Error("An error occurred while processing the request.");
+  }
 }
