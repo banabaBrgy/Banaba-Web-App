@@ -1,8 +1,8 @@
 "use server";
 
-import { DirectoryLoader } from "@langchain/classic/document_loaders/fs/directory";
+import { DirectoryLoader } from "langchain/document_loaders/fs/directory";
 import { DocumentInterface } from "@langchain/core/documents";
-import { TextLoader } from "@langchain/classic/document_loaders/fs/text"
+import { TextLoader } from "langchain/document_loaders/fs/text";
 import { getEmbeddingsCollection, getVectorStore } from "@/lib/astradb";
 import { getPinnedInquiries } from "@/lib/faq";
 import { getDocumentType } from "@/lib/query/admin/document-type";

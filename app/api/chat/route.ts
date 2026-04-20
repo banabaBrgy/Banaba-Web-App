@@ -9,9 +9,9 @@ import {
   PromptTemplate,
   MessagesPlaceholder,
 } from "@langchain/core/prompts";
-import { createStuffDocumentsChain } from "@langchain/classic/chains/combine_documents";
-// import { createHistoryAwareRetriever } from "@langchain/classic/chains/history_aware_retriever";
-import { createRetrievalChain } from "@langchain/classic/chains/retrieval";
+import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
+import { createHistoryAwareRetriever } from "langchain/chains/history_aware_retriever";
+import { createRetrievalChain } from "langchain/chains/retrieval";
 import { getVectorStore } from "@/lib/astradb";
 import { HumanMessage, AIMessage } from "@langchain/core/messages";
 
@@ -38,24 +38,24 @@ export async function POST(req: Request) {
       temperature: 0,
     });
 
-    /* const rephrasingModel = new ChatGoogleGenerativeAI({
+    const rephrasingModel = new ChatGoogleGenerativeAI({
       model: "gemini-3.1-flash-lite-preview",
       temperature: 0,
-    }); */
+    });
 
     const retriever = (await getVectorStore()).asRetriever();
 
-    /* const rephrasePrompt = ChatPromptTemplate.fromMessages([
+    const rephrasePrompt = ChatPromptTemplate.fromMessages([
       new MessagesPlaceholder("chat_history"),
       ["user", "{input}"],
       ["user", "Given the above conversation, generate a search query to look up in order to get information relevant to the current question. " + "Don't leave out any relevant keywords. Only return the query and no other text."],
-    ]); */
+    ]);
 
-    /* const historyAwareRetrievalChain = await createHistoryAwareRetriever({
+    const historyAwareRetrievalChain = await createHistoryAwareRetriever({
       llm: rephrasingModel,
       retriever,
       rephrasePrompt,
-    }); */
+    });
 
     const prompt = ChatPromptTemplate.fromMessages([
       [
